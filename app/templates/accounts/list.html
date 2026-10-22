@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Accounts{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-2xl font-bold text-wr-700">Accounts</h1>
+  <div class="text-sm text-slate-500">{{ companies|length }} shown</div>
+</div>
+
+<form class="bg-white border rounded-lg p-3 mb-4 flex flex-wrap gap-3 items-end" method="get">
+  <div class="flex-1 min-w-[200px]">
+    <label class="block text-xs text-slate-500">Search</label>
+    <input name="q" value="{{ search }}" placeholder="company, brand, plant…" class="w-full border rounded px-3 py-2 text-sm" />
+  </div>
+  <div>
+    <label class="block text-xs text-slate-500">Sector</label>
+    <select name="sector" class="border rounded px-3 py-2 text-sm">
+      <option value="">All sectors</option>
+      {% for s in sectors %}<option value="{{ s.id }}" {% if sector_id == s.id|string %}selected{% endif %}>{{ s.name }}</option>{% endfor %}
+    </select>
+  </div>
+  <div>
+    <label class="block text-xs text-slate-500">Scope</label>
+    <select name="scope" class="border rounded px-3 py-2 text-sm">
+      <option value="all" {% if scope == 'all' %}selected{% endif %}>All</option>
+      <option value="mine" {% if scope == 'mine' %}selected{% endif %}>My accounts</option>
+    </select>
+  </div>
+  <button class="bg-wr-600 text-white px-4 py-2 rounded text-sm">Filter</button>
+</form>
+
+<div class="bg-white border rounded-lg overflow-hidden">
+<table class="w-full text-sm">
+<thead class="bg-slate-50 text-slate-600"><tr>
+  <th class="text-left px-3 py-2">Company</th>
+  <th class="text-left px-3 py-2">Sector</th>
+  <th class="text-left px-3 py-2">City</th>
+  <th class="text-left px-3 py-2">Priority</th>
+  <th class="text-left px-3 py-2">Owner</th>
+  <th class="text-left px-3 py-2">Status</th>
+</tr></thead>
+<tbody class="divide-y">
+{% for c in companies %}
+<tr class="hover:bg-slate-50">
+  <td class="px-3 py-2">
+    <a href="{{ url_for('accounts.detail', company_id=c.id) }}" class="text-wr-700 hover:underline font-medium">{{ c.name }}</a>
+    {% if c.brand %}<div class="text-xs text-slate-500">{{ c.brand }}{% if c.plant_unit %} · {{ c.plant_unit }}{% endif %}</div>{% endif %}
+  </td>
+  <td class="px-3 py-2 text-xs">{{ c.sector.name if c.sector else '—' }}</td>
+  <td class="px-3 py-2 text-xs">{{ c.city.name if c.city else '—' }}</td>
+  <td class="px-3 py-2 text-xs">
+    {% if c.priority == 'P1' %}<span class="bg-rose-100 text-rose-700 px-2 py-0.5 rounded">P1</span>
+    {% elif c.priority == 'P2' %}<span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded">P2</span>
+    {% elif c.priority == 'P3' %}<span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded">P3</span>
+    {% else %}—{% endif %}
+  </td>
+  <td class="px-3 py-2 text-xs">{{ c.owner.name if c.owner else '—' }}</td>
+  <td class="px-3 py-2 text-xs capitalize">{{ c.status }}</td>
+</tr>
+{% else %}
+<tr><td colspan="6" class="px-3 py-6 text-center text-slate-500">No companies match.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-white border rounded-lg shadow-sm p-8">
+  <div class="text-center mb-6">
+    <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-wr-600 text-white font-bold text-xl">WR</div>
+    <h1 class="mt-3 text-2xl font-bold text-wr-700">Water Regime Sales Hub</h1>
+    <p class="text-sm text-slate-500">Sign in to continue</p>
+  </div>
+  <form method="post" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium">Email</label>
+      <input name="email" type="email" required class="mt-1 w-full border rounded px-3 py-2 focus:ring-wr-500 focus:border-wr-500" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Password</label>
+      <input name="password" type="password" required class="mt-1 w-full border rounded px-3 py-2 focus:ring-wr-500 focus:border-wr-500" />
+    </div>
+    <button class="w-full bg-wr-600 hover:bg-wr-700 text-white py-2 rounded font-medium">Sign in</button>
+  </form>
+</div>
+{% endblock %}

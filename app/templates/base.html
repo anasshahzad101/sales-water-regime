@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}WR Sales Hub{% endblock %} · Water Regime</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wr: {
+              50: '#E8F2EB', 100: '#CFE4D5', 300: '#7FB591',
+              500: '#2E8A54', 600: '#1F6F3D', 700: '#175A32', 800: '#124527',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    [x-cloak] { display: none !important; }
+    body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+{% if current_user.is_authenticated %}
+<header class="bg-wr-600 text-white shadow">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-6">
+      <a href="{{ url_for('main.home') }}" class="font-bold text-lg tracking-tight">Water Regime · Sales Hub</a>
+      <nav class="hidden md:flex items-center gap-4 text-sm">
+        {% if not current_user.is_ceo %}
+          <a href="{{ url_for('main.my_week') }}" class="hover:text-wr-100">My Week</a>
+          <a href="{{ url_for('visits.new_visit') }}" class="hover:text-wr-100">Log Visit</a>
+          <a href="{{ url_for('accounts.list_accounts') }}" class="hover:text-wr-100">Accounts</a>
+          <a href="{{ url_for('pipeline.board') }}" class="hover:text-wr-100">Team Pulse</a>
+        {% endif %}
+        <a href="{{ url_for('cockpit.ceo') }}" class="hover:text-wr-100">CEO Cockpit</a>
+        {% if current_user.is_admin %}
+          <a href="{{ url_for('admin.users') }}" class="hover:text-wr-100">Admin</a>
+        {% endif %}
+      </nav>
+    </div>
+    <div class="flex items-center gap-3 text-sm">
+      <span class="hidden md:inline opacity-80">{{ current_user.name }}
+        <span class="opacity-70">· {{ current_user.role }}</span></span>
+      <a href="{{ url_for('auth.change_password') }}" class="hover:text-wr-100">Password</a>
+      <a href="{{ url_for('auth.logout') }}" class="bg-white/10 hover:bg-white/20 px-3 py-1 rounded">Sign out</a>
+    </div>
+  </div>
+</header>
+{% endif %}
+
+<main class="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="space-y-2 mb-4">
+      {% for category, msg in messages %}
+        <div class="rounded-md border px-3 py-2 text-sm
+          {% if category == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800
+          {% elif category == 'danger' %}bg-rose-50 border-rose-200 text-rose-800
+          {% elif category == 'warning' %}bg-amber-50 border-amber-200 text-amber-800
+          {% else %}bg-sky-50 border-sky-200 text-sky-800{% endif %}">{{ msg }}</div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="mt-auto border-t bg-white">
+  <div class="max-w-7xl mx-auto px-4 py-3 text-xs text-slate-500 flex items-center justify-between">
+    <span>Water Regime (Pvt.) Ltd. · Internal</span>
+    <span>sales.waterregime.com</span>
+  </div>
+</footer>
+</body>
+</html>

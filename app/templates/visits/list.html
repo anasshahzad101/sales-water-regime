@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Visits{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-2xl font-bold text-wr-700">Visits</h1>
+  <a href="{{ url_for('visits.new_visit') }}" class="bg-wr-600 text-white px-4 py-2 rounded">+ New</a>
+</div>
+<div class="bg-white border rounded-lg overflow-hidden">
+<table class="w-full text-sm">
+<thead class="bg-slate-50 text-slate-600"><tr>
+  <th class="text-left px-3 py-2">Date</th><th class="text-left px-3 py-2">Company</th>
+  <th class="text-left px-3 py-2">Type</th><th class="text-left px-3 py-2">Outcome</th>
+  <th class="text-left px-3 py-2">Owner</th>
+</tr></thead>
+<tbody class="divide-y">
+{% for v in visits %}
+<tr>
+  <td class="px-3 py-2 whitespace-nowrap">{{ v.visit_date|datetime_short }}</td>
+  <td class="px-3 py-2">{{ v.company.name }}</td>
+  <td class="px-3 py-2">{{ v.visit_type }}</td>
+  <td class="px-3 py-2">{{ v.outcome }}{% if v.skip_reason %} · <span class="text-xs text-slate-500">{{ v.skip_reason }}</span>{% endif %}</td>
+  <td class="px-3 py-2">{{ v.salesperson.name }}</td>
+</tr>
+{% else %}
+<tr><td colspan="5" class="px-3 py-6 text-center text-slate-500">No visits yet.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

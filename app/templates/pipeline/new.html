@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}New Opportunity{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white border rounded-lg p-6">
+  <h1 class="text-2xl font-bold text-wr-700 mb-4">New Opportunity</h1>
+  <form method="post" class="grid md:grid-cols-2 gap-4">
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium">Opportunity title *</label>
+      <input name="title" required class="mt-1 w-full border rounded px-3 py-2" placeholder="e.g., ETP upgrade – dyeing unit" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Company *</label>
+      <select name="company_id" required class="mt-1 w-full border rounded px-3 py-2">
+        <option value="">— choose —</option>
+        {% for c in companies %}<option value="{{ c.id }}" {% if request.args.get('company_id')|int == c.id %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Stage</label>
+      <select name="stage" class="mt-1 w-full border rounded px-3 py-2">
+        {% for s in stages %}<option {% if s == 'Lead' %}selected{% endif %}>{{ s }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Solution type</label>
+      <select name="solution_type" class="mt-1 w-full border rounded px-3 py-2">
+        <option value="">—</option>
+        {% for s in ['RO','ETP','STP','MBR','UF','ZLD','Mixed'] %}<option>{{ s }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Value (PKR)</label>
+      <input name="value_pkr" type="number" step="1000" class="mt-1 w-full border rounded px-3 py-2" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Probability (%)</label>
+      <input name="probability" type="number" min="0" max="100" value="20" class="mt-1 w-full border rounded px-3 py-2" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Expected close</label>
+      <input name="expected_close" type="date" class="mt-1 w-full border rounded px-3 py-2" />
+    </div>
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium">Notes</label>
+      <textarea name="notes" rows="3" class="mt-1 w-full border rounded px-3 py-2"></textarea>
+    </div>
+    <div class="md:col-span-2">
+      <button class="bg-wr-600 text-white px-5 py-2 rounded">Create</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

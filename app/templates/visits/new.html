@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Log a Visit{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white border rounded-lg p-6" x-data="{ outcome: '{{ form.outcome or 'Pending' }}' }">
+  <h1 class="text-2xl font-bold text-wr-700 mb-4">Log a Visit</h1>
+  <form method="post" class="grid md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium">Company *</label>
+      <select name="company_id" required class="mt-1 w-full border rounded px-3 py-2">
+        <option value="">— choose —</option>
+        {% for c in companies %}
+          <option value="{{ c.id }}" {% if form.company_id|string == c.id|string %}selected{% endif %}>{{ c.name }}{% if c.city %} · {{ c.city.name }}{% endif %}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Visit type</label>
+      <select name="visit_type" class="mt-1 w-full border rounded px-3 py-2">
+        {% for t in visit_types %}<option {% if form.visit_type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Visit date / time</label>
+      <input name="visit_date" type="datetime-local" class="mt-1 w-full border rounded px-3 py-2" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Contact met</label>
+      <input name="contact_met" value="{{ form.contact_met or '' }}" class="mt-1 w-full border rounded px-3 py-2" />
+    </div>
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium">Discussion</label>
+      <textarea name="discussion" rows="3" class="mt-1 w-full border rounded px-3 py-2">{{ form.discussion or '' }}</textarea>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium">Outcome *</label>
+      <select name="outcome" x-model="outcome" required class="mt-1 w-full border rounded px-3 py-2">
+        {% for o in outcomes %}<option {% if form.outcome == o %}selected{% endif %}>{{ o }}</option>{% endfor %}
+      </select>
+    </div>
+    <div x-show="outcome === 'Skipped — reason required'" x-cloak>
+      <label class="block text-sm font-medium">Skip reason *</label>
+      <select name="skip_reason" class="mt-1 w-full border rounded px-3 py-2">
+        <option value="">— choose —</option>
+        {% for r in skip_reasons %}<option {% if form.skip_reason == r %}selected{% endif %}>{{ r }}</option>{% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium">Next action</label>
+      <input name="next_action" value="{{ form.next_action or '' }}" class="mt-1 w-full border rounded px-3 py-2" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Next action date</label>
+      <input name="next_action_date" type="date" class="mt-1 w-full border rounded px-3 py-2" />
+    </div>
+
+    <div class="md:col-span-2 flex items-center justify-between pt-4 border-t mt-2">
+      <p class="text-xs text-slate-500">Outcome can be set within 48 hours. After that, a reason code is required.</p>
+      <button class="bg-wr-600 hover:bg-wr-700 text-white px-5 py-2 rounded">Save visit</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

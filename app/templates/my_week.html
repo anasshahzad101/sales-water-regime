@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}My Week{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-5">
+  <div>
+    <h1 class="text-2xl font-bold text-wr-700">My Week</h1>
+    <p class="text-sm text-slate-500">Hello {{ current_user.name }} — here is what needs you today.</p>
+  </div>
+  <a href="{{ url_for('visits.new_visit') }}" class="bg-wr-600 hover:bg-wr-700 text-white px-4 py-2 rounded">+ Log a Visit</a>
+</div>
+
+<div class="grid md:grid-cols-2 gap-4">
+  <!-- Pending outcomes -->
+  <div class="bg-white border rounded-lg p-4">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-semibold">Visits awaiting outcome</h2>
+      <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded">{{ pending_outcomes|length }}</span>
+    </div>
+    {% if pending_outcomes %}
+      <ul class="divide-y text-sm">
+      {% for v in pending_outcomes %}
+        <li class="py-2 flex items-center justify-between gap-3">
+          <div>
+            <div class="font-medium">{{ v.company.name }}</div>
+            <div class="text-xs text-slate-500">{{ v.visit_date|datetime_short }} · {{ v.visit_type }}</div>
+          </div>
+          <div class="text-right text-xs">
+            {% if v.grace_remaining_hours > 0 %}
+              <span class="text-amber-700">{{ v.grace_remaining_hours|humanize_hours }} left</span>
+            {% else %}
+              <span class="text-rose-700 font-semibold">Overdue</span>
+            {% endif %}
+            <form method="post" action="{{ url_for('visits.set_outcome', visit_id=v.id) }}" class="mt-1 flex gap-1"
+                  x-data="{ outcome: 'Pending' }">
+              <select name="outcome" x-model="outcome" class="border rounded text-xs px-1 py-0.5">
+                <option>Positive — move forward</option>
+                <option>Neutral — info only</option>
+                <option>Negative — pushback</option>
+                <option>No show / rescheduled</option>
+                <option>Skipped — reason required</option>
+              </select>
+              <template x-if="outcome === 'Skipped — reason required'">
+                <select name="skip_reason" required class="border rounded text-xs px-1 py-0.5">
+                  <option value="">Reason…</option>
+                  {% for r in ['Client unavailable','Rescheduled by client','Travel / logistics','Internal priority shift','No access to decision maker','Other (specify in notes)'] %}
+                  <option value="{{ r }}">{{ r }}</option>
+                  {% endfor %}
+                </select>
+              </template>
+              <button class="bg-wr-600 text-white px-2 rounded text-xs">Save</button>
+            </form>
+          </div>
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-sm text-slate-500">All clear. Nothing waiting.</p>
+    {% endif %}
+  </div>
+
+  <!-- Due this week -->
+  <div class="bg-white border rounded-lg p-4">
+    <h2 class="font-semibold mb-3">Due this week</h2>
+    {% if due_this_week %}
+      <ul class="divide-y text-sm">
+      {% for v in due_this_week %}
+        <li class="py-2">
+          <div class="font-medium">{{ v.company.name }}</div>
+          <div class="text-xs text-slate-500">{{ v.next_action or '—' }}</div>
+          <div class="text-xs text-slate-400">by {{ v.next_action_date|date_only }}</div>
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-sm text-slate-500">No follow-ups scheduled.</p>
+    {% endif %}
+  </div>
+
+  <!-- Open opportunities -->
+  <div class="bg-white border rounded-lg p-4">
+    <h2 class="font-semibold mb-3">My open opportunities</h2>
+    {% if my_opps %}
+      <ul class="divide-y text-sm">
+      {% for o in my_opps %}
+        <li class="py-2 flex items-center justify-between gap-3">
+          <div>
+            <a href="{{ url_for('pipeline.detail', opp_id=o.id) }}" class="font-medium text-wr-700 hover:underline">{{ o.title }}</a>
+            <div class="text-xs text-slate-500">{{ o.company.name }} · {{ o.stage }}</div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm font-semibold">{{ o.value_pkr|money }}</div>
+            <div class="text-xs text-slate-500">{{ o.days_in_stage }} d in stage</div>
+          </div>
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-sm text-slate-500">No open opportunities. <a class="text-wr-700 underline" href="{{ url_for('pipeline.new_opp') }}">Create one</a>.</p>
+    {% endif %}
+  </div>
+
+  <!-- Flags -->
+  <div class="bg-white border rounded-lg p-4">
+    <h2 class="font-semibold mb-3">Self-correction flags</h2>
+    <ul class="text-sm space-y-2">
+      <li class="flex justify-between"><span>Stuck deals (&gt;30 d in stage)</span><span class="font-semibold">{{ stuck|length }}</span></li>
+      <li class="flex justify-between"><span>Dormant accounts (&gt;60 d no touch)</span><span class="font-semibold">{{ dormant|length }}</span></li>
+    </ul>
+    {% if dormant %}
+      <div class="mt-3 text-xs text-slate-500">Dormant: {% for c in dormant %}<a class="underline" href="{{ url_for('accounts.detail', company_id=c.id) }}">{{ c.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
