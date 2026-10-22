@@ -1,167 +1,158 @@
 # WR Sales Hub
 
-Internal sales operations portal for **Water Regime (Pvt.) Ltd.** —
-a consolidated system that replaces the three legacy Excel files
-(Weekly Sales Dashboard, Industries List, Visit Plan) with one web app
-the whole BD team uses.
+Internal sales operations portal for **Water Regime (Pvt.) Ltd.** It replaces the three Excel files
+(target companies, visit plan, weekly dashboard) with one shared system: salespeople record the
+companies they chase, every visit and every deal; managers and the CEO see the state of sales
+without asking anyone.
 
-**Live at:** `sales.waterregime.com`
+- **Next.js 16** (App Router, Cache Components, Server Actions) · React 19 · TypeScript · Tailwind CSS 4
+- **Live database:** MariaDB / MySQL on Hostinger (Drizzle ORM + mysql2)
+- **Local development:** a JSON file (`.data/db.json`) — no database to install
+- **Hosting:** Vercel
 
----
-
-## What it does
-
-Five screens, one database:
-
-| Screen            | For whom         | What it answers                               |
-| ----------------- | ---------------- | --------------------------------------------- |
-| **My Week**       | Sales            | What do I need to do today?                   |
-| **Log a Visit**   | Sales            | Record a visit — with outcome enforcement     |
-| **My Accounts**   | Sales / Manager  | My client list and their status               |
-| **Team Pulse**    | Manager          | Where every deal is right now, by stage       |
-| **CEO Cockpit**   | CEO (read-only)  | Pipeline, team activity, self-correction flags |
-
-Opportunity stages: **Lead → Qualified → Proposal Submitted → Negotiation → Won (PO) → Lost**.
-
-Outcome enforcement: every visit must get an outcome within **48 hours**.
-After the grace window closes, a reason code becomes mandatory —
-sales people cannot silently skip visits.
-
-Roles: **Sales / Manager / CEO (read-only) / Admin.**
+Design source: `WR Sales Hub design system/` (Claude Design export — open the `.dc.html` files in a browser).
 
 ---
 
-## Tech stack (zero-payment)
+## Screens
 
-- Python 3.12 · Flask 3 · SQLAlchemy 2
-- SQLite in dev, PostgreSQL in production (both free)
-- Tailwind CSS (CDN) + Alpine.js
-- Gunicorn WSGI server
-- Deploys as-is on **Render.com** free tier,
-  **PythonAnywhere**, **Railway**, or any VPS with Python
+| Screen | Who | Answers |
+|---|---|---|
+| **My Week** (`/my-week`) | Sales, Manager, Admin | What do I need to do today? Outcomes to set (48-hour countdown, late reason after that), follow-ups due (tick off with undo), my open deals, self-correction flags |
+| **Log a visit** (`/log`) | Sales, Manager, Admin | Record what happened — searchable company, linked deal, visit type, time in PKT, outcome, skip reason, next action |
+| **Visits** (`/visits`) | Sales (own) / Manager, Admin (team) | Visit history with filters and Excel export |
+| **Accounts** (`/accounts`, `/accounts/new`, `/accounts/[id]`) | Sales, Manager, Admin (CEO: read-only detail) | Which companies are we chasing? Filters, add company with duplicate warning, contacts (call / WhatsApp / email), claim, timeline |
+| **Team Pulse** (`/pulse`, `/deals/new`, `/deals/[id]`) | Sales, Manager, Admin (CEO: read-only detail) | Where is every deal? Kanban by stage, filters, edit deal, stage changes with lost reasons, proposals |
+| **Cockpit** (`/cockpit`) | Everyone (home for the CEO) | How is sales going? Date filter, weighted pipeline, win rate, by salesperson, flags with drill-downs, lost reasons |
+| **Users** / **Audit log** (`/admin/...`) | Admin | Add users, roles, reset passwords, deactivate; every change recorded |
 
-No paid SaaS, licence or API.
+Roles: **Sales · Manager · CEO (read-only) · Admin**. Light and dark theme (user menu), phone and desktop layouts.
+
+**Rules built in:** an outcome is due within 48 hours of a visit (after that a written late reason is required);
+skipped visits need a reason; deals more than 30 days in one stage are *stuck*; owned accounts with no visit
+in 60 days are *dormant*; open deals past their expected close date are flagged. All enforced on the server.
+
+**Security:** passwords hashed with bcrypt; signed, HTTP-only session cookies; sign-in locks for 15 minutes
+after 5 wrong passwords; everyone must replace the shared starting password at first sign-in; password
+changes and role changes sign out other devices; Server Actions are protected against cross-site requests;
+the CEO account cannot change anything.
 
 ---
 
-## Local setup
+## Run it on your computer
+
+Requirements: **Node.js 20.9+** (22 LTS recommended).
 
 ```bash
-git clone <this-repo-url>
-cd wr-sales-hub
-
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-cp .env.example .env            # edit SECRET_KEY
-export FLASK_APP=run.py
-
-flask full-seed                 # creates tables, demo users, loads the 299 target accounts
-flask run                       # http://127.0.0.1:5000
+npm install
+npm run dev
 ```
 
-Default accounts (change passwords on first login):
+Open http://localhost:3000. The first `npm run dev` creates `.data/db.json` with the 332 companies and
+33 pipeline deals from `seed_data/WR_Pakistan_Industry_Master_FINAL.xlsx`, plus **demo activity**
+(sample salespeople, contacts, visits, proposals) so every screen has something to show.
 
-| Email                        | Role    | Password        |
-| ---------------------------- | ------- | --------------- |
-| haroon@waterregime.com       | admin   | ChangeMe123!    |
-| qasim@waterregime.com        | admin   | ChangeMe123!    |
-| khalid@waterregime.com       | ceo     | ChangeMe123!    |
-| manager@waterregime.com      | manager | ChangeMe123!    |
-| sales@waterregime.com        | sales   | ChangeMe123!    |
+Sign-in accounts (password for all: `ChangeMe123!`, or `SEED_DEFAULT_PASSWORD` if you set it):
 
----
+| Account | Role | Notes |
+|---|---|---|
+| `ali.raza@waterregime.com` | Sales | demo — lots of activity |
+| `bilal.ahmed@waterregime.com` | Manager | demo |
+| `zainab.qureshi@waterregime.com` | CEO | demo, read-only |
+| `kamran.javed@waterregime.com` | Admin | demo |
+| `haroon@`, `qasim@` (admin), `khalid@` (CEO), `manager@`, `sales@waterregime.com` | — | real starting accounts — must set a new password at first sign-in |
 
-## Deploy — Render.com (recommended free path)
+Start over with fresh data: delete `.data/db.json` and run `npm run dev` again
+(or `npm run db:seed -- --demo`).
 
-1. Push this repo to GitHub (any name, private is fine).
-2. Go to **render.com → New → Web Service**, connect your GitHub, pick this repo.
-3. Settings:
-   - **Environment:** Python 3
-   - **Build command:** `pip install -r requirements.txt`
-   - **Start command:** `gunicorn wsgi:app`
-4. Add a free **PostgreSQL** database on Render → copy its *Internal Database URL* into the web service's `DATABASE_URL` env variable.
-5. Add env vars: `SECRET_KEY` (any long random string), `FLASK_ENV=production`.
-6. First deploy done → open the Render shell on the web service and run:
-   ```bash
-   flask --app wsgi:app full-seed
-   ```
-7. **Custom domain `sales.waterregime.com`:**
-   - In Render → Web Service → Settings → Custom Domain → add `sales.waterregime.com`.
-   - Render shows a CNAME target (something like `wr-sales-hub.onrender.com`).
-   - Ask the domain/hosting admin to add **one CNAME record** in `waterregime.com`'s DNS:
-     - **Name:** `sales`
-     - **Type:** `CNAME`
-     - **Value:** the Render target
-   - **Do NOT change nameservers.** The main website and email keep working untouched.
-   - HTTPS is automatic (Let's Encrypt via Render).
+Useful commands:
 
----
-
-## Deploy — PythonAnywhere alternative
-
-1. Upload the repo (or git clone) into your PythonAnywhere account.
-2. Create a Python 3.12 Web App, point WSGI to `wsgi.py`.
-3. Create a free MySQL DB in PythonAnywhere, set `DATABASE_URL` in the Web tab's env vars.
-4. In a Bash console: `pip install --user -r requirements.txt` then `flask full-seed`.
-5. For `sales.waterregime.com`, PythonAnywhere needs a paid plan ($5/mo).
-
----
-
-## Data seed
-
-The `/seed_data/WR_Pakistan_Industry_Master_FINAL.xlsx` workbook is the verified
-starting set:
-
-- **299** new target accounts across 19 core industrial sectors
-- **922** master companies (full industry database)
-- **33** existing WR pipeline rows (loaded as initial Opportunities)
-
-Only verified companies are included. The seed loader is idempotent — safe to re-run.
-
----
-
-## File layout
-
-```
-wr-sales-hub/
-├── app/
-│   ├── __init__.py          # Flask factory
-│   ├── models.py            # SQLAlchemy — all tables
-│   ├── decorators.py        # role_required, write_required
-│   ├── filters.py           # money, date_only, humanize_hours
-│   ├── cli.py               # flask init-db / seed-users / seed-data / full-seed
-│   ├── seed.py              # Excel → DB loader
-│   ├── routes/
-│   │   ├── auth.py          # login / logout / change password
-│   │   ├── main.py          # My Week
-│   │   ├── visits.py        # Log a Visit  (soft-block + reason codes)
-│   │   ├── accounts.py      # Accounts list + detail
-│   │   ├── pipeline.py      # Team Pulse + opportunity CRUD
-│   │   ├── cockpit.py       # CEO Cockpit
-│   │   └── admin.py         # User management
-│   └── templates/           # Jinja + Tailwind + Alpine
-├── seed_data/
-│   └── WR_Pakistan_Industry_Master_FINAL.xlsx
-├── config.py
-├── requirements.txt
-├── Procfile                 # web: gunicorn wsgi:app
-├── runtime.txt
-├── wsgi.py
-├── run.py                   # local dev
-├── .env.example
-└── README.md
+```bash
+npm run typecheck     # TypeScript
+npm run lint          # ESLint
+npm run build         # production build
 ```
 
 ---
 
-## Pending (open items)
+## Deploy: Vercel + Hostinger MariaDB
 
-1. Confirm Python app support on the main hosting (or go with Render).
-2. Named decision-makers for the 299 new targets (Step 4 research) — to be added via the UI.
-3. 11 knitwear exporters + 8 sugar mills carry *to confirm* flags.
+### 1. Create the database on Hostinger
+1. **hPanel → Databases → MySQL Databases**: create a database and a user with a strong password.
+   Note the database name and user (Hostinger prefixes them, e.g. `u123456789_saleshub`).
+2. **hPanel → Databases → Remote MySQL**: allow remote connections for that database from
+   **any host (`%`)**. Vercel's servers don't have fixed IP addresses, so a single-IP rule won't work.
+   Use a long random password because the database is reachable from the internet.
+3. Note the **remote host name** shown there (for example `srv1234.hstgr.io`) and the port (3306).
+
+### 2. Create the tables and load the data (once, from your computer)
+Create `.env.local` (copy `.env.example`) with:
+
+```
+DATABASE_URL=mysql://USER:PASSWORD@HOST:3306/DATABASE
+```
+
+(URL-encode special characters in the password, e.g. `@` → `%40` — or use the separate `DB_HOST`,
+`DB_USER`, `DB_PASSWORD`, `DB_NAME` variables instead.) Allow your own IP in Remote MySQL too, then:
+
+```bash
+npm run db:check      # connects and reports what it finds
+npm run db:migrate    # creates the tables
+npm run db:seed       # Excel companies + pipeline + the 5 starting accounts (no demo data)
+npm run db:check      # should now list row counts
+```
+
+Never run `db:seed -- --demo` against the live database (the script refuses unless forced).
+Remove `DATABASE_URL` from `.env.local` afterwards if you want to go back to the local JSON file.
+
+### 3. Deploy on Vercel
+1. Import the GitHub repository in Vercel (framework: Next.js — detected automatically).
+2. **Settings → Environment Variables** (Production and Preview):
+   - `SESSION_SECRET` — 32+ random characters
+     (`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`)
+   - `DATABASE_URL` — as above (or `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`)
+   - optional: `DB_SSL=true` if your host requires TLS, `DATABASE_POOL_MAX` (default 3)
+3. Deploy. The `vercel-build` script applies any new database migrations, then builds.
+4. **Settings → Functions → Region**: choose the Vercel region closest to your Hostinger server
+   (hPanel shows the data-centre location). Every page makes several database queries, so distance matters.
+5. Custom domain (e.g. `sales.waterregime.com`): **Settings → Domains**, then add the CNAME record Vercel shows
+   in Hostinger's DNS zone. Your main website and email are unaffected.
+
+### 4. First sign-in
+Sign in as `haroon@waterregime.com` / `ChangeMe123!` (or your `SEED_DEFAULT_PASSWORD`), set a new password,
+then add the team under **Admin → Users** (each person sets their own password at first sign-in).
+
+**Plan note:** Vercel's free Hobby plan is for personal, non-commercial use only. A company tool should run on
+**Vercel Pro** (charged per developer seat; people who only *use* the app don't need seats).
 
 ---
 
-**Water Regime (Pvt.) Ltd. — Internal.** All project material is confidential.
+## How it's built
+
+```
+src/
+  app/
+    (auth)/            sign-in, first-password screens
+    (app)/             the signed-in app (layout = sidebar / phone tab bar)
+      my-week/ log/ visits/ accounts/ pulse/ deals/ cockpit/ admin/ change-password/
+    actions/           Server Actions (auth, visits, accounts, deals, admin)
+    export/*/route.ts  Excel downloads of the filtered lists
+    api/search/        global search (press "/")
+  components/
+    shell/             sidebar, header, phone bars, theme, search
+    ui/                design-system components (pills, inputs, pickers, overlays, filters, …)
+  lib/
+    constants.ts       every dropdown / stage / outcome / threshold — one source
+    rules.ts           48-hour, stuck, dormant, close-passed logic
+    data/              storage layer: store() → MySQL (live) or JSON (local)
+    db/schema.ts       table definitions (Drizzle, MySQL)
+    auth/              sessions, password hashing, data-access checks
+    queries/           data for each screen
+scripts/               migrate, seed (Excel import), db check
+drizzle/               SQL migrations (generated: npm run db:generate)
+```
+
+Changing the schema: edit `src/lib/db/schema.ts`, run `npm run db:generate`, commit the new file in `drizzle/`;
+the next Vercel deploy applies it.
+
+All dates and times are shown in Pakistan time (PKT). Timestamps are stored in UTC.

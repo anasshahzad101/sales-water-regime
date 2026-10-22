@@ -1,0 +1,274 @@
+@import "tailwindcss";
+
+/* Light/dark switch is driven by data-theme on <html> (set before paint, see layout.tsx). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---------------------------------------------------------------- design tokens (light) */
+:root {
+  --bg: #f3f8f4;
+  --bg-alt: #eef5f0;
+  --surface: #ffffff;
+  --surface-2: #f7faf8;
+  --input: #ffffff;
+  --ink: #06231a;
+  --text-2: #5a6b62;
+  --text-3: #637469;
+  --line: #e3ece6;
+  --line-strong: #c9d8ce;
+  --primary: #007a3a;
+  --primary-hover: #0a5c30;
+  --on-primary: #ffffff;
+  --cta: #00a950;
+  --cta-hover: #009646;
+  --on-cta: #ffffff;
+  --link: #007a3a;
+  --focus: #0b7f85;
+  --brand-soft: #e7f7ee;
+  --nav-bg: #041c22;
+  --nav-ink: #e6f2ec;
+  --nav-muted: #9db5ab;
+  --nav-active: rgba(159, 245, 192, 0.1);
+  --nav-accent: #9ff5c0;
+  --nav-line: rgba(255, 255, 255, 0.08);
+  --inverse-bg: #06231a;
+  --inverse-ink: #f3f8f4;
+  --inverse-accent: #9ff5c0;
+  --inverse-line: rgba(255, 255, 255, 0.28);
+  --scrim: rgba(3, 21, 26, 0.5);
+  --skeleton: #e6eee9;
+  --shadow-sm: 0 1px 2px rgba(6, 35, 26, 0.06);
+  --shadow-md: 0 8px 24px -10px rgba(6, 35, 26, 0.16);
+  --shadow-lg: 0 18px 50px -12px rgba(6, 35, 26, 0.22);
+  --slate: #4a5a66;
+  --slate-bg: #edf1f4;
+  --aqua: #0b7178;
+  --aqua-bg: #e4faf9;
+  --blue: #2d55a8;
+  --blue-bg: #eaf0fb;
+  --violet: #6a45a8;
+  --violet-bg: #f2edfb;
+  --amber: #8a5300;
+  --amber-bg: #fff3d9;
+  --green: #007a3a;
+  --green-bg: #e7f7ee;
+  --red: #b42318;
+  --red-bg: #fdecea;
+  --red-solid: #d92d20;
+  --amber-solid: #e89b0c;
+  --green-solid: #00a950;
+  --on-solid: #ffffff;
+  --danger: #b42318;
+  --toast-success: #9ff5c0;
+  --toast-error: #ff9b8f;
+  --toast-warning: #ffc766;
+  --toast-info: #6fe0e5;
+  color-scheme: light;
+}
+
+/* ---------------------------------------------------------------- design tokens (dark) */
+[data-theme="dark"] {
+  --bg: #03151a;
+  --bg-alt: #041c22;
+  --surface: #062a2b;
+  --surface-2: #0a3436;
+  --input: #04201f;
+  --ink: #e6f2ec;
+  --text-2: #a7bdb3;
+  --text-3: #87a096;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.22);
+  --primary: #00a950;
+  --primary-hover: #1fbf68;
+  --on-primary: #03151a;
+  --cta: #00a950;
+  --cta-hover: #1fbf68;
+  --on-cta: #03151a;
+  --link: #9ff5c0;
+  --focus: #5fe3e8;
+  --brand-soft: rgba(0, 169, 80, 0.16);
+  --nav-bg: #021013;
+  --nav-ink: #e6f2ec;
+  --nav-muted: #9db5ab;
+  --nav-active: rgba(159, 245, 192, 0.1);
+  --nav-accent: #9ff5c0;
+  --nav-line: rgba(255, 255, 255, 0.08);
+  --inverse-bg: #e6f2ec;
+  --inverse-ink: #06231a;
+  --inverse-accent: #007a3a;
+  --inverse-line: rgba(6, 35, 26, 0.25);
+  --scrim: rgba(0, 0, 0, 0.6);
+  --skeleton: rgba(255, 255, 255, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px -10px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 18px 50px -12px rgba(0, 0, 0, 0.65);
+  --slate: #b4c3ce;
+  --slate-bg: rgba(180, 195, 206, 0.14);
+  --aqua: #6fe0e5;
+  --aqua-bg: rgba(20, 194, 201, 0.16);
+  --blue: #a3bdf7;
+  --blue-bg: rgba(120, 155, 235, 0.18);
+  --violet: #c9b2f5;
+  --violet-bg: rgba(170, 140, 240, 0.18);
+  --amber: #ffc766;
+  --amber-bg: rgba(255, 184, 64, 0.16);
+  --green: #9ff5c0;
+  --green-bg: rgba(0, 169, 80, 0.18);
+  --red: #ff9b8f;
+  --red-bg: rgba(255, 99, 82, 0.16);
+  --red-solid: #ff6b5b;
+  --amber-solid: #ffb840;
+  --green-solid: #00a950;
+  --on-solid: #03151a;
+  --danger: #c4321f;
+  --toast-success: #007a3a;
+  --toast-error: #b42318;
+  --toast-warning: #8a5300;
+  --toast-info: #0b7178;
+  color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------- Tailwind theme */
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-current: currentColor;
+  --color-bg: var(--bg);
+  --color-bg-alt: var(--bg-alt);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-input: var(--input);
+  --color-ink: var(--ink);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
+  --color-on-cta: var(--on-cta);
+  --color-link: var(--link);
+  --color-focus: var(--focus);
+  --color-brand-soft: var(--brand-soft);
+  --color-nav-bg: var(--nav-bg);
+  --color-nav-ink: var(--nav-ink);
+  --color-nav-muted: var(--nav-muted);
+  --color-nav-active: var(--nav-active);
+  --color-nav-accent: var(--nav-accent);
+  --color-nav-line: var(--nav-line);
+  --color-inverse-bg: var(--inverse-bg);
+  --color-inverse-ink: var(--inverse-ink);
+  --color-inverse-accent: var(--inverse-accent);
+  --color-inverse-line: var(--inverse-line);
+  --color-scrim: var(--scrim);
+  --color-skeleton: var(--skeleton);
+  --color-slate: var(--slate);
+  --color-slate-bg: var(--slate-bg);
+  --color-aqua: var(--aqua);
+  --color-aqua-bg: var(--aqua-bg);
+  --color-blue: var(--blue);
+  --color-blue-bg: var(--blue-bg);
+  --color-violet: var(--violet);
+  --color-violet-bg: var(--violet-bg);
+  --color-amber: var(--amber);
+  --color-amber-bg: var(--amber-bg);
+  --color-green: var(--green);
+  --color-green-bg: var(--green-bg);
+  --color-red: var(--red);
+  --color-red-bg: var(--red-bg);
+  --color-red-solid: var(--red-solid);
+  --color-amber-solid: var(--amber-solid);
+  --color-green-solid: var(--green-solid);
+  --color-on-solid: var(--on-solid);
+  --color-danger: var(--danger);
+
+  --breakpoint-md: 47.5rem; /* 760px — phone vs desktop, as in the design */
+
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-display: var(--font-sora), Sora, system-ui, sans-serif;
+
+  --animate-spin: wrspin 0.9s linear infinite;
+  --animate-shimmer: wrshimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes wrspin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes wrshimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* ---------------------------------------------------------------- base (layered so utilities win) */
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+  }
+  [data-theme="dark"] a:hover {
+    color: var(--nav-accent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .wr-field:focus,
+  .wr-field:focus-within {
+    border-color: var(--focus) !important;
+    box-shadow: 0 0 0 3px rgba(20, 194, 201, 0.25);
+    outline: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+  }
+  [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+  [data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.85);
+  }
+}

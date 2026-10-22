@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-screen-label="Admin · Audit log" style="display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><div style="flex:1;min-width:260px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:var(--text-3)">Admin</span><h1 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Audit log</h1><p style="margin:0;font-size:14.5px;color:var(--text-2)">Every change, with who made it and when. Entries can't be edited or deleted.</p></div></sc-if>
+    <button onClick="{{ exportXlsx }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 16px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px"><i class="icon-file-spreadsheet" style="font-size:16px;line-height:1;color:var(--green)"></i>{{ exportLabel }}</button>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <span style="display:flex;align-items:center;gap:10px;height:{{ inH }};flex:{{ searchFlex }};min-width:220px;padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input)"><i class="icon-search" style="font-size:16px;line-height:1;color:var(--text-3)"></i><input value="{{ q }}" onChange="{{ onQ }}" placeholder="Search details, e.g. WR-P-2026 or Kohsar" style="flex:1;min-width:0;height:100%;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none"></span>
+    <sc-for list="{{ selects }}" as="f" hint-placeholder-count="4">
+      <span style="position:relative;display:flex;flex:{{ selFlex }}"><select value="{{ f.value }}" onChange="{{ f.onChange }}" aria-label="{{ f.label }}" style="flex:1;appearance:none;-webkit-appearance:none;height:{{ selH }};padding:0 34px 0 12px;border-radius:{{ selR }};border:1px solid {{ f.bd }};background:{{ f.bg }};color:var(--ink);font-size:{{ selFs }};font-weight:500;outline:none;cursor:pointer"><sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.l }}</option></sc-for></select><i class="icon-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px;line-height:1;color:var(--text-3);pointer-events:none"></i></span>
+    </sc-for>
+    <sc-if value="{{ hasActive }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearAll }}" style="height:36px;padding:0 10px;border:0;border-radius:999px;background:transparent;color:var(--link);font-size:13px;font-weight:600;cursor:pointer">Clear all</button></sc-if>
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+    <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+      <div style="padding:10px 20px;background:var(--surface-2);border-top:1px solid {{ g.bd }};font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3)">{{ g.label }}</div>
+      <sc-for list="{{ g.items }}" as="e" hint-placeholder-count="3">
+        <div style="display:grid;grid-template-columns:{{ cols }};gap:{{ gapX }};align-items:center;padding:{{ rowPad }};border-top:1px solid var(--line)">
+          <span style="font-size:13px;color:var(--text-2);font-variant-numeric:tabular-nums;grid-row:{{ timeRow }}">{{ e.time }}</span>
+          <span style="display:flex;align-items:center;gap:8px;min-width:0"><span style="width:26px;height:26px;flex:none;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ e.initials }}</span><span style="font-size:13.5px;font-weight:600;white-space:nowrap">{{ e.who }}</span></span>
+          <span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12px;font-weight:600;color:{{ e.ap.fg }};background:{{ e.ap.bg }};white-space:nowrap"><i class="icon-{{ e.ap.icon }}" style="font-size:12px;line-height:1"></i>{{ e.action }}</span><span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--text-2)"><i class="icon-{{ e.eIcon }}" style="font-size:13px;line-height:1"></i>{{ e.entity }}</span></span>
+          <span style="font-size:13.5px;line-height:1.45;grid-column:{{ detailCol }};min-width:0">{{ e.detail }}</span>
+        </div>
+      </sc-for>
+    </sc-for>
+    <sc-if value="{{ none }}" hint-placeholder-val="{{ false }}"><div style="padding:40px 20px;text-align:center;font-size:14px;color:var(--text-2)">No changes match these filters.</div></sc-if>
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid var(--line);font-size:13px;color:var(--text-2);flex-wrap:wrap"><span>{{ showing }}</span><span style="margin-left:auto;display:flex;gap:4px;align-items:center"><button disabled="{{ true }}" aria-label="Previous page" style="width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--text-3);display:flex;align-items:center;justify-content:center"><i class="icon-chevron-left" style="font-size:16px;line-height:1"></i></button><span style="min-width:36px;height:36px;border-radius:10px;background:var(--brand-soft);color:var(--green);font-weight:700;display:flex;align-items:center;justify-content:center">1</span><span style="min-width:36px;height:36px;display:flex;align-items:center;justify-content:center">2</span><span style="min-width:36px;height:36px;display:flex;align-items:center;justify-content:center">…</span><span style="min-width:36px;height:36px;display:flex;align-items:center;justify-content:center">88</span><button aria-label="Next page" style="width:36px;height:36px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="icon-chevron-right" style="font-size:16px;line-height:1"></i></button></span></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const AH = {'created':['green','plus'], 'updated':['blue','pencil'], 'stage changed':['violet','arrow-right-left'], 'claimed':['aqua','hand'], 'outcome set':['green','circle-check'], 'deleted':['red','trash-2'], 'role changed':['violet','shield'], 'password reset':['amber','key-round'], 'deactivated':['red','user-x'], 'status changed':['blue','refresh-cw']};
+const EI = {company:['building-2','Company'], contact:['user','Contact'], visit:['map-pin','Visit'], deal:['briefcase','Deal'], proposal:['file-text','Proposal'], user:['users-round','User']};
+class Component extends DCLogic {
+  state = {q:'', user:'all', entity:'all', action:'all', range:'30', exporting:false};
+  app() { return this.props.app || {}; }
+  componentDidMount() { if (this.app().demo === 'filtered') this.setState({entity:'deal'}); }
+  componentWillUnmount() { clearTimeout(this.t); }
+  renderVals() {
+    const a = this.app(), W = a.W, s = this.state;
+    if (!W) return {};
+    const phone = !!a.phone;
+    const list = W.AUDIT.filter(e => (s.user === 'all' || e.who === s.user) && (s.entity === 'all' || e.entity === s.entity) && (s.action === 'all' || e.action === s.action) && (!s.q || (e.detail + ' ' + W.user(e.who).name).toLowerCase().includes(s.q.toLowerCase())));
+    const dates = [...new Set(list.map(e => e.date))];
+    const lbl = d => d === '22 Oct 2026' ? 'Today · 22 Oct 2026' : d === '21 Oct 2026' ? 'Yesterday · 21 Oct 2026' : d;
+    const mk = (key, label, value, options) => ({label, value, options, bd: value !== 'all' && value !== '30' ? 'var(--primary)' : 'var(--line-strong)', bg: value !== 'all' && value !== '30' ? 'var(--brand-soft)' : 'var(--surface)', onChange: e => this.setState({[key]: e.target.value})});
+    const filtered = s.user !== 'all' || s.entity !== 'all' || s.action !== 'all' || !!s.q;
+    return {
+      isDesktop: !phone, q: s.q, onQ: e => this.setState({q:e.target.value}),
+      selects: [
+        mk('user','User', s.user, [{v:'all', l:'All users'}, ...W.USERS.map(u => ({v:u.id, l:u.name}))]),
+        mk('entity','Entity', s.entity, [{v:'all', l:'All entities'}, ...Object.entries(EI).map(([k, v]) => ({v:k, l:v[1]}))]),
+        mk('action','Action', s.action, [{v:'all', l:'All actions'}, ...Object.keys(AH).map(k => ({v:k, l:k[0].toUpperCase() + k.slice(1)}))]),
+        mk('range','Date range', s.range, [{v:'7', l:'Last 7 days'}, {v:'30', l:'Last 30 days'}, {v:'q', l:'This quarter'}, {v:'all', l:'All time'}])
+      ],
+      hasActive: filtered, clearAll: () => this.setState({q:'', user:'all', entity:'all', action:'all', range:'30'}),
+      groups: dates.map((d, i) => ({label:lbl(d), bd: i ? 'var(--line)' : 'transparent', items: list.filter(e => e.date === d).map(e => { const u = W.user(e.who), [h, icon] = AH[e.action] || ['slate','dot'], [ei, el] = EI[e.entity]; return {time:`${e.time} PKT`, who:u.name, initials:u.initials, action:e.action[0].toUpperCase() + e.action.slice(1), ap:W.pill(h, e.action, icon), entity:el, eIcon:ei, detail:e.detail}; })})),
+      none: list.length === 0, showing: filtered ? `${list.length} matching changes` : `Showing 1–${list.length} of 2,184 changes`,
+      exportLabel: s.exporting ? 'Preparing…' : phone ? 'Export' : 'Export to Excel', exportXlsx: () => { this.setState({exporting:true}); this.t = setTimeout(() => { this.setState({exporting:false}); a.toast({title:'Export ready', sub:'audit-log_2026-10-22.xlsx · current filters applied'}); }, 1100); },
+      cols: phone ? 'auto minmax(0,1fr)' : '96px 170px 230px minmax(0,1fr)', gapX: phone ? '6px 12px' : '14px', rowPad: phone ? '12px 16px' : '11px 20px', detailCol: phone ? '1 / -1' : 'auto', timeRow: 'auto',
+      inH: phone ? '48px' : '40px', inFs: phone ? '16px' : '14px', btnH: phone ? '44px' : '40px', btnFlex: phone ? '1' : 'none', searchFlex: phone ? '1 1 100%' : '0 1 340px',
+      selFlex: phone ? '1 1 calc(50% - 5px)' : 'none', selH: phone ? '44px' : '40px', selR: phone ? '12px' : '999px', selFs: phone ? '15px' : '13.5px'
+    };
+  }
+}
+</script>
+</body>
+</html>

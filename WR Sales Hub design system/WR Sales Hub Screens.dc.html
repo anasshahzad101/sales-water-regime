@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>WR Sales Hub — Overview</title>
+<link rel="icon" href="uploads/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Sora:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/font/lucide.css">
+<style>body{margin:0;background:#F3F8F4;font-family:Inter,system-ui,sans-serif;color:#06231A;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}a{color:#007A3A;text-decoration:none}a:hover{color:#0A5C30;text-decoration:underline}code{font:500 12.5px ui-monospace,Menlo,monospace;background:#EEF5F0;padding:1px 5px;border-radius:5px}</style>
+</helmet>
+<div style="background:#041C22;color:#E6F2EC">
+  <div style="max-width:1200px;margin:0 auto;padding:40px 32px 44px;display:flex;flex-direction:column;gap:18px">
+    <img src="uploads/logo-white.png" alt="Water Regime" style="width:130px;height:auto;display:block">
+    <h1 style="margin:0;font-family:Sora,sans-serif;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;max-width:760px">WR Sales Hub: the full design</h1>
+    <p style="margin:0;font-size:16px;line-height:1.6;color:#B7CCC2;max-width:720px">Every page from the brief on desktop and phone, in light and dark, with its states. Plus the design system, a clickable prototype of the four main flows, and notes for the Next.js rebuild.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+      <a href="WR Sales Hub Prototype.dc.html" style="height:48px;padding:0 22px 0 18px;border-radius:999px;background:#00A950;color:#FFFFFF;font-size:15px;font-weight:700;display:inline-flex;align-items:center;gap:10px;text-decoration:none"><i class="icon-play" style="font-size:17px;line-height:1"></i>Open the prototype</a>
+      <a href="WR Design System.dc.html" style="height:48px;padding:0 20px;border-radius:999px;border:1px solid rgba(255,255,255,0.22);color:#E6F2EC;font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:10px;text-decoration:none"><i class="icon-swatch-book" style="font-size:17px;line-height:1"></i>Design system</a>
+    </div>
+  </div>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;padding:36px 32px 80px;display:flex;flex-direction:column;gap:36px">
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <h2 style="margin:0;font-family:Sora,sans-serif;font-size:22px;font-weight:600">Screens</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px">
+      <sc-for list="{{ boards }}" as="b" hint-placeholder-count="6">
+        <a href="{{ b.href }}" style="display:flex;flex-direction:column;gap:10px;padding:18px 20px;border-radius:18px;background:#FFFFFF;border:1px solid #E3ECE6;box-shadow:0 1px 2px rgba(6,35,26,0.06);color:#06231A;text-decoration:none" style-hover="box-shadow:0 8px 24px -10px rgba(6,35,26,0.18);text-decoration:none;color:#06231A">
+          <span style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:36px;border-radius:12px;background:#E7F7EE;color:#007A3A;display:flex;align-items:center;justify-content:center"><i class="icon-{{ b.icon }}" style="font-size:18px;line-height:1"></i></span><span style="flex:1;font-family:Sora,sans-serif;font-size:16px;font-weight:600">{{ b.title }}</span><i class="icon-arrow-up-right" style="font-size:16px;line-height:1;color:#637469"></i></span>
+          <span style="font-size:13.5px;line-height:1.5;color:#5A6B62">{{ b.pages }}</span>
+          <span style="font-size:12.5px;color:#637469">{{ b.count }}</span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;align-items:start">
+    <div style="background:#FFFFFF;border:1px solid #E3ECE6;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#637469">Clickable prototype</span>
+      <ol style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.5">
+        <li><b>Sign in → My Week → set an overdue visit's outcome.</b> The late reason step appears, and the My Week badge goes from red to green.</li>
+        <li><b>Log a visit from an account.</b> The company is pre-filled, and after saving you land back on the account with the new visit on the timeline.</li>
+        <li><b>Move a deal to Lost.</b> A reason from the list is required, Other needs a note, probability goes to 0%, and you can Undo.</li>
+        <li><b>The CEO opens the Cockpit and drills into a flag.</b> Everything stays read-only, all the way down to the deal page.</li>
+      </ol>
+      <span style="font-size:13px;color:#5A6B62">The top bar switches device, theme and role. Changes you make carry across pages until you restart.</span>
+    </div>
+    <div style="background:#FFFFFF;border:1px solid #E3ECE6;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#637469">Direction (approved)</span>
+      <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.5">
+        <li>The deep-teal sidebar is the one brand block that's always visible. Content sits on calm mist (light) or night (dark).</li>
+        <li>Bright green is only for “Log a visit”. Primary buttons use green-700 (5.6:1); in dark mode, green buttons have dark text (6:1).</li>
+        <li>Statuses use 7 colour pairs, and every pill has an icon and a label. Small text uses #637469, because muted-2 is only 3.1:1.</li>
+        <li>Phones get a 5-tab bar with a raised Log button. The CEO gets the Cockpit only, with a read-only indicator everywhere.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section style="background:#FFFFFF;border:1px solid #E3ECE6;border-radius:18px;padding:24px 28px;display:flex;flex-direction:column;gap:16px">
+    <h2 style="margin:0;font-family:Sora,sans-serif;font-size:22px;font-weight:600">Notes for the Next.js rebuild</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px 32px">
+      <sc-for list="{{ notes }}" as="n" hint-placeholder-count="8">
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;gap:8px;align-items:center;font-size:14.5px;font-weight:700"><i class="icon-{{ n.icon }}" style="font-size:16px;line-height:1;color:#007A3A"></i>{{ n.t }}</span><span style="font-size:13.5px;line-height:1.6;color:#3D4F46">{{ n.d }}</span></div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      boards: [
+        {href:'Screens 1 - Sign in and passwords.dc.html', icon:'log-in', title:'1 · Sign in & passwords', pages:'6.1 Sign in (wrong, locked, deactivated) · 6.2 First-login password · Change password', count:'16 artboards'},
+        {href:'Screens 2 - My Week and visits.dc.html', icon:'calendar-check', title:'2 · My Week, Log visit, Visits', pages:'6.3 My Week (outcome sheet, late reason, skip, all clear, first-time) · 6.4 Log a visit · 6.5 Visit history', count:'23 artboards'},
+        {href:'Screens 3 - Accounts.dc.html', icon:'building-2', title:'3 · Accounts', pages:'6.6 Accounts list · 6.7 Add company + duplicates · 6.8 Account detail (contacts, claim, delete, CEO)', count:'18 artboards'},
+        {href:'Screens 4 - Pipeline and deals.dc.html', icon:'kanban', title:'4 · Pipeline & deals', pages:'6.9 Team Pulse · 6.10 New deal · 6.11 Deal detail (stage change, Lost reason, Won, edit, proposals)', count:'16 artboards'},
+        {href:'Screens 5 - Cockpit.dc.html', icon:'gauge', title:'5 · CEO Cockpit', pages:'6.12 Cockpit (KPIs, pipeline, salespeople, flags, lost reasons) · drill-down lists', count:'8 artboards'},
+        {href:'Screens 6 - Admin and system.dc.html', icon:'shield', title:'6 · Admin, shell & system', pages:'6.13 Users · 6.14 Audit log · App shell (menus, More sheet, toasts) · 6.15 403 / 404 / 500', count:'24 artboards'}
+      ],
+      notes: [
+        {icon:'palette', t:'Tokens and theming', d:'Every colour is a CSS custom property. Put light values on :root and dark on [data-theme="dark"]. Store the theme per user, and set it in a cookie before first paint so there is no flash. Components only read var(--token), never hex values.'},
+        {icon:'component', t:'Components', d:'Names match the design system inventory (StagePill, OutcomeChip, Countdown, CompanyPicker, DealPicker, KpiTile…). Status pills take a key from the shared list and look up label, icon and hue, so screens never hard-code colours.'},
+        {icon:'list', t:'One source for lists', d:'Stages, outcomes, visit types, skip and lost reasons, solutions, priorities, lead sources, roles and proposal statuses come from one module (or one API endpoint) that is used by both forms and server validation.'},
+        {icon:'monitor-smartphone', t:'Responsive', d:'Below 768px: tab bar, card lists, sheets instead of drawers and modals, 16px inputs, 44px minimum targets. 768–1100px: the sidebar stays, and two-column pages stack. Team Pulse scrolls sideways under 1600px.'},
+        {icon:'clock', t:'Time and the 48-hour rule', d:'Store UTC and show PKT (UTC+5), always labelled. Countdowns recalculate every minute on the client. The server re-checks the deadline on save and rejects a late outcome without a late reason, or Skipped without a skip reason.'},
+        {icon:'flag', t:'Flags', d:'Stuck (more than 30 days in stage), dormant (owned, no visit in 60 days), close passed and outcome overdue are computed on the server. The Cockpit tiles and drill-down lists use the same queries, so the numbers always match.'},
+        {icon:'shield-check', t:'Roles', d:'Hide controls the user can’t use; don’t just disable them. The CEO is read-only, enforced on the server. Admin pages return 403 to other roles, and 403/404/500 have their own branded pages.'},
+        {icon:'undo-2', t:'Feedback and undo', d:'Quick actions (outcome, done, claim, stage change, delete contact) apply right away and offer Undo for 6 s in a toast. Undo sends a reversing request, and both actions are written to the audit log.'},
+        {icon:'file-spreadsheet', t:'Export', d:'Export to Excel sends the current filters to the server and streams back an .xlsx named area_YYYY-MM-DD.xlsx. The button shows progress, and an info toast confirms the file.'},
+        {icon:'accessibility', t:'Accessibility', d:'Text meets AA in both modes; the focus ring is 2px surface + 2px focus colour. Dialogs trap focus and Esc closes them. Toasts use role=status. Badges have aria-labels (“4 visits awaiting outcome, 1 overdue”).'}
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

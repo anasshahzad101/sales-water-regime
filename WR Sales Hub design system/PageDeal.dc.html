@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-screen-label="Deal detail" style="display:flex;flex-direction:column;gap:20px">
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text-3)"><a href="#root" onClick="{{ goRoot }}" style="color:var(--text-2)">{{ crumbRoot }}</a><i class="icon-chevron-right" style="font-size:13px;line-height:1"></i><a href="#account" onClick="{{ goCo }}" style="color:var(--text-2)">{{ co.name }}</a><i class="icon-chevron-right" style="font-size:13px;line-height:1"></i>{{ d.title }}</span>
+  </sc-if>
+
+  <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:{{ cardPad }};display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1;min-width:260px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <span style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px 0 9px;border-radius:999px;font-size:13px;font-weight:600;color:{{ st.fg }};background:{{ st.bg }}"><i class="icon-{{ st.icon }}" style="font-size:14px;line-height:1"></i>{{ st.label }}</span>
+          <sc-if value="{{ stuck }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px 0 9px;border-radius:999px;font-size:13px;font-weight:600;color:var(--red);background:var(--red-bg)"><i class="icon-hourglass" style="font-size:13px;line-height:1"></i>Stuck · {{ d.days }} d in stage</span></sc-if>
+          <sc-if value="{{ closePassed }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px 0 9px;border-radius:999px;font-size:13px;font-weight:600;color:var(--red);background:var(--red-bg)"><i class="icon-calendar-x" style="font-size:13px;line-height:1"></i>Close date passed</span></sc-if>
+          <sc-if value="{{ readOnly }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--line-strong);color:var(--text-2);font-size:12.5px;font-weight:600"><i class="icon-eye" style="font-size:13px;line-height:1"></i>Read-only</span></sc-if>
+        </div>
+        <h1 style="margin:0;font-family:Sora,sans-serif;font-size:{{ h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.15">{{ d.title }}</h1>
+        <span style="font-size:14px;color:var(--text-2)"><a href="#account" onClick="{{ goCo }}" style="font-weight:600;color:var(--link)">{{ co.name }}</a> · {{ co.plant }}, {{ co.city }} · owner {{ owner.name }}</span>
+      </div>
+      <sc-if value="{{ canEdit }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;width:{{ actW }}">
+          <button onClick="{{ goLog }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 18px 0 16px;border:0;border-radius:999px;background:var(--cta);color:var(--on-cta);font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px" style-hover="background:var(--cta-hover)"><i class="icon-notebook-pen" style="font-size:16px;line-height:1"></i>Log a visit</button>
+          <button onClick="{{ openEdit }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 16px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px"><i class="icon-pencil" style="font-size:15px;line-height:1"></i>Edit deal</button>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="display:grid;grid-template-columns:{{ kpiCols }};gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+      <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="6">
+        <div title="{{ k.title }}" style="background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0">
+          <span style="font-size:11.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3)">{{ k.label }}</span>
+          <span style="font-family:Sora,sans-serif;font-size:{{ k.size }};font-weight:600;font-variant-numeric:tabular-nums;color:{{ k.fg }};white-space:nowrap">{{ k.value }}</span>
+          <span style="font-size:12.5px;color:{{ k.subFg }};font-weight:{{ k.subFw }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ k.sub }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ isLost }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:var(--red-bg);color:var(--red)"><i class="icon-circle-x" style="font-size:18px;line-height:1.2"></i><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:700">Lost · {{ d.lostReason }}</span><span style="font-size:13.5px;color:var(--ink)">{{ lostNote }}</span></div></div>
+    </sc-if>
+
+    <sc-if value="{{ canEdit }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:10px;padding-top:18px;border-top:1px solid var(--line)">
+        <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font-size:14px;font-weight:700">Change stage</span><span style="font-size:12.5px;color:var(--text-3)">Won sets probability to 100%. Lost needs a reason and sets it to 0%.</span></div>
+        <div style="display:grid;grid-template-columns:{{ stageCols }};gap:8px">
+          <sc-for list="{{ stageBtns }}" as="b" hint-placeholder-count="6">
+            <button onClick="{{ b.pick }}" aria-pressed="{{ b.cur }}" style="display:flex;align-items:center;gap:8px;height:{{ stageH }};padding:0 12px;border-radius:12px;border:{{ b.bw }} solid {{ b.bd }};background:{{ b.bg }};color:{{ b.fg }};font-size:13.5px;font-weight:{{ b.fw }};cursor:pointer;text-align:left"><i class="icon-{{ b.icon }}" style="font-size:16px;line-height:1;color:{{ b.ic }}"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.label }}</span><sc-if value="{{ b.cur }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Now</span></sc-if></button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </section>
+
+  <div style="display:grid;grid-template-columns:{{ bodyCols }};gap:24px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:24px;min-width:0">
+      <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+        <div style="display:flex;align-items:center;gap:10px;padding:16px 16px 12px 20px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">Proposals</h2><span style="font-size:13px;color:var(--text-3)">{{ propCount }}</span>
+          <sc-if value="{{ canAddProp }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openAdd }}" style="margin-left:auto;height:{{ smH }};padding:0 12px;border:0;border-radius:999px;background:transparent;color:var(--link);font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px"><i class="icon-plus" style="font-size:15px;line-height:1"></i>Add proposal</button></sc-if>
+        </div>
+        <sc-for list="{{ proposals }}" as="p" hint-placeholder-count="2">
+          <div style="display:grid;grid-template-columns:{{ propCols }};gap:12px;align-items:center;padding:12px 20px;border-top:1px solid var(--line)">
+            <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font:600 13.5px ui-monospace,Menlo,monospace">{{ p.ref }}</span><span style="font-size:12.5px;color:var(--text-3)">Submitted {{ p.date }}</span></span>
+            <span title="{{ p.full }}" style="font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;text-align:{{ amtAlign }}">{{ p.money }}</span>
+            <sc-if value="{{ canEdit }}" hint-placeholder-val="{{ true }}">
+              <span style="position:relative;display:inline-flex;justify-self:{{ statusJustify }}"><select value="{{ p.status }}" onChange="{{ p.onStatus }}" aria-label="Update proposal status" style="appearance:none;-webkit-appearance:none;height:{{ pillH }};padding:0 30px 0 12px;border-radius:999px;border:1px solid transparent;background:{{ p.st.bg }};color:{{ p.st.fg }};font-size:13px;font-weight:700;outline:none;cursor:pointer"><sc-for list="{{ statusOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o }}">{{ o }}</option></sc-for></select><i class="icon-chevron-down" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:13px;line-height:1;color:{{ p.st.fg }};pointer-events:none"></i></span>
+            </sc-if>
+            <sc-if value="{{ readOnly }}" hint-placeholder-val="{{ false }}"><span style="justify-self:{{ statusJustify }};display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12.5px;font-weight:600;color:{{ p.st.fg }};background:{{ p.st.bg }}"><i class="icon-{{ p.st.icon }}" style="font-size:13px;line-height:1"></i>{{ p.status }}</span></sc-if>
+            <sc-if value="{{ p.hasNotes }}" hint-placeholder-val="{{ false }}"><span style="grid-column:1 / -1;font-size:13px;color:var(--text-2);margin-top:-4px">{{ p.notes }}</span></sc-if>
+          </div>
+        </sc-for>
+        <sc-if value="{{ noProps }}" hint-placeholder-val="{{ false }}"><div style="padding:14px 20px 18px;border-top:1px solid var(--line);font-size:14px;color:var(--text-2)">No proposals submitted yet.</div></sc-if>
+        <sc-if value="{{ addOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 20px 20px;border-top:1px solid var(--line);background:var(--surface-2);display:flex;flex-direction:column;gap:14px">
+            <span style="font-size:14px;font-weight:700">New proposal</span>
+            <div style="display:grid;grid-template-columns:{{ addCols }};gap:12px">
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">Reference</span><input value="{{ np.ref }}" onChange="{{ onRef }}" style="height:{{ inH }};padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font:500 {{ inFs }} ui-monospace,Menlo,monospace;outline:none"></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">Submitted</span><input value="{{ np.date }}" onChange="{{ onDate }}" style="height:{{ inH }};padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none"></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">Amount <span style="color:var(--red)">*</span></span><span style="display:flex;align-items:center;height:{{ inH }};border-radius:12px;border:1px solid {{ amtBd }};background:var(--input);overflow:hidden"><span style="height:100%;padding:0 10px;display:flex;align-items:center;background:var(--bg-alt);color:var(--text-2);font-size:12.5px;font-weight:700;border-right:1px solid var(--line)">PKR</span><input value="{{ np.amount }}" onChange="{{ onAmount }}" inputmode="numeric" placeholder="0" style="flex:1;min-width:0;height:100%;padding:0 10px;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none;text-align:right;font-variant-numeric:tabular-nums"></span><span style="font-size:12.5px;color:{{ amtHintFg }}">{{ amtHint }}</span></label>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end"><button onClick="{{ closeAdd }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 16px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer">Cancel</button><button onClick="{{ saveProp }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 18px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600;cursor:pointer">Add proposal</button></div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+        <div style="display:flex;align-items:center;gap:10px;padding:16px 20px 12px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">Related visits</h2><span style="font-size:13px;color:var(--text-3)">{{ visitCount }}</span></div>
+        <sc-for list="{{ visits }}" as="v" hint-placeholder-count="2">
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 20px;border-top:1px solid var(--line)">
+            <span style="width:34px;height:34px;flex:none;border-radius:10px;background:var(--bg-alt);color:var(--text-2);display:flex;align-items:center;justify-content:center"><i class="icon-{{ v.icon }}" style="font-size:16px;line-height:1"></i></span>
+            <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:600">{{ v.type }} <span style="font-weight:400;color:var(--text-2)">· {{ v.when }}</span></span><span style="font-size:13px;color:var(--text-2)">{{ v.who }} · {{ v.notes }}</span></span>
+            <span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap;color:{{ v.chip.fg }};background:{{ v.chip.bg }}"><i class="icon-{{ v.chip.icon }}" style="font-size:13px;line-height:1"></i>{{ v.chip.label }}</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ noVisits }}" hint-placeholder-val="{{ false }}"><div style="padding:14px 20px 18px;border-top:1px solid var(--line);font-size:14px;color:var(--text-2)">No visits linked to this deal yet. Pick this deal when you log a visit.</div></sc-if>
+      </section>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:24px;min-width:0">
+      <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:16px 20px 18px;display:flex;flex-direction:column;gap:8px">
+        <h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">Notes</h2>
+        <p style="margin:0;font-size:14px;line-height:1.55;color:var(--ink);text-wrap:pretty">{{ notes }}</p>
+      </section>
+      <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+        <div style="padding:16px 20px 8px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">Change history</h2></div>
+        <div style="padding:4px 20px 14px;display:flex;flex-direction:column">
+          <sc-for list="{{ history }}" as="h" hint-placeholder-count="4">
+            <div style="display:flex;gap:12px;padding:8px 0">
+              <span style="width:8px;height:8px;flex:none;border-radius:99px;margin-top:6px;background:{{ h.dot }}"></span>
+              <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px">{{ h.text }}</span><span style="font-size:12.5px;color:var(--text-3)">{{ h.meta }}</span></span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ mWrap }}">
+      <div onClick="{{ closeModal }}" style="position:absolute;inset:0;background:var(--scrim)"></div>
+      <div role="dialog" aria-label="{{ mTitle }}" style="{{ mPanel }}">
+        <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}"><div style="width:40px;height:5px;border-radius:99px;background:var(--line-strong);margin:0 auto"></div></sc-if>
+        <div style="display:flex;align-items:flex-start;gap:8px"><span style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-family:Sora,sans-serif;font-size:20px;font-weight:600">{{ mTitle }}</span><span style="font-size:13.5px;color:var(--text-2)">{{ d.title }} · {{ co.name }}</span></span><button onClick="{{ closeModal }}" aria-label="Close" style="width:44px;height:44px;margin:-8px -10px 0 0;border:0;border-radius:999px;background:transparent;color:var(--text-2);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="icon-x" style="font-size:20px;line-height:1"></i></button></div>
+
+        <sc-if value="{{ mLost }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:13.5px;font-weight:600">Why was it lost? <span style="color:var(--red)">*</span></span>
+            <div role="radiogroup" style="display:flex;flex-direction:column;gap:6px">
+              <sc-for list="{{ lostOpts }}" as="o" hint-placeholder-count="7"><button role="radio" aria-checked="{{ o.on }}" onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:10px;min-height:{{ optH }};padding:0 12px;border-radius:12px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:var(--ink);font-size:14px;font-weight:{{ o.fw }};text-align:left;cursor:pointer"><i class="icon-{{ o.icon }}" style="font-size:17px;line-height:1;color:{{ o.ic }}"></i>{{ o.label }}</button></sc-for>
+            </div>
+            <sc-if value="{{ lostErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--red);font-weight:500"><i class="icon-circle-alert" style="font-size:14px;line-height:1"></i>{{ lostErr }}</span></sc-if>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">{{ noteLabel }}</span><textarea rows="2" value="{{ lostNote2 }}" onChange="{{ onLostNote }}" placeholder="e.g. Competitor quoted 12% lower with a 5-year O&amp;M" style="resize:none;min-height:64px;padding:10px 12px;border-radius:12px;border:1px solid {{ noteBd }};background:var(--input);color:var(--ink);font-size:{{ inFs }};line-height:1.5;outline:none"></textarea></label>
+          <div style="display:flex;gap:10px"><button onClick="{{ closeModal }}" style="flex:1;height:{{ mBtnH }};border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14.5px;font-weight:600;cursor:pointer">Cancel</button><button onClick="{{ confirmLost }}" style="flex:1;height:{{ mBtnH }};border:0;border-radius:999px;background:var(--danger);color:#FFFFFF;font-size:14.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><i class="icon-circle-x" style="font-size:16px;line-height:1"></i>Move to Lost</button></div>
+        </sc-if>
+
+        <sc-if value="{{ mWon }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:var(--green-bg)"><i class="icon-trophy" style="font-size:20px;line-height:1.1;color:var(--green)"></i><span style="font-size:14px;line-height:1.5">Mark as <b>Won (PO)</b>? Probability becomes 100% and {{ money }} counts as won in the Cockpit.</span></div>
+          <div style="display:flex;gap:10px"><button onClick="{{ closeModal }}" style="flex:1;height:{{ mBtnH }};border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14.5px;font-weight:600;cursor:pointer">Cancel</button><button onClick="{{ confirmWon }}" style="flex:1;height:{{ mBtnH }};border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14.5px;font-weight:600;cursor:pointer">Mark as Won</button></div>
+        </sc-if>
+
+        <sc-if value="{{ mEdit }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:{{ editCols }};gap:12px">
+            <sc-for list="{{ editFields }}" as="f" hint-placeholder-count="4"><label style="display:flex;flex-direction:column;gap:6px;grid-column:{{ f.span }}"><span style="font-size:13px;font-weight:600">{{ f.label }}</span><span style="display:flex;align-items:center;height:{{ inH }};border-radius:12px;border:1px solid var(--line-strong);background:var(--input);overflow:hidden"><sc-if value="{{ f.pre }}" hint-placeholder-val="{{ false }}"><span style="height:100%;padding:0 10px;display:flex;align-items:center;background:var(--bg-alt);color:var(--text-2);font-size:12.5px;font-weight:700;border-right:1px solid var(--line)">{{ f.pre }}</span></sc-if><input value="{{ f.value }}" onChange="{{ f.onChange }}" style="flex:1;min-width:0;height:100%;padding:0 12px;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none;text-align:{{ f.align }}"><sc-if value="{{ f.suf }}" hint-placeholder-val="{{ false }}"><span style="height:100%;padding:0 10px;display:flex;align-items:center;background:var(--bg-alt);color:var(--text-2);font-size:12.5px;font-weight:700;border-left:1px solid var(--line)">{{ f.suf }}</span></sc-if></span></label></sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">Solution type</span><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ editSols }}" as="o" hint-placeholder-count="7"><button onClick="{{ o.pick }}" style="min-width:48px;height:{{ solH }};padding:0 10px;border-radius:10px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:700;cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">Notes</span><textarea rows="3" value="{{ ef.notes }}" onChange="{{ onEfNotes }}" style="resize:vertical;min-height:72px;padding:10px 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font-size:{{ inFs }};line-height:1.5;outline:none"></textarea></label>
+          <div style="display:flex;gap:10px"><button onClick="{{ closeModal }}" style="flex:1;height:{{ mBtnH }};border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14.5px;font-weight:600;cursor:pointer">Cancel</button><button onClick="{{ saveEdit }}" style="flex:1;height:{{ mBtnH }};border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14.5px;font-weight:600;cursor:pointer">Save changes</button></div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const NOTES = {d1:'Client wants phased CAPEX with an O&M option. Competing with two European vendors; our edge is local service and the Port Qasim reference.', d4:'Procurement prefers UF ahead of RO. Revised proposal pending since September; follow up with Ayesha Khan.', d2:'Two reference plants requested. Board meeting decides in November.'};
+class Component extends DCLogic {
+  state = {modal:null, lostReason:'', lostNote:'', lostErr:'', ef:{}, props:null, addOpen:false, np:{}, amtErr:false, log:[]};
+  app() { return this.props.app || {}; }
+  id() { return (this.app().params || {}).deal || 'd4'; }
+  componentDidMount() {
+    const a = this.app(), W = a.W, d = a.demo;
+    const s = {props: W ? W.PROPOSALS.filter(p => p.deal === this.id()) : []};
+    if (d === 'lost') s.modal = 'lost';
+    if (d === 'lostErr') Object.assign(s, {modal:'lost', lostReason:'Other (specify)', lostErr:'Add a short note for “Other”.'});
+    if (d === 'won') s.modal = 'won';
+    if (d === 'edit') { s.modal = 'edit'; s.ef = this.efFrom(); }
+    if (d === 'addprop') Object.assign(s, {addOpen:true, np:{ref:'WR-P-2026-125', date:'22 Oct 2026', amount:''}});
+    this.setState(s);
+  }
+  deal() { const a = this.app(); return a.W.deal(this.id(), a.store); }
+  efFrom() { const d = this.deal(); return d ? {title:d.title, value:String(d.value), prob:String(d.prob), close:d.close, sol:d.sol, notes: d.notes || NOTES[d.id] || ''} : {}; }
+  setOverride(o, toast) {
+    const a = this.app(), id = this.id(), prev = (a.store.deals || {})[id];
+    a.update(st => ({...st, deals:{...(st.deals || {}), [id]: {...((st.deals || {})[id] || {}), ...o}}}));
+    a.toast({...toast, undo: () => a.update(st => { const deals = {...(st.deals || {})}; if (prev) deals[id] = prev; else delete deals[id]; return {...st, deals}; })});
+  }
+  pickStage(k) {
+    const d = this.deal(), W = this.app().W;
+    if (k === d.stage) return;
+    if (k === 'lost') return this.setState({modal:'lost', lostReason:'', lostNote:'', lostErr:''});
+    if (k === 'won') return this.setState({modal:'won'});
+    this.setOverride({stage:k, days:0, lostReason:null}, {title:'Stage changed', sub:`${W.stage(d.stage).label} → ${W.stage(k).label}`});
+    this.setState(s => ({log:[{text:`Stage changed: ${W.stage(d.stage).label} → ${W.stage(k).label}`, meta:'Just now · you'}, ...s.log]}));
+  }
+  confirmLost() {
+    const s = this.state, d = this.deal(), W = this.app().W;
+    if (!s.lostReason) return this.setState({lostErr:'Pick the main reason.'});
+    if (s.lostReason === 'Other (specify)' && !s.lostNote.trim()) return this.setState({lostErr:'Add a short note for “Other”.'});
+    this.setOverride({stage:'lost', prob:0, days:0, lostReason:s.lostReason, lostNote:s.lostNote}, {title:'Moved to Lost', sub:`${d.title} · ${s.lostReason}`});
+    this.setState(st => ({modal:null, log:[{text:`Stage changed: ${W.stage(d.stage).label} → Lost (${s.lostReason})`, meta:'Just now · you'}, ...st.log]}));
+  }
+  confirmWon() {
+    const d = this.deal(), W = this.app().W;
+    this.setOverride({stage:'won', prob:100, days:0, lostReason:null}, {title:'Marked as Won (PO)', sub:`${d.title} · ${W.money(d.value)}`});
+    this.setState(st => ({modal:null, log:[{text:`Stage changed: ${W.stage(d.stage).label} → Won (PO)`, meta:'Just now · you'}, ...st.log]}));
+  }
+  saveEdit() {
+    const f = this.state.ef;
+    this.setOverride({title:f.title, value: parseFloat(f.value) || 0, prob: parseFloat(f.prob) || 0, close:f.close, sol:f.sol, notes:f.notes}, {title:'Deal updated', sub:f.title});
+    this.setState(st => ({modal:null, log:[{text:'Deal details edited', meta:'Just now · you'}, ...st.log]}));
+  }
+  saveProp() {
+    const np = this.state.np, a = this.app(), amt = parseFloat(String(np.amount).replace(/[^0-9.]/g, ''));
+    if (!amt) return this.setState({amtErr:true});
+    const p = {id:'p' + Date.now(), deal:this.id(), ref:np.ref, date:np.date, amount: amt / 1e6, status:'Submitted', notes:''};
+    this.setState(s => ({props:[...(s.props || []), p], addOpen:false, amtErr:false, log:[{text:`Proposal ${np.ref} added · ${a.W.money(p.amount)}`, meta:'Just now · you'}, ...s.log]}));
+    a.toast({title:'Proposal added', sub:`${np.ref} · ${a.W.money(p.amount)}`});
+  }
+  renderVals() {
+    const a = this.app(), W = a.W, s = this.state;
+    if (!W) return {};
+    const d = this.deal(); if (!d) return {};
+    const phone = !!a.phone, ro = !!a.readOnly, co = W.co(d.co), owner = W.user(d.owner), st = W.stage(d.stage);
+    const go = fn => e => { if (e && e.preventDefault) e.preventDefault(); fn(); };
+    const stuck = W.isStuck(d), cp = W.isClosePassed(d), open = W.isOpen(d);
+    const props = s.props || W.PROPOSALS.filter(p => p.deal === d.id);
+    const visits = W.allVisits(a.store).filter(v => v.deal === d.id);
+    const order = ['lead','qualified','proposal','negotiation','won','lost'], ci = order.indexOf(d.stage);
+    const ef = s.ef || {}, efs = k => e => this.setState({ef:{...ef, [k]: e.target.value}});
+    const sel = on => on ? {bd:'var(--primary)', bg:'var(--brand-soft)', fg:'var(--green)'} : {bd:'var(--line-strong)', bg:'var(--surface)', fg:'var(--ink)'};
+    const amt = parseFloat(String((s.np || {}).amount || '').replace(/[^0-9.]/g, '')) || 0;
+    const kpis = [
+      {label:'Value', value:W.money(d.value), sub:W.full(d.value), title:W.full(d.value)},
+      {label:'Probability', value:`${d.prob}%`, sub: d.stage === 'won' ? 'Set by Won' : d.stage === 'lost' ? 'Set by Lost' : `Stage default ${st.p}%`},
+      {label:'Weighted', value:W.money(d.value * d.prob / 100), sub:'Value × probability'},
+      {label:'Expected close', value:d.close, sub: cp ? 'Date has passed' : 'On track', fg: cp ? 'var(--red)' : 'var(--ink)', subFg: cp ? 'var(--red)' : 'var(--text-3)', subFw: cp ? 600 : 400, size:'17px'},
+      {label:'In stage', value:`${d.days} d`, sub: stuck ? 'Stuck: over 30 days' : open ? 'Under the 30-day limit' : 'Closed', fg: stuck ? 'var(--red)' : 'var(--ink)', subFg: stuck ? 'var(--red)' : 'var(--text-3)', subFw: stuck ? 600 : 400},
+      {label:'Solution', value:d.sol, sub:co.need}
+    ].map(k => ({fg:'var(--ink)', subFg:'var(--text-3)', subFw:400, size: phone ? '18px' : '20px', title:'', ...k, ...(k.size && phone ? {size:'15px'} : {})}));
+    const isModal = !!s.modal;
+    const history = [...s.log.map(h => ({...h, dot:'var(--green-solid)'})),
+      {text:`Stage changed: Qualified → ${st.label === 'Lead' ? 'Lead' : 'Proposal Submitted'}`, meta:`11 Sep 2026 · ${owner.name}`, dot:'var(--line-strong)'},
+      {text:'Value changed: PKR 92.0M → ' + W.money(d.value), meta:`17 Oct 2026 · ${owner.name}`, dot:'var(--line-strong)'},
+      {text:'Deal created as Lead', meta:`4 Aug 2026 · ${owner.name}`, dot:'var(--line-strong)'}];
+    return {
+      isDesktop: !phone, isPhone: phone, readOnly: ro, canEdit: !ro, d, co, owner, st, stuck, closePassed: cp, isLost: d.stage === 'lost', lostNote: d.lostNote || 'No extra note added.',
+      crumbRoot: ro ? 'Cockpit' : 'Team Pulse', goRoot: go(() => a.nav(ro ? 'cockpit' : 'pulse')), goCo: go(() => a.nav('account', {company:co.id})), goLog: () => a.nav('log', {company:co.id}),
+      openEdit: () => this.setState({modal:'edit', ef:this.efFrom()}), money: W.money(d.value),
+      kpis, kpiCols: phone ? 'repeat(2,minmax(0,1fr))' : 'repeat(6,minmax(0,1fr))',
+      stageBtns: order.map((k, i) => { const x = W.stage(k), cur = k === d.stage, past = d.stage !== 'lost' && i < ci && k !== 'lost';
+        return {label:x.label, cur, icon: past ? 'check' : x.icon, ic: cur ? x.fg : past ? 'var(--text-3)' : x.fg, bw: cur ? '2px' : '1px', bd: cur ? x.fg : k === 'lost' ? 'color-mix(in srgb, var(--red) 35%, var(--line-strong))' : 'var(--line-strong)', bg: cur ? x.bg : 'var(--surface)', fg: cur ? x.fg : past ? 'var(--text-2)' : 'var(--ink)', fw: cur ? 700 : 500, pick: () => this.pickStage(k)}; }),
+      stageCols: phone ? 'repeat(2,minmax(0,1fr))' : 'repeat(4,minmax(0,1fr)) 24px repeat(2,minmax(0,1fr))'.replace(' 24px', ''),
+      bodyCols: phone ? 'minmax(0,1fr)' : 'minmax(0,1.5fr) minmax(0,1fr)',
+      propCount: props.length, noProps: props.length === 0, canAddProp: !ro,
+      proposals: props.map(p => ({...p, money:W.money(p.amount), full:W.full(p.amount), st:W.propStatus(p.status), hasNotes: !!p.notes,
+        onStatus: e => { const v = e.target.value; this.setState(ss => ({props:(ss.props || []).map(x => x.id === p.id ? {...x, status:v} : x), log:[{text:`Proposal ${p.ref}: ${p.status} → ${v}`, meta:'Just now · you'}, ...ss.log]})); a.toast({title:'Proposal updated', sub:`${p.ref} · ${v}`}); }})),
+      statusOpts: W.PROP_STATUS.map(x => x.key), propCols: phone ? 'minmax(0,1fr) auto' : 'minmax(0,1fr) 120px 140px', amtAlign: phone ? 'right' : 'right', statusJustify: phone ? 'start' : 'end',
+      openAdd: () => this.setState({addOpen:true, amtErr:false, np:{ref:`WR-P-2026-${125 + (s.props || []).length - props.length}`, date:'22 Oct 2026', amount:''}}), closeAdd: () => this.setState({addOpen:false}), addOpen: s.addOpen && !ro,
+      np: s.np || {}, onRef: e => this.setState({np:{...s.np, ref:e.target.value}}), onDate: e => this.setState({np:{...s.np, date:e.target.value}}), onAmount: e => this.setState({np:{...s.np, amount:e.target.value}, amtErr:false}),
+      amtBd: s.amtErr ? 'var(--red)' : 'var(--line-strong)', amtHint: s.amtErr ? 'Enter the proposal amount.' : amt ? `= ${W.money(amt / 1e6)}` : 'Full amount in rupees', amtHintFg: s.amtErr ? 'var(--red)' : 'var(--text-3)',
+      saveProp: () => this.saveProp(), addCols: phone ? 'minmax(0,1fr)' : 'repeat(3,minmax(0,1fr))',
+      visits: visits.map(v => { const pend = v.outcome === 'pending', cd = pend ? W.cd(v.hrsLeft) : null; return {type:v.type, icon:W.vtIcon(v.type), when:`${v.date}, ${v.time} PKT`, who:W.user(v.owner).name, notes:v.notes, chip: pend && cd ? {label:cd.label, icon:cd.icon, fg:cd.fg, bg:cd.bg} : W.outcome(v.outcome)}; }),
+      visitCount: visits.length, noVisits: visits.length === 0,
+      notes: d.notes || NOTES[d.id] || 'No notes yet.', history,
+      modalOpen: isModal && !ro, mLost: s.modal === 'lost', mWon: s.modal === 'won', mEdit: s.modal === 'edit',
+      mTitle: s.modal === 'lost' ? 'Move to Lost' : s.modal === 'won' ? 'Mark as Won (PO)' : 'Edit deal', closeModal: () => this.setState({modal:null}),
+      lostOpts: W.LOST.map(r => { const on = s.lostReason === r; return {label:r, on, bd: on ? 'var(--red)' : 'var(--line-strong)', bg: on ? 'var(--red-bg)' : 'var(--surface)', ic: on ? 'var(--red)' : 'var(--text-3)', icon: on ? 'circle-dot' : 'circle', fw: on ? 600 : 500, pick: () => this.setState({lostReason:r, lostErr:''})}; }),
+      lostErr: s.lostErr, lostNote2: s.lostNote, onLostNote: e => this.setState({lostNote:e.target.value, lostErr:''}),
+      noteLabel: s.lostReason === 'Other (specify)' ? 'Note (required for Other)' : 'Note (optional)', noteBd: s.lostErr && s.lostReason === 'Other (specify)' ? 'var(--red)' : 'var(--line-strong)',
+      confirmLost: () => this.confirmLost(), confirmWon: () => this.confirmWon(), saveEdit: () => this.saveEdit(),
+      ef, onEfNotes: efs('notes'), editCols: phone ? 'minmax(0,1fr)' : 'repeat(2,minmax(0,1fr))',
+      editFields: [
+        {label:'Title', value:ef.title, onChange:efs('title'), span:'1 / -1', align:'left'},
+        {label:'Value (millions)', value:ef.value, onChange:efs('value'), pre:'PKR', suf:'M', span:'auto', align:'right'},
+        {label:'Probability', value:ef.prob, onChange:efs('prob'), suf:'%', span:'auto', align:'right'},
+        {label:'Expected close', value:ef.close, onChange:efs('close'), span:'1 / -1', align:'left'}
+      ].map(f => ({pre:'', suf:'', ...f})),
+      editSols: W.SOL.map(x => ({label:x, ...sel(ef.sol === x), pick: () => this.setState({ef:{...ef, sol:x}})})),
+      mWrap: phone ? {position:'absolute', inset:0, zIndex:50, display:'flex', flexDirection:'column', justifyContent:'flex-end'} : {position:'absolute', inset:0, zIndex:50, display:'flex', alignItems:'flex-start', justifyContent:'center', paddingTop:'110px'},
+      mPanel: phone ? {position:'relative', background:'var(--surface)', color:'var(--ink)', borderRadius:'28px 28px 0 0', padding:'8px 20px 28px', display:'flex', flexDirection:'column', gap:'14px', maxHeight:'92%', overflowY:'auto', boxShadow:'var(--shadow-lg)'} : {position:'relative', width:'520px', background:'var(--surface)', color:'var(--ink)', borderRadius:'28px', padding:'26px 28px', display:'flex', flexDirection:'column', gap:'16px', boxShadow:'var(--shadow-lg)'},
+      cardPad: phone ? '18px 16px' : '24px', h1: phone ? '23px' : '28px', actW: phone ? '100%' : 'auto', btnH: phone ? '46px' : '40px', btnFlex: phone ? '1' : 'none', smH: phone ? '44px' : '34px', stageH: phone ? '48px' : '44px', pillH: phone ? '36px' : '30px',
+      inH: phone ? '48px' : '42px', inFs: phone ? '16px' : '14px', mBtnH: phone ? '50px' : '44px', optH: phone ? '48px' : '42px', solH: phone ? '40px' : '34px'
+    };
+  }
+}
+</script>
+</body>
+</html>

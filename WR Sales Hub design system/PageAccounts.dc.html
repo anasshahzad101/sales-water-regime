@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-screen-label="Accounts" style="display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><div style="flex:1;min-width:260px;display:flex;flex-direction:column;gap:6px"><h1 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Accounts</h1><p style="margin:0;font-size:14.5px;color:var(--text-2)">334 industrial companies across 9 cities · 48 unassigned</p></div></sc-if>
+    <button onClick="{{ goAdd }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 18px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px" style-hover="background:var(--primary-hover)"><i class="icon-plus" style="font-size:16px;line-height:1"></i>Add company</button>
+    <button onClick="{{ exportXlsx }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 16px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px"><i class="icon-{{ exportIcon }}" style="font-size:16px;line-height:1;color:var(--green);animation:{{ exportAnim }}"></i>{{ exportLabel }}</button>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <span style="display:flex;align-items:center;gap:10px;height:{{ inH }};flex:{{ searchFlex }};min-width:220px;padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input)"><i class="icon-search" style="font-size:16px;line-height:1;color:var(--text-3)"></i><input value="{{ q }}" onChange="{{ onQ }}" placeholder="Search company, brand or plant" style="flex:1;min-width:0;height:100%;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none"></span>
+    <div role="radiogroup" aria-label="Scope" style="display:flex;padding:3px;border-radius:999px;background:var(--bg-alt);border:1px solid var(--line);flex:{{ scopeFlex }}">
+      <sc-for list="{{ scopes }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="flex:1;height:{{ segH }};padding:0 14px;border:0;border-radius:999px;font-size:13.5px;font-weight:600;cursor:pointer;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.sh }};white-space:nowrap">{{ o.label }}</button></sc-for>
+    </div>
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <sc-for list="{{ selects }}" as="f" hint-placeholder-count="4">
+        <span style="position:relative;display:flex"><select value="{{ f.value }}" onChange="{{ f.onChange }}" aria-label="{{ f.label }}" style="appearance:none;-webkit-appearance:none;height:40px;padding:0 34px 0 12px;border-radius:999px;border:1px solid {{ f.bd }};background:{{ f.bg }};color:var(--ink);font-size:13.5px;font-weight:500;outline:none;cursor:pointer"><sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.l }}</option></sc-for></select><i class="icon-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px;line-height:1;color:var(--text-3);pointer-events:none"></i></span>
+      </sc-for>
+      <sc-for list="{{ toggles }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.toggle }}" style="height:40px;padding:0 14px 0 10px;border-radius:999px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};font-size:13.5px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px"><i class="icon-{{ t.icon }}" style="font-size:15px;line-height:1"></i>{{ t.label }}</button></sc-for>
+    </sc-if>
+    <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ openSheet }}" style="height:48px;padding:0 16px;border:1px solid var(--line-strong);border-radius:12px;background:var(--surface);color:var(--ink);font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:8px;cursor:pointer"><i class="icon-sliders-horizontal" style="font-size:17px;line-height:1"></i>Filters<sc-if value="{{ hasActive }}" hint-placeholder-val="{{ false }}"><span style="min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ activeCount }}</span></sc-if></button>
+    </sc-if>
+  </div>
+  <sc-if value="{{ hasActive }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:-4px">
+      <sc-for list="{{ chips }}" as="c" hint-placeholder-count="2"><span style="display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 4px 0 12px;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:13px;font-weight:600">{{ c.label }}<button onClick="{{ c.clear }}" aria-label="Remove filter" style="width:26px;height:26px;border:0;border-radius:999px;background:transparent;color:var(--green);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="icon-x" style="font-size:14px;line-height:1"></i></button></span></sc-for>
+      <button onClick="{{ clearAll }}" style="height:30px;padding:0 10px;border:0;border-radius:999px;background:transparent;color:var(--link);font-size:13px;font-weight:600;cursor:pointer">Clear all</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden">
+      <sc-for list="{{ skeleton }}" as="k" hint-placeholder-count="6"><div style="display:flex;gap:16px;align-items:center;padding:16px 20px;border-top:1px solid {{ k.bd }}"><span style="width:38px;height:38px;border-radius:12px;background:var(--skeleton);animation:wrshimmer 1.4s ease-in-out infinite"></span><span style="flex:1;display:flex;flex-direction:column;gap:8px"><span style="width:40%;height:12px;border-radius:6px;background:var(--skeleton);animation:wrshimmer 1.4s ease-in-out infinite"></span><span style="width:24%;height:10px;border-radius:6px;background:var(--skeleton);animation:wrshimmer 1.4s ease-in-out infinite"></span></span><span style="width:70px;height:22px;border-radius:999px;background:var(--skeleton);animation:wrshimmer 1.4s ease-in-out infinite"></span></div></sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+      <span style="width:56px;height:56px;border-radius:18px;background:var(--bg-alt);color:var(--text-2);display:flex;align-items:center;justify-content:center"><i class="icon-search-x" style="font-size:26px;line-height:1"></i></span>
+      <span style="font-family:Sora,sans-serif;font-size:18px;font-weight:600">No companies match</span>
+      <span style="font-size:14px;color:var(--text-2);max-width:400px;line-height:1.5">Try another spelling, a brand or plant name, or clear the filters. If the company isn't in the system yet, add it.</span>
+      <div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;justify-content:center"><button onClick="{{ clearAll }}" style="height:44px;padding:0 18px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer">Clear filters</button><button onClick="{{ goAdd }}" style="height:44px;padding:0 18px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600;cursor:pointer">Add company</button></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showTable }}" hint-placeholder-val="{{ true }}">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+      <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) 110px 70px 150px 112px 120px;gap:14px;padding:10px 20px;background:var(--surface-2);font-size:11.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3)">
+        <button onClick="{{ sortName }}" style="display:flex;align-items:center;gap:4px;border:0;background:transparent;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--ink);cursor:pointer">Company<i class="icon-{{ sortIcon }}" style="font-size:13px;line-height:1"></i></button>
+        <span>Sector</span><span>City</span><span>Priority</span><span>Owner</span><span>Status</span><span>Last visit</span>
+      </div>
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="10">
+        <a href="#account" onClick="{{ r.go }}" style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) 110px 70px 150px 112px 120px;gap:14px;align-items:center;padding:11px 20px;border-top:1px solid var(--line);color:var(--ink);text-decoration:none" style-hover="background:var(--surface-2);color:var(--ink);text-decoration:none">
+          <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span><span style="font-size:12.5px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.bp }}</span></span>
+          <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:13.5px">{{ r.sector }}</span><span style="font-size:12.5px;color:var(--text-3)">{{ r.sub }}</span></span>
+          <span style="font-size:13.5px">{{ r.city }}</span>
+          <span><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:7px;font-size:11.5px;font-weight:700;color:{{ r.pri.fg }};background:{{ r.pri.bg }};border:1px solid {{ r.pri.bd }}"><i class="icon-{{ r.pri.icon }}" style="font-size:12px;line-height:1"></i>{{ r.pri.label }}</span></span>
+          <span style="display:flex;align-items:center;gap:8px;min-width:0"><span style="width:26px;height:26px;flex:none;border-radius:999px;border:1px {{ r.avBorder }};background:{{ r.avBg }};color:var(--green);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ r.initials }}</span><span style="font-size:13.5px;color:{{ r.ownerFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.owner }}</span></span>
+          <span><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12.5px;font-weight:600;color:{{ r.st.fg }};background:{{ r.st.bg }}"><i class="icon-{{ r.st.icon }}" style="font-size:13px;line-height:1"></i>{{ r.st.label }}</span></span>
+          <span style="display:flex;flex-direction:column;gap:2px;font-variant-numeric:tabular-nums"><span style="font-size:13.5px">{{ r.last }}</span><span style="font-size:12.5px;color:{{ r.agoFg }};font-weight:{{ r.agoFw }}">{{ r.ago }}</span></span>
+        </a>
+      </sc-for>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid var(--line);font-size:13px;color:var(--text-2)">
+        <span>{{ showing }}</span>
+        <span style="margin-left:auto;display:flex;gap:4px;align-items:center">
+          <button aria-label="Previous page" disabled="{{ true }}" style="width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--text-3);display:flex;align-items:center;justify-content:center"><i class="icon-chevron-left" style="font-size:16px;line-height:1"></i></button>
+          <sc-for list="{{ pages }}" as="p" hint-placeholder-count="5"><span style="min-width:34px;height:34px;padding:0 6px;border-radius:10px;background:{{ p.bg }};color:{{ p.fg }};font-weight:{{ p.fw }};display:flex;align-items:center;justify-content:center;cursor:pointer">{{ p.n }}</span></sc-for>
+          <button aria-label="Next page" style="width:34px;height:34px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="icon-chevron-right" style="font-size:16px;line-height:1"></i></button>
+        </span>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showCards }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+        <a href="#account" onClick="{{ r.go }}" style="display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:18px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none">
+          <span style="display:flex;gap:10px;align-items:flex-start"><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:15.5px;font-weight:600">{{ r.name }}</span><span style="font-size:13px;color:var(--text-2)">{{ r.bp }} · {{ r.city }}</span></span><span style="display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 7px;border-radius:7px;font-size:11.5px;font-weight:700;color:{{ r.pri.fg }};background:{{ r.pri.bg }};border:1px solid {{ r.pri.bd }}"><i class="icon-{{ r.pri.icon }}" style="font-size:12px;line-height:1"></i>{{ r.pri.label }}</span></span>
+          <span style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12.5px;font-weight:600;color:{{ r.st.fg }};background:{{ r.st.bg }}"><i class="icon-{{ r.st.icon }}" style="font-size:13px;line-height:1"></i>{{ r.st.label }}</span>
+            <span style="font-size:13px;color:{{ r.ownerFg }}">{{ r.owner }}</span>
+            <span style="margin-left:auto;font-size:12.5px;color:{{ r.agoFg }};font-weight:{{ r.agoFw }}">{{ r.agoLong }}</span>
+          </span>
+        </a>
+      </sc-for>
+      <button style="height:48px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:15px;font-weight:600">Load 25 more · {{ showing }}</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;justify-content:flex-end">
+      <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:var(--scrim)"></div>
+      <div role="dialog" aria-label="Filters" style="position:relative;background:var(--surface);color:var(--ink);border-radius:28px 28px 0 0;padding:8px 20px 28px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow-lg);max-height:88%;overflow-y:auto">
+        <div style="width:40px;height:5px;border-radius:99px;background:var(--line-strong);margin:0 auto"></div>
+        <div style="display:flex;align-items:center"><span style="flex:1;font-family:Sora,sans-serif;font-size:19px;font-weight:600">Filters</span><button onClick="{{ clearAll }}" style="height:44px;padding:0 10px;border:0;background:transparent;color:var(--link);font-size:14.5px;font-weight:600">Clear all</button></div>
+        <sc-for list="{{ selects }}" as="f" hint-placeholder-count="4">
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">{{ f.label }}</span><span style="position:relative;display:flex"><select value="{{ f.value }}" onChange="{{ f.onChange }}" style="flex:1;appearance:none;-webkit-appearance:none;height:48px;padding:0 40px 0 14px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font-size:16px;outline:none"><sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.l }}</option></sc-for></select><i class="icon-chevron-down" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;line-height:1;color:var(--text-3);pointer-events:none"></i></span></label>
+        </sc-for>
+        <sc-for list="{{ toggles }}" as="t" hint-placeholder-count="2">
+          <button onClick="{{ t.toggle }}" style="display:flex;align-items:center;gap:12px;min-height:52px;padding:0 14px;border-radius:12px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:var(--ink);font-size:15px;font-weight:500;text-align:left;cursor:pointer"><i class="icon-{{ t.icon }}" style="font-size:18px;line-height:1;color:{{ t.fg }}"></i><span style="flex:1">{{ t.label }}</span><span style="width:44px;height:26px;border-radius:999px;background:{{ t.track }};position:relative;display:block"><span style="position:absolute;top:3px;left:{{ t.knob }};width:20px;height:20px;border-radius:999px;background:#FFFFFF;box-shadow:0 1px 2px rgba(0,0,0,0.25)"></span></span></button>
+        </sc-for>
+        <button onClick="{{ closeSheet }}" style="height:52px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:16px;font-weight:600;cursor:pointer;margin-top:4px">Show {{ count }} companies</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {q:'', scope:null, sector:'all', city:'all', pri:'all', owner:'all', unassigned:false, dormant:false, sheet:false, exporting:false, sort:'asc'};
+  app() { return this.props.app || {}; }
+  componentDidMount() { const d = this.app().demo; if (d === 'filters') this.setState({sheet:true, sector:'Textiles'}); if (d === 'filtered') this.setState({sector:'Textiles', dormant:false, city:'Faisalabad'}); if (d === 'noresults') this.setState({q:'Nishtar Glass'}); }
+  componentWillUnmount() { clearTimeout(this.t); }
+  exportXlsx() { if (this.state.exporting) return; this.setState({exporting:true}); this.t = setTimeout(() => { this.setState({exporting:false}); this.app().toast({title:'Export ready', sub:'accounts_2026-10-22.xlsx · current filters applied'}); }, 1200); }
+  renderVals() {
+    const a = this.app(), W = a.W, s = this.state;
+    if (!W) return {};
+    const phone = !!a.phone, me = a.me || {id:'u1'}, sc = a.scenario;
+    const scope = s.scope || (a.role === 'sales' ? 'mine' : 'all');
+    const claimed = (a.store && a.store.claimed) || {};
+    const owner = c => claimed[c.id] || c.owner;
+    let list = W.COMPANIES.filter(c => {
+      if (scope === 'mine' && owner(c) !== me.id) return false;
+      if (s.q && ![c.name, c.brand, c.plant].join(' ').toLowerCase().includes(s.q.toLowerCase())) return false;
+      if (s.sector !== 'all' && c.sector !== s.sector) return false;
+      if (s.city !== 'all' && c.city !== s.city) return false;
+      if (s.pri !== 'all' && c.pri !== s.pri) return false;
+      if (s.owner !== 'all' && owner(c) !== s.owner) return false;
+      if (s.unassigned && owner(c)) return false;
+      if (s.dormant && c.status !== 'dormant') return false;
+      return true;
+    }).sort((x, y) => (s.sort === 'asc' ? 1 : -1) * x.name.localeCompare(y.name));
+    if (sc === 'empty') list = [];
+    const mk = (key, label, value, options) => ({label, value, options, bd: value !== 'all' ? 'var(--primary)' : 'var(--line-strong)', bg: value !== 'all' ? 'var(--brand-soft)' : 'var(--surface)', onChange: ev => this.setState({[key]: ev.target.value})});
+    const people = W.USERS.filter(u => ['sales','manager'].includes(u.role));
+    const selects = [
+      mk('sector','Sector', s.sector, [{v:'all', l:'All sectors'}, ...Object.keys(W.SECTORS).map(k => ({v:k, l:k}))]),
+      mk('city','City', s.city, [{v:'all', l:'All cities'}, ...W.CITIES.map(k => ({v:k, l:k}))]),
+      mk('pri','Priority', s.pri, [{v:'all', l:'Any priority'}, {v:'P1', l:'P1 (highest)'}, {v:'P2', l:'P2'}, {v:'P3', l:'P3'}]),
+      mk('owner','Owner', s.owner, [{v:'all', l:'Any owner'}, ...people.map(u => ({v:u.id, l:u.name}))])
+    ];
+    const tg = (key, label, icon) => { const on = s[key]; return {label, icon, bd: on ? 'var(--primary)' : 'var(--line-strong)', bg: on ? 'var(--brand-soft)' : 'var(--surface)', fg: on ? 'var(--green)' : 'var(--ink)', track: on ? 'var(--primary)' : 'var(--line-strong)', knob: on ? '21px' : '3px', toggle: () => this.setState({[key]: !on})}; };
+    const toggles = [tg('unassigned','Unassigned only','user-x'), tg('dormant','Dormant only','moon')];
+    const chips = [];
+    ['sector','city','pri','owner'].forEach(k => { if (s[k] !== 'all') chips.push({label: k === 'owner' ? W.user(s[k]).name : s[k], clear: () => this.setState({[k]:'all'})}); });
+    if (s.unassigned) chips.push({label:'Unassigned', clear: () => this.setState({unassigned:false})});
+    if (s.dormant) chips.push({label:'Dormant', clear: () => this.setState({dormant:false})});
+    if (s.q) chips.push({label:`“${s.q}”`, clear: () => this.setState({q:''})});
+    const unfiltered = scope === 'all' && chips.length === 0 && sc !== 'empty';
+    const seg = on => on ? {bg:'var(--surface)', fg:'var(--ink)', sh:'var(--shadow-sm)'} : {bg:'transparent', fg:'var(--text-2)', sh:'none'};
+    const loading = sc === 'loading';
+    return {
+      isDesktop: !phone, isPhone: phone, goAdd: () => a.nav('addcompany'),
+      exportXlsx: () => this.exportXlsx(), exportLabel: s.exporting ? 'Preparing…' : phone ? 'Export' : 'Export to Excel', exportIcon: s.exporting ? 'loader-circle' : 'file-spreadsheet', exportAnim: s.exporting ? 'wrspin 0.9s linear infinite' : 'none',
+      q: s.q, onQ: ev => this.setState({q: ev.target.value}),
+      scopes: [['mine','My accounts'],['all','All accounts']].map(([k, l]) => ({label:l, ...seg(scope === k), pick: () => this.setState({scope:k})})),
+      selects, toggles, chips, hasActive: chips.length > 0, activeCount: chips.length,
+      clearAll: () => this.setState({q:'', sector:'all', city:'all', pri:'all', owner:'all', unassigned:false, dormant:false}),
+      openSheet: () => this.setState({sheet:true}), closeSheet: () => this.setState({sheet:false}), sheetOpen: s.sheet && phone,
+      isLoading: loading, skeleton: [0,1,2,3,4,5].map(i => ({bd: i ? 'var(--line)' : 'transparent'})),
+      showEmpty: !loading && list.length === 0, showTable: !phone && !loading && list.length > 0, showCards: phone && !loading && list.length > 0,
+      sortName: () => this.setState({sort: s.sort === 'asc' ? 'desc' : 'asc'}), sortIcon: s.sort === 'asc' ? 'arrow-down-a-z' : 'arrow-up-z-a',
+      count: unfiltered ? 334 : list.length,
+      showing: unfiltered ? `Showing 1–${list.length} of 334` : `${list.length} ${list.length === 1 ? 'company' : 'companies'}`,
+      pages: (unfiltered ? ['1','2','3','…','14'] : ['1']).map((n, i) => ({n, bg: i === 0 ? 'var(--brand-soft)' : 'transparent', fg: i === 0 ? 'var(--green)' : 'var(--text-2)', fw: i === 0 ? 700 : 500})),
+      rows: list.map(c => {
+        const o = owner(c), u = o ? W.user(o) : null, dormant = c.status === 'dormant';
+        return {name:c.name, bp:`${c.brand} · ${c.plant}`, sector:c.sector, sub:c.sub, city:c.city, pri:W.pri(c.pri), st:W.status(c.status),
+          owner: u ? (u.id === me.id ? `${u.name} (you)` : u.name) : 'Unassigned', ownerFg: u ? 'var(--ink)' : 'var(--text-3)', initials: u ? u.initials : '', avBg: u ? 'var(--brand-soft)' : 'transparent', avBorder: u ? 'solid transparent' : 'dashed var(--line-strong)',
+          last: c.lastVisit, ago: c.lastDays == null ? 'Never visited' : dormant ? `${c.lastDays} d · dormant` : c.lastDays === 0 ? 'Today' : `${c.lastDays} d ago`,
+          agoLong: c.lastDays == null ? 'Never visited' : dormant ? `No visit in ${c.lastDays} d` : `Visited ${c.lastDays === 0 ? 'today' : c.lastDays + ' d ago'}`,
+          agoFg: dormant ? 'var(--amber)' : 'var(--text-3)', agoFw: dormant ? 600 : 400, go: e => { e.preventDefault(); a.nav('account', {company:c.id}); }};
+      }),
+      inH: phone ? '48px' : '40px', inFs: phone ? '16px' : '14px', btnH: phone ? '46px' : '40px', btnFlex: phone ? '1' : 'none', searchFlex: phone ? '1 1 100%' : '0 1 300px', scopeFlex: phone ? '1 1 auto' : 'none', segH: phone ? '40px' : '32px'
+    };
+  }
+}
+</script>
+</body>
+</html>
