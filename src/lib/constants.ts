@@ -61,7 +61,7 @@ export const LOST_REASONS = [
 ] as const;
 
 export const SOLUTION_TYPES = ["RO", "ETP", "STP", "MBR", "ZLD", "UF", "Mixed"] as const;
-export const LEAD_SOURCES = ["Target", "Live Signal", "WR Pipeline", "Partner"] as const;
+export const LEAD_SOURCES = ["Target", "Live Signal", "WR Pipeline", "WR Existing List", "Partner"] as const;
 export const PRIORITIES = ["P1", "P2", "P3"] as const;
 export const COMPANY_STATUSES = ["active", "dormant", "archived"] as const;
 

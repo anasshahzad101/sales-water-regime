@@ -48,9 +48,10 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000. The first `npm run dev` creates `.data/db.json` with the 332 companies and
-33 pipeline deals from `seed_data/WR_Pakistan_Industry_Master_FINAL.xlsx`, plus **demo activity**
-(sample salespeople, contacts, visits, proposals) so every screen has something to show.
+Open http://localhost:3000. Without a database configured, the first `npm run dev` creates `.data/db.json`
+with **sample data only**: 16 fictional companies plus demo activity (salespeople, contacts, deals, visits,
+proposals) so every screen has something to show. The real company list (953 companies) lives in the
+Hostinger database; put its `DB_*` values (or `DATABASE_URL`) in `.env` to work against it instead.
 
 Sign-in accounts (password for all: `ChangeMe123!`, or `SEED_DEFAULT_PASSWORD` if you set it):
 
@@ -85,7 +86,7 @@ npm run build         # production build
    Use a long random password because the database is reachable from the internet.
 3. Note the **remote host name** shown there (for example `srv1234.hstgr.io`) and the port (3306).
 
-### 2. Create the tables and load the data (once, from your computer)
+### 2. Create the tables and the starting accounts (once, from your computer)
 Create `.env.local` (copy `.env.example`) with:
 
 ```
@@ -98,7 +99,7 @@ DATABASE_URL=mysql://USER:PASSWORD@HOST:3306/DATABASE
 ```bash
 npm run db:check      # connects and reports what it finds
 npm run db:migrate    # creates the tables
-npm run db:seed       # Excel companies + pipeline + the 5 starting accounts (no demo data)
+npm run db:seed       # the 5 starting accounts (no demo data); safe to re-run
 npm run db:check      # should now list row counts
 ```
 
@@ -148,7 +149,7 @@ src/
     db/schema.ts       table definitions (Drizzle, MySQL)
     auth/              sessions, password hashing, data-access checks
     queries/           data for each screen
-scripts/               migrate, seed (Excel import), db check
+scripts/               migrate, seed (starting accounts, local demo data), db check
 drizzle/               SQL migrations (generated: npm run db:generate)
 ```
 

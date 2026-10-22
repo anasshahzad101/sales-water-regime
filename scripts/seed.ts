@@ -1,94 +1,37 @@
 /**
- * Loads the starting data.
+ * Sets up a database.
  *
- *   npm run db:seed            → Excel target accounts + WR pipeline + starting user accounts
- *   npm run db:seed -- --demo  → also adds sample salespeople, contacts, deals, visits and proposals
+ *   npm run db:seed            → the 5 starting user accounts (company data lives in the database itself)
+ *   npm run db:seed -- --demo  → also adds sample salespeople, companies, contacts, deals, visits and proposals
  *                                (local testing only — never run --demo against the live database)
  *
  * Writes to MySQL when DATABASE_URL / DB_HOST is set (running migrations first),
  * otherwise to the local JSON store (.data/db.json).
- * Idempotent: companies are matched by name, users by email, deals by company + title.
+ * Idempotent: users are matched by email; demo activity is only added once.
  * Starting accounts use SEED_DEFAULT_PASSWORD (default "ChangeMe123!") and must change it at first login.
  */
 import { loadEnv } from "./env";
 loadEnv();
 
-import path from "node:path";
-import ExcelJS from "exceljs";
 import bcrypt from "bcryptjs";
 import { closeStore, store } from "../src/lib/data/store";
 import { runMigrations } from "./migrate";
 
-const SEED_FILE = path.join(process.cwd(), "seed_data", "WR_Pakistan_Industry_Master_FINAL.xlsx");
 const DEFAULT_PASSWORD = process.env.SEED_DEFAULT_PASSWORD || "ChangeMe123!";
 const DEMO = process.argv.includes("--demo");
 const hashPassword = (pw: string) => bcrypt.hash(pw, 10);
 
 const db = store();
 
-// ---------------------------------------------------------------- helpers
-type CV = ExcelJS.CellValue;
-function txt(v: CV): string | null {
-  if (v == null) return null;
-  if (v instanceof Date) return v.toISOString().slice(0, 10);
-  if (typeof v === "object") {
-    const o = v as unknown as Record<string, unknown>;
-    if (Array.isArray(o.richText)) return (o.richText as { text: string }[]).map((r) => r.text).join("").trim() || null;
-    if ("result" in o) return txt(o.result as CV);
-    if ("text" in o) return String(o.text).trim() || null;
-    return null;
-  }
-  const out = String(v).trim();
-  return out || null;
-}
-function num(v: CV): number | null {
-  const t = txt(v);
-  if (t == null) return null;
-  const n = Number(t.replace(/[,\s]|PKR/gi, ""));
-  return Number.isFinite(n) ? n : null;
-}
-
-const SECTOR_ALIASES: Record<string, string> = { Pharmaceutical: "Pharmaceutical & Healthcare" };
-const MAJOR = ["Karachi", "Lahore", "Islamabad", "Faisalabad", "Rawalpindi", "Multan", "Peshawar"];
-
-/** Splits a messy "City / site" cell into a clean city plus the original site text. */
-function splitLocation(raw: string | null): { city: string | null; site: string | null } {
-  if (!raw) return { city: null, site: null };
-  const original = raw.replace(/\s+/g, " ").trim();
-  if (/to confirm/i.test(original)) return { city: "To confirm", site: original === "To confirm" ? null : original };
-  let part = original.split(" / ")[0].trim();
-  if (part.includes(",")) part = part.split(",").pop()!.trim();
-  part = part.split(/\s[–—-]\s|[–—]/)[0].trim();
-  const m = part.match(/^(.*?)\s*\((.*?)\)\s*$/);
-  if (m) {
-    const [, outside, inside] = m;
-    const insideIsPlace = !/network|nationwide|fields|ops/i.test(inside);
-    part = MAJOR.includes(outside.trim()) || !insideIsPlace ? outside.trim() : inside.trim();
-  }
-  const city = part || original;
-  return { city, site: city === original ? null : original };
-}
-
-function solutionFrom(text: string | null): string | null {
-  if (!text) return null;
-  const t = text.toUpperCase();
-  const found = ["RO", "ETP", "STP", "MBR", "ZLD", "UF"].filter((k) =>
-    k === "RO" ? /(^|[^A-Z])(BW|HBW|SW)?RO([^A-Z]|$)/.test(t) : new RegExp(`(^|[^A-Z])${k}([^A-Z]|$)`).test(t),
-  );
-  if (found.length === 1) return found[0];
-  if (found.length > 1) return "Mixed";
-  return null;
-}
-
+// ---------------------------------------------------------------- lookups
 const sectorCache = new Map<string, number>();
 async function sectorId(name: string | null) {
   if (!name) return null;
-  const clean = SECTOR_ALIASES[name] ?? name;
-  if (!sectorCache.has(clean)) {
-    const row = (await db.first("sectors", { where: { name: clean } })) ?? (await db.insert("sectors", { name: clean }));
-    sectorCache.set(clean, row.id);
+  if (!sectorCache.has(name)) {
+    const row = (await db.first("sectors", { where: { name } })) ?? (await db.insert("sectors", { name }));
+    sectorCache.set(name, row.id);
   }
-  return sectorCache.get(clean)!;
+  return sectorCache.get(name)!;
 }
 async function subSectorId(sector: number | null, name: string | null) {
   if (!sector || !name) return null;
@@ -142,113 +85,50 @@ async function seedUsers(list: SeedUser[], mustChange: boolean) {
   return created;
 }
 
-// ---------------------------------------------------------------- Excel
-async function seedWorkbook() {
-  const wb = new ExcelJS.Workbook();
-  await wb.xlsx.readFile(SEED_FILE);
-  const stats = { companies: 0, skipped: 0, deals: 0 };
-  const known = new Map((await db.list("companies")).map((c) => [c.name.toLowerCase(), c.id]));
+// ---------------------------------------------------------------- demo data
+// Fictional companies from the design's sample data — used only when the demo database has none.
+const DEMO_COMPANIES: [string, string, string, string | null, string, string, string, string, string, string, number][] = [
+  ["Lyallpur Denim Mills", "LDM Denim", "Plant 2", "Lyallpur Group", "Textiles", "Denim", "Faisalabad", "P1", "Target", "ETP upgrade + water reuse", 2.4],
+  ["Ravi Valley Beverages", "RVB Bottling", "Sheikhupura Plant", "Ravi Valley Holdings", "Beverages", "Soft drinks", "Sheikhupura", "P1", "Live Signal", "RO for process water", 0.8],
+  ["Margalla Biopharma", "Margalla", "Sterile Unit", null, "Pharma", "Sterile", "Islamabad", "P2", "WR Pipeline", "Purified water / WFI", 0.15],
+  ["Kohsar Chemicals", "Kohsar", "Port Qasim Plant", "Kohsar Industries", "Chemicals", "Specialty", "Karachi", "P1", "Target", "Zero liquid discharge", 1.2],
+  ["Sutlej Steel Works", "Sutlej Steel", "Rolling Mill 1", "Sutlej Group", "Steel", "Rolling mills", "Lahore", "P2", "Partner", "Cooling water recycling", 3.5],
+  ["Chenab Agro Foods", "Chenab Dairy", "Multan Plant", null, "Food processing", "Dairy", "Multan", "P2", "Target", "Sewage treatment", 0.5],
+  ["Pak Tanners Group", "PTG Leather", "Unit A", "Pak Tanners Group", "Leather", "Tanneries", "Sialkot", "P1", "Live Signal", "ETP + chrome recovery", 0.9],
+  ["Punjab Ceramics", "PC Tiles", "Kiln Unit", null, "Building materials", "Ceramics", "Gujranwala", "P3", "Target", "Process water RO", 0.3],
+  ["Indus Crest Power", "Indus Crest", "Unit 2", "Crest Energy", "Power", "IPP", "Hyderabad", "P1", "WR Pipeline", "DM water + blowdown recovery", 6.0],
+  ["Karakoram Spinning", "KSM", "Mill 3", "Karakoram Group", "Textiles", "Spinning", "Faisalabad", "P2", "Target", "Humidification RO", 0.4],
+  ["Bolan Edible Oils", "Bolan", "Karachi Refinery", null, "Food processing", "Edible oil", "Karachi", "P2", "Partner", "Refinery effluent", 1.1],
+  ["Shalimar Poultry", "Shalimar Feeds", "Processing Plant", "Shalimar Group", "Food processing", "Poultry", "Lahore", "P3", "Target", "STP + reuse", 0.6],
+  ["Thal Fertilizers", "Thal Agro", "Daharki Complex", "Thal Industries", "Chemicals", "Fertilizer", "Multan", "P1", "Target", "MBR for reuse", 4.2],
+  ["Potohar Pharma", "Potohar", "Formulations Unit", null, "Pharma", "Formulations", "Islamabad", "P2", "WR Pipeline", "RO + EDI", 0.2],
+  ["Mangla Juices", "Mangla Fresh", "Gujranwala Plant", null, "Beverages", "Juices", "Gujranwala", "P3", "Live Signal", "Wastewater ETP", 0.35],
+  ["Hub Petrochem", "Hub", "Terminal Plant", "Hub Energy", "Chemicals", "Petrochemicals", "Karachi", "P1", "Target", "Zero liquid discharge", 2.0],
+];
 
-  const targets = wb.getWorksheet("New Target Accounts");
-  if (!targets) throw new Error("Sheet 'New Target Accounts' not found");
-  for (let r = 2; r <= targets.rowCount; r++) {
-    const row = targets.getRow(r);
-    const c = (i: number) => row.getCell(i).value;
-    const name = txt(c(2));
-    if (!name || num(c(1)) == null) continue;
-    if (known.has(name.toLowerCase())) {
-      stats.skipped++;
-      continue;
-    }
-    const [group, sector, sub, location, province, need, solution, dms, , basis, evidence, firstStep, remarks, , source] = [
-      3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-    ].map((i) => txt(c(i)));
-    const loc = splitLocation(location);
+async function seedDemoCompanies() {
+  if (await db.count("companies")) return 0;
+  for (const [name, brand, plantUnit, group, sector, sub, city, priority, leadSource, waterNeed, capacityMld] of DEMO_COMPANIES) {
     const sec = await sectorId(sector);
-    const notes = [
-      solution && `WR solution: ${solution}`,
-      dms && `Target decision-makers: ${dms}`,
-      basis && `Basis: ${basis}`,
-      evidence && `Evidence: ${evidence}`,
-      firstStep && `Recommended first step: ${firstStep}`,
-      remarks && `Remarks: ${remarks}`,
-      source && `Source: ${source}`,
-    ]
-      .filter(Boolean)
-      .join("\n");
-    const pr = num(c(11));
-    const created = await db.insert("companies", {
+    await db.insert("companies", {
       name,
+      brand,
+      plantUnit,
       parentGroupId: await groupId(group),
       sectorId: sec,
       subSectorId: await subSectorId(sec, sub),
-      cityId: await cityId(loc.city, province),
-      plantUnit: loc.site,
-      priority: pr === 1 ? "P1" : pr === 3 ? "P3" : pr === 2 ? "P2" : null,
-      leadSource: basis && /live/i.test(basis) ? "Live Signal" : "Target",
-      waterNeed: need,
-      notes: notes || null,
+      cityId: await cityId(city, null),
+      priority,
+      leadSource,
+      waterNeed,
+      capacityMld,
+      notes: "Sample company for local testing (fictional).",
       status: "active",
     });
-    known.set(name.toLowerCase(), created.id);
-    stats.companies++;
   }
-
-  // WR Active Pipeline → deals (skips the TOTAL row and footnotes, which have no row number)
-  const pipe = wb.getWorksheet("WR Active Pipeline");
-  if (pipe) {
-    for (let r = 2; r <= pipe.rowCount; r++) {
-      const row = pipe.getRow(r);
-      const c = (i: number) => row.getCell(i).value;
-      const account = txt(c(2));
-      if (!account || num(c(1)) == null) continue;
-      const [sector, tier, status, desc, solution, dms] = [3, 4, 5, 6, 7, 8].map((i) => txt(c(i)));
-      const pipeVal = num(c(9));
-      const closeVal = num(c(10));
-      const nextAction = txt(c(11));
-
-      let companyId = known.get(account.toLowerCase());
-      if (!companyId) {
-        const created = await db.insert("companies", {
-          name: account,
-          sectorId: await sectorId(sector),
-          leadSource: "WR Pipeline",
-          priority: tier && tier.includes("A") ? "P1" : "P2",
-          notes: status ? `WR status: ${status}` : null,
-          status: "active",
-        });
-        companyId = created.id;
-        known.set(account.toLowerCase(), companyId);
-        stats.companies++;
-      }
-      const title = (desc || `${account} — Water Regime opportunity`).slice(0, 230);
-      if (await db.first("deals", { where: { companyId, title } })) continue;
-      const probability = closeVal && pipeVal ? Math.max(10, Math.min(90, Math.round((closeVal / pipeVal) * 100))) : 25;
-      await db.insert("deals", {
-        title,
-        companyId,
-        stage: "qualified",
-        solutionType: solutionFrom(solution),
-        valuePkr: pipeVal,
-        probability,
-        expectedClose: closeVal ? "2026-12-31" : null,
-        notes: [
-          solution && `WR solution: ${solution}`,
-          dms && `Decision-makers: ${dms}`,
-          closeVal && `Expected to close by Dec-26: PKR ${Math.round(closeVal).toLocaleString("en-US")}`,
-          nextAction && `Next action: ${nextAction}`,
-          status && `WR status: ${status}`,
-        ]
-          .filter(Boolean)
-          .join("\n"),
-      });
-      stats.deals++;
-    }
-  }
-  return stats;
+  return DEMO_COMPANIES.length;
 }
 
-// ---------------------------------------------------------------- demo data
 function rng(seed: number) {
   return () => {
     seed |= 0;
@@ -260,10 +140,7 @@ function rng(seed: number) {
 }
 
 async function seedDemo() {
-  if (await db.count("visits")) {
-    console.log("Demo activity already present — skipped.");
-    return;
-  }
+  if (await db.count("visits")) return false;
   const rand = rng(20261022);
   const pick = <T,>(a: readonly T[]) => a[Math.floor(rand() * a.length)];
   const now = Date.now();
@@ -310,7 +187,7 @@ async function seedDemo() {
     }
   }
 
-  // Deals: owners and a spread of stages for the pipeline, plus some for owned accounts.
+  // Deals: owners and a spread of stages for any existing deals, plus some for owned accounts.
   const PROB = { lead: 10, qualified: 25, proposal: 50, negotiation: 70, won: 100, lost: 0 } as Record<string, number>;
   const spread = ["lead", "qualified", "qualified", "proposal", "proposal", "negotiation", "won", "lost"];
   for (const d of await db.list("deals")) {
@@ -331,17 +208,20 @@ async function seedDemo() {
   const DEAL_TITLES = ["ETP upgrade + water reuse", "RO for process water", "Zero liquid discharge", "Cooling water recycling", "Sewage treatment plant", "UF pre-treatment", "Boiler feed RO / DM", "MBR reuse plant"];
   const SOL: Record<string, string> = { "ETP upgrade + water reuse": "ETP", "RO for process water": "RO", "Zero liquid discharge": "ZLD", "Cooling water recycling": "Mixed", "Sewage treatment plant": "STP", "UF pre-treatment": "UF", "Boiler feed RO / DM": "RO", "MBR reuse plant": "MBR" };
   for (const c of owned.slice(0, 20)) {
-    const stage = pick(spread.slice(0, 6));
+    const stage = pick(spread);
     const title = pick(DEAL_TITLES);
+    const daysIn = Math.floor(rand() * 50) + 1;
     await db.insert("deals", {
       title,
       companyId: c.id,
       ownerId: c.owner,
       stage,
-      stageEnteredAt: new Date(now - (Math.floor(rand() * 50) + 1) * D),
+      stageEnteredAt: new Date(now - daysIn * D),
       solutionType: SOL[title],
       valuePkr: Math.round((5 + rand() * 300) * 10) * 100_000,
       probability: PROB[stage],
+      lostReason: stage === "lost" ? pick(["Price too high", "Lost to competitor", "No budget"]) : null,
+      closedAt: stage === "won" || stage === "lost" ? new Date(now - daysIn * D) : null,
       expectedClose: dateStr(now + (Math.floor(rand() * 160) - 25) * D),
     });
   }
@@ -414,6 +294,7 @@ async function seedDemo() {
   }
 
   await db.insert("auditLog", { userId: ali.id, entity: "visit", action: "created", detail: "Demo data loaded" });
+  return true;
 }
 
 // ---------------------------------------------------------------- main
@@ -421,16 +302,17 @@ async function main() {
   console.log(`Store: ${db.kind}`);
   if (await runMigrations()) console.log("MySQL migrations applied.");
   const users = await seedUsers(STARTING_USERS, true);
-  if (users.length) console.log(`Starting accounts created (must change password at first login): ${users.join(", ")}`);
-  const stats = await seedWorkbook();
-  console.log(`Excel import: ${stats.companies} companies added, ${stats.skipped} already present, ${stats.deals} pipeline deals.`);
+  console.log(users.length ? `Starting accounts created (must change password at first login): ${users.join(", ")}` : "Starting accounts already exist.");
   if (DEMO) {
     if (db.kind === "mysql" && !process.argv.includes("--force-demo")) {
       throw new Error("Refusing to load demo data into MySQL. Pass --force-demo if you really mean it.");
     }
     await seedUsers(DEMO_USERS, false);
-    await seedDemo();
-    console.log("Demo activity added (sample salespeople, contacts, deals, visits, proposals).");
+    const companies = await seedDemoCompanies();
+    if (companies) console.log(`${companies} sample companies added (fictional).`);
+    console.log(
+      (await seedDemo()) ? "Demo activity added (sample salespeople, contacts, deals, visits, proposals)." : "Demo activity already present — skipped.",
+    );
   }
 }
 
