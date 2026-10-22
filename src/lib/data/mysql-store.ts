@@ -47,9 +47,15 @@ export class MysqlStore implements Store {
     this.pool = mysql.createPool(mysqlPoolOptions());
     if (process.env.VERCEL) {
       // Lets Vercel close idle connections before a function instance is suspended.
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { attachDatabasePool } = require("@vercel/functions") as typeof import("@vercel/functions");
-      attachDatabasePool(this.pool);
+      // It recognises mysql2's core pool, which the promise wrapper keeps in `.pool`.
+      // Only an optimisation, so it must never stop the app (or a build script) from starting.
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const { attachDatabasePool } = require("@vercel/functions") as typeof import("@vercel/functions");
+        attachDatabasePool((this.pool as unknown as { pool: Parameters<typeof attachDatabasePool>[0] }).pool);
+      } catch (e) {
+        console.warn("attachDatabasePool skipped:", e instanceof Error ? e.message : e);
+      }
     }
     this.db = drizzle(this.pool, { schema, mode: "default" });
   }
