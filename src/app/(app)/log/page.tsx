@@ -50,7 +50,7 @@ async function LogVisit({ searchParams }: { searchParams: PageProps<"/log">["sea
 
 function LogSkeleton() {
   return (
-    <div className="flex max-w-[880px] flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-2 max-md:hidden">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-4 w-80" />

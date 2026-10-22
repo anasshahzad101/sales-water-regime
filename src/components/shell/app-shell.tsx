@@ -49,13 +49,13 @@ function navKeyFor(path: string): NavKey {
   return null;
 }
 
-function metaFor(path: string): { title: string; back?: string; wide?: boolean } {
+function metaFor(path: string): { title: string; back?: string } {
   if (path === "/log") return { title: "Log a visit", back: "/my-week" };
   if (path === "/visits") return { title: "Visits" };
   if (path === "/accounts") return { title: "Accounts" };
   if (path === "/accounts/new") return { title: "Add company", back: "/accounts" };
   if (/^\/accounts\/\d+/.test(path)) return { title: "Account", back: "/accounts" };
-  if (path === "/pulse") return { title: "Team Pulse", wide: true };
+  if (path === "/pulse") return { title: "Team Pulse" };
   if (path === "/deals/new") return { title: "New deal", back: "/pulse" };
   if (/^\/deals\/\d+/.test(path)) return { title: "Deal", back: "/pulse" };
   if (path === "/cockpit") return { title: "Cockpit" };
@@ -313,7 +313,6 @@ function ShellInner({ user, badge, children }: { user: ShellUser; badge: ShellBa
         <main
           className={cn(
             "w-full flex-1 px-4 pt-2 md:px-8 md:pt-7 md:pb-14",
-            meta.wide ? "" : "md:max-w-[1240px]",
             user.isCeo ? "pb-7" : "pb-[calc(110px+env(safe-area-inset-bottom))] md:pb-14",
           )}
         >

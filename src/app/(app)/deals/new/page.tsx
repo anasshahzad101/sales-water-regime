@@ -34,7 +34,7 @@ async function NewDeal({ searchParams }: { searchParams: PageProps<"/deals/new">
 
 function NewDealSkeleton() {
   return (
-    <div className="flex max-w-[760px] flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-2 max-md:hidden">
         <Skeleton className="h-4 w-40" />
         <Skeleton className="h-8 w-48" />

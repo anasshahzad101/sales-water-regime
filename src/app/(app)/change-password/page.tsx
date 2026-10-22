@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Change password" };
 
 export default function ChangePasswordPage() {
   return (
-    <div className="flex max-w-[560px] flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-1.5">
         <span className="text-[13px] text-text-3 max-md:hidden">Account · Change password</span>
         <h1 className="m-0 font-display text-[28px] font-semibold tracking-[-0.02em] max-md:hidden">Change password</h1>

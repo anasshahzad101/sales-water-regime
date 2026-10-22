@@ -45,7 +45,7 @@ export function NewDealForm({ companies, from }: { companies: CompanyOption[]; f
   const err = (k: string) => (k in local ? local[k] : state.fieldErrors?.[k]);
 
   return (
-    <div className="flex max-w-[760px] flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <div className="hidden flex-col gap-1.5 md:flex">
         <span className="flex items-center gap-1.5 text-[13px] text-text-3">
           <Link href={back} className="text-text-2">

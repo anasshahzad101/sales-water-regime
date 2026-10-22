@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Add company" };
 
 export default function AddCompanyPage() {
   return (
-    <div className="flex max-w-[880px] flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <div className="hidden flex-col gap-1.5 md:flex">
         <span className="flex items-center gap-1.5 text-[13px] text-text-3">
           <Link href="/accounts" className="text-text-2">

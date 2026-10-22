@@ -131,7 +131,7 @@ export function LogForm({
   const cancelHref = fromAccount ? `/accounts/${fromAccount.id}` : "/my-week";
 
   return (
-    <div className="flex max-w-[880px] flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <div className="hidden flex-col gap-1.5 md:flex">
         {fromAccount && (
           <span className="flex items-center gap-1.5 text-[13px] text-text-3">
