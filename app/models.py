@@ -19,6 +19,13 @@ def utcnow():
     return datetime.now(timezone.utc)
 
 
+def as_utc(dt):
+    """SQLite drops tzinfo on read; treat naive datetimes as UTC so they compare with utcnow()."""
+    if dt is not None and dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
 # ---------------------------------------------------------------------------
 # USERS & ROLES
 # ---------------------------------------------------------------------------
@@ -167,7 +174,7 @@ class Company(db.Model):
     def last_touch(self):
         if not self.visits:
             return None
-        return max(v.visit_date for v in self.visits if v.visit_date)
+        return max(as_utc(v.visit_date) for v in self.visits if v.visit_date)
 
     @property
     def is_dormant(self):
@@ -245,7 +252,7 @@ class Opportunity(db.Model):
     def days_in_stage(self):
         if not self.stage_entered_at:
             return 0
-        return (utcnow() - self.stage_entered_at).days
+        return (utcnow() - as_utc(self.stage_entered_at)).days
 
     @property
     def is_stuck(self):
@@ -315,7 +322,7 @@ class Visit(db.Model):
     def hours_since_visit(self):
         if not self.visit_date:
             return 0
-        return (utcnow() - self.visit_date).total_seconds() / 3600.0
+        return (utcnow() - as_utc(self.visit_date)).total_seconds() / 3600.0
 
     @property
     def grace_remaining_hours(self):
