@@ -9,9 +9,11 @@ import { fmtCalendar, fmtDate, fmtDateTime, pktDate } from "@/lib/time";
 import { companyLine, lookups } from "./common";
 
 // ---------------------------------------------------------------- Team Pulse filters
-export type PulseFilters = { scope: "mine" | "team"; owner: number | null; sols: string[] };
+export const PULSE_VIEWS = ["board", "list", "forecast"] as const;
+export type PulseView = (typeof PULSE_VIEWS)[number];
+export type PulseFilters = { scope: "mine" | "team"; owner: number | null; sols: string[]; view: PulseView };
 
-/** Reads ?scope, ?owner and ?sol (comma-separated) with role-based defaults. */
+/** Reads ?scope, ?owner, ?sol (comma-separated) and ?view with role-based defaults. */
 export function pulseFilters(user: CurrentUser, sp: Record<string, string | string[] | undefined>): PulseFilters {
   const one = (k: string) => (typeof sp[k] === "string" ? (sp[k] as string) : "");
   const scopeParam = one("scope");
@@ -20,7 +22,8 @@ export function pulseFilters(user: CurrentUser, sp: Record<string, string | stri
   const sols = one("sol")
     .split(",")
     .filter((s) => (SOLUTION_TYPES as readonly string[]).includes(s));
-  return { scope, owner, sols };
+  const view = (PULSE_VIEWS as readonly string[]).includes(one("view")) ? (one("view") as PulseView) : "board";
+  return { scope, owner, sols, view };
 }
 
 function pulseWhere(user: CurrentUser, f: PulseFilters): Where<Row<"deals">> {
@@ -36,6 +39,7 @@ export type PulseCard = {
   title: string;
   company: string;
   value: number | null;
+  probability: number;
   sol: string | null;
   owner: string;
   ownerInitials: string;
@@ -44,8 +48,12 @@ export type PulseCard = {
   stuck: boolean;
   closePassed: boolean;
   close: string;
+  /** YYYY-MM-DD, for sorting and the forecast. */
+  expectedClose: string | null;
   closedOn: string;
   lostReason: string | null;
+  /** The signed-in user may change this deal (drag it, change its stage). */
+  canMove: boolean;
 };
 export type PulseColumn = { key: StageKey; count: number; total: number; cards: PulseCard[] };
 
@@ -68,6 +76,7 @@ export async function getPulse(user: CurrentUser, f: PulseFilters, now: Date) {
       title: d.title,
       company: companies.get(d.companyId)?.name ?? "—",
       value: d.valuePkr,
+      probability: d.probability,
       sol: d.solutionType,
       owner: owner ? owner.name.split(" ")[0] : "Unassigned",
       ownerInitials: owner ? initials(owner.name) : "—",
@@ -76,8 +85,10 @@ export async function getPulse(user: CurrentUser, f: PulseFilters, now: Date) {
       stuck: isStuck(d, now),
       closePassed: isClosePassed(d, today),
       close: fmtCalendar(d.expectedClose),
+      expectedClose: d.expectedClose,
       closedOn: d.closedAt ? fmtDate(d.closedAt) : fmtCalendar(d.expectedClose),
       lostReason: d.lostReason,
+      canMove: canChange(user, d.ownerId),
     };
   };
   const columns: PulseColumn[] = STAGES.map((s) => {
@@ -85,7 +96,7 @@ export async function getPulse(user: CurrentUser, f: PulseFilters, now: Date) {
     return { key: s.key, count: list.length, total: list.reduce((n, d) => n + (d.valuePkr ?? 0), 0), cards: list.map(card) };
   });
   const people = L.users.filter((u) => u.isActive && (u.role === "sales" || u.role === "manager")).map((u) => ({ id: u.id, name: u.name }));
-  return { columns, people };
+  return { columns, people, today };
 }
 
 // ---------------------------------------------------------------- New deal

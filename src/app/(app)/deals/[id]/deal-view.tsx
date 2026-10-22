@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { addProposal, changeDealStage, setProposalStatus, undoDealStage, updateDeal } from "@/app/actions/deals";
+import { LostModal, WonModal } from "@/components/deals/stage-modals";
 import { Icon } from "@/components/ui/icon";
 import { Modal } from "@/components/ui/overlay";
 import { CountdownPill, hueClass, OutcomePill, Pill } from "@/components/ui/pills";
 import { useToast } from "@/components/ui/toast";
-import { LOST_REASONS, PROPOSAL_STATUSES, SOLUTION_TYPES, STAGES, proposalStatusOf, stageOf, visitTypeIcon, type StageKey } from "@/lib/constants";
+import { PROPOSAL_STATUSES, SOLUTION_TYPES, STAGES, proposalStatusOf, stageOf, visitTypeIcon, type StageKey } from "@/lib/constants";
 import { cn } from "@/lib/cn";
 import { money, moneyFull } from "@/lib/format";
 import type { DealView as Deal } from "@/lib/queries/deals";
@@ -21,8 +22,6 @@ export function DealView({ deal }: { deal: Deal }) {
   const toast = useToast();
   const [busy, startTransition] = useTransition();
   const [modal, setModal] = useState<null | "lost" | "won" | "edit">(null);
-  const [lostReason, setLostReason] = useState("");
-  const [lostNote, setLostNote] = useState("");
   const [lostErr, setLostErr] = useState("");
   const [addOpen, setAddOpen] = useState(false);
 
@@ -54,18 +53,10 @@ export function DealView({ deal }: { deal: Deal }) {
   const pickStage = (k: StageKey) => {
     if (ro || busy || k === deal.stage) return;
     if (k === "lost") {
-      setLostReason("");
-      setLostNote("");
       setLostErr("");
       setModal("lost");
     } else if (k === "won") setModal("won");
     else runStage(k);
-  };
-
-  const confirmLost = () => {
-    if (!lostReason) return setLostErr("Pick the main reason.");
-    if (lostReason === "Other (specify)" && !lostNote.trim()) return setLostErr("Add a short note for “Other”.");
-    runStage("lost", { lostReason, lostNote });
   };
 
   const kpis: { label: string; value: string; sub: string; title?: string; red?: boolean; small?: boolean }[] = [
@@ -278,98 +269,23 @@ export function DealView({ deal }: { deal: Deal }) {
         </div>
       </div>
 
-      {/* lost */}
-      <Modal open={modal === "lost"} onClose={() => setModal(null)} title="Move to Lost" description={`${deal.title} · ${deal.company.name}`} width={520}>
-        <div className="flex flex-col gap-2">
-          <span className="text-[13.5px] font-semibold">
-            Why was it lost? <span className="text-red">*</span>
-          </span>
-          <div role="radiogroup" className="flex flex-col gap-1.5">
-            {LOST_REASONS.map((r) => {
-              const on = lostReason === r;
-              return (
-                <button
-                  key={r}
-                  type="button"
-                  role="radio"
-                  aria-checked={on}
-                  onClick={() => {
-                    setLostReason(r);
-                    setLostErr("");
-                  }}
-                  className={cn(
-                    "flex min-h-12 items-center gap-2.5 rounded-xl border px-3 text-left text-sm text-ink md:min-h-[42px]",
-                    on ? "border-red bg-red-bg font-semibold" : "border-line-strong bg-surface font-medium",
-                  )}
-                >
-                  <Icon name={on ? "circle-dot" : "circle"} size={17} className={on ? "text-red" : "text-text-3"} />
-                  {r}
-                </button>
-              );
-            })}
-          </div>
-          {lostErr && (
-            <span className="flex items-center gap-1.5 text-[13px] font-medium text-red">
-              <Icon name="circle-alert" size={14} />
-              {lostErr}
-            </span>
-          )}
-        </div>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-[13.5px] font-semibold">{lostReason === "Other (specify)" ? "Note (required for Other)" : "Note (optional)"}</span>
-          <textarea
-            rows={2}
-            value={lostNote}
-            onChange={(e) => {
-              setLostNote(e.target.value);
-              setLostErr("");
-            }}
-            placeholder="e.g. Competitor quoted 12% lower with a 5-year O&M"
-            className={cn(
-              "wr-field min-h-16 resize-none rounded-xl border bg-input px-3 py-2.5 text-base leading-normal text-ink outline-none md:text-sm",
-              lostErr && lostReason === "Other (specify)" ? "border-red" : "border-line-strong",
-            )}
-          />
-        </label>
-        <div className="flex gap-2.5">
-          <button type="button" onClick={() => setModal(null)} className="h-[50px] flex-1 rounded-full border border-line-strong bg-surface text-[14.5px] font-semibold text-ink md:h-11">
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={confirmLost}
-            disabled={busy}
-            className="flex h-[50px] flex-1 items-center justify-center gap-2 rounded-full border-0 bg-danger text-[14.5px] font-semibold text-white disabled:opacity-60 md:h-11"
-          >
-            <Icon name={busy ? "loader-circle" : "circle-x"} size={16} className={busy ? "animate-spin" : undefined} />
-            Move to Lost
-          </button>
-        </div>
-      </Modal>
-
-      {/* won */}
-      <Modal open={modal === "won"} onClose={() => setModal(null)} title="Mark as Won (PO)" description={`${deal.title} · ${deal.company.name}`} width={520}>
-        <div className="flex items-start gap-3 rounded-[14px] bg-green-bg px-4 py-3.5">
-          <Icon name="trophy" size={20} className="mt-0.5 text-green" />
-          <span className="text-sm leading-normal">
-            Mark as <b>Won (PO)</b>? Probability becomes 100% and {money(deal.value)} counts as won in the Cockpit.
-          </span>
-        </div>
-        <div className="flex gap-2.5">
-          <button type="button" onClick={() => setModal(null)} className="h-[50px] flex-1 rounded-full border border-line-strong bg-surface text-[14.5px] font-semibold text-ink md:h-11">
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => runStage("won")}
-            disabled={busy}
-            className="flex h-[50px] flex-1 items-center justify-center gap-2 rounded-full border-0 bg-primary text-[14.5px] font-semibold text-on-primary hover:bg-primary-hover disabled:opacity-60 md:h-11"
-          >
-            {busy && <Icon name="loader-circle" size={16} className="animate-spin" />}
-            Mark as Won
-          </button>
-        </div>
-      </Modal>
+      <LostModal
+        open={modal === "lost"}
+        description={`${deal.title} · ${deal.company.name}`}
+        busy={busy}
+        error={lostErr}
+        onEdit={() => setLostErr("")}
+        onClose={() => setModal(null)}
+        onConfirm={(lostReason, lostNote) => runStage("lost", { lostReason, lostNote })}
+      />
+      <WonModal
+        open={modal === "won"}
+        description={`${deal.title} · ${deal.company.name}`}
+        value={deal.value}
+        busy={busy}
+        onClose={() => setModal(null)}
+        onConfirm={() => runStage("won")}
+      />
 
       {modal === "edit" && <EditDeal deal={deal} onClose={() => setModal(null)} />}
     </div>

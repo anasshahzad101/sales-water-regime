@@ -1,9 +1,9 @@
 import type { SVGProps } from "react";
 import {
   Accessibility, AlarmClock, Archive, ArrowDown, ArrowDownAZ, ArrowLeft, ArrowUp, ArrowRight, Briefcase, User, UserCheck, ArrowRightLeft, ArrowUpRight, BadgeCheck, Building2,
-  CalendarCheck, CalendarClock, CalendarDays, CalendarX, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, Circle,
+  CalendarCheck, CalendarClock, CalendarDays, CalendarRange, CalendarX, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, Circle,
   CircleAlert, CircleCheck, CircleDashed, CircleDot, CircleHelp, CircleSlash, CircleX, ClipboardList, Clock, Copy, Download, Ellipsis,
-  ExternalLink, Eye, EyeOff, Factory, FilePen, FileSpreadsheet, FileText, Filter, Flag, Gauge, Hand, Handshake, Hash, History,
+  ExternalLink, Eye, EyeOff, Factory, FilePen, FileSpreadsheet, FileText, Filter, Flag, Gauge, GripVertical, Hand, Handshake, Hash, History,
   Hourglass, Info, Kanban, KeyRound, Layers, List, LoaderCircle, Lock, LogIn, LogOut, Mail, MapPin, Menu, MessageCircle, Moon,
   NotebookPen, Pencil, Phone, Plus, Presentation, RefreshCw, RotateCcw, Route, Scale, ScrollText, Search, SearchX, Send, Shield,
   ShieldCheck, SignalHigh, SignalLow, SignalMedium, SkipForward, SlidersHorizontal, Star, Sun, SunMoon, Tag, Target, ThumbsDown,
@@ -25,13 +25,13 @@ function Linkedin(props: SVGProps<SVGSVGElement> & { size?: number | string }) {
 const ICONS = {
   accessibility: Accessibility, "alarm-clock": AlarmClock, archive: Archive, "arrow-down": ArrowDown, "arrow-up": ArrowUp, "arrow-down-a-z": ArrowDownAZ, "arrow-left": ArrowLeft,
   "arrow-right": ArrowRight, "arrow-right-left": ArrowRightLeft, "arrow-up-right": ArrowUpRight, "badge-check": BadgeCheck, briefcase: Briefcase, user: User, "user-check": UserCheck,
-  "building-2": Building2, "calendar-check": CalendarCheck, "calendar-clock": CalendarClock, "calendar-days": CalendarDays,
+  "building-2": Building2, "calendar-check": CalendarCheck, "calendar-clock": CalendarClock, "calendar-days": CalendarDays, "calendar-range": CalendarRange,
   "calendar-x": CalendarX, check: Check, "chevron-down": ChevronDown, "chevron-left": ChevronLeft, "chevron-right": ChevronRight,
   "chevrons-up-down": ChevronsUpDown, circle: Circle, "circle-alert": CircleAlert, "circle-check": CircleCheck,
   "circle-dashed": CircleDashed, "circle-dot": CircleDot, "circle-help": CircleHelp, "circle-slash": CircleSlash, "circle-x": CircleX,
   "clipboard-list": ClipboardList, clock: Clock, copy: Copy, download: Download, ellipsis: Ellipsis, "external-link": ExternalLink,
   eye: Eye, "eye-off": EyeOff, factory: Factory, "file-pen": FilePen, "file-spreadsheet": FileSpreadsheet, "file-text": FileText,
-  filter: Filter, flag: Flag, gauge: Gauge, hand: Hand, handshake: Handshake, hash: Hash, history: History, hourglass: Hourglass,
+  filter: Filter, flag: Flag, gauge: Gauge, "grip-vertical": GripVertical, hand: Hand, handshake: Handshake, hash: Hash, history: History, hourglass: Hourglass,
   info: Info, kanban: Kanban, "key-round": KeyRound, layers: Layers, linkedin: Linkedin as unknown as LucideIcon, list: List,
   "loader-circle": LoaderCircle, lock: Lock, "log-in": LogIn, "log-out": LogOut, mail: Mail, "map-pin": MapPin, menu: Menu,
   "message-circle": MessageCircle, moon: Moon, "notebook-pen": NotebookPen, pencil: Pencil, phone: Phone, plus: Plus,

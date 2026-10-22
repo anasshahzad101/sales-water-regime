@@ -23,12 +23,12 @@ async function Pulse({ searchParams }: { searchParams: PageProps<"/pulse">["sear
   const { now } = await requestNow();
   const sp = await searchParams;
   const filters = pulseFilters(user, sp);
-  const { columns, people } = await getPulse(user, filters, now);
+  const { columns, people, today } = await getPulse(user, filters, now);
   const q = new URLSearchParams();
   q.set("scope", filters.scope);
   if (filters.owner) q.set("owner", String(filters.owner));
   if (filters.sols.length) q.set("sol", filters.sols.join(","));
-  return <PulseBoard columns={columns} people={people} filters={filters} canCreate={user.canEdit} exportHref={`/export/pipeline?${q.toString()}`} />;
+  return <PulseBoard columns={columns} people={people} filters={filters} today={today} canCreate={user.canEdit} exportHref={`/export/pipeline?${q.toString()}`} />;
 }
 
 function PulseSkeleton() {
