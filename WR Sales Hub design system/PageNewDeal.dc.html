@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-screen-label="New deal" style="display:flex;flex-direction:column;gap:20px;max-width:760px">
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text-3)"><a href="#back" onClick="{{ goBack }}" style="color:var(--text-2)">{{ crumb }}</a><i class="icon-chevron-right" style="font-size:13px;line-height:1"></i>New deal</span>
+      <h1 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">New deal</h1>
+      <p style="margin:0;font-size:14.5px;color:var(--text-2)">You'll be the owner. You can change the stage later from the deal page.</p>
+    </div>
+  </sc-if>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:{{ cardPad }};display:flex;flex-direction:column;gap:20px">
+    <label style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:13.5px;font-weight:600">Company <span style="color:var(--red)">*</span></span>
+      <span style="position:relative;display:flex"><select value="{{ company }}" onChange="{{ onCompany }}" style="flex:1;appearance:none;-webkit-appearance:none;height:{{ inH }};padding:0 38px 0 12px;border-radius:12px;border:1px solid {{ coBd }};background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none"><option value="">Search or choose a company</option><sc-for list="{{ companies }}" as="c" hint-placeholder-count="5"><option value="{{ c.id }}">{{ c.label }}</option></sc-for></select><i class="icon-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:16px;line-height:1;color:var(--text-3);pointer-events:none"></i></span>
+      <span style="font-size:12.5px;color:{{ coHelpFg }}">{{ coHelp }}</span>
+    </label>
+    <label style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:13.5px;font-weight:600">Deal title <span style="color:var(--red)">*</span></span>
+      <input value="{{ title }}" onChange="{{ onTitle }}" placeholder="e.g. ETP expansion, Plant 2" style="height:{{ inH }};padding:0 12px;border-radius:12px;border:1px solid {{ titleBd }};background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+      <sc-if value="{{ titleErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--red);font-weight:500">{{ titleErr }}</span></sc-if>
+    </label>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:13.5px;font-weight:600">Stage</span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ stages }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="display:inline-flex;align-items:center;gap:6px;height:{{ chipH }};padding:0 14px 0 12px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13.5px;font-weight:600;cursor:pointer"><i class="icon-{{ o.icon }}" style="font-size:14px;line-height:1;color:{{ o.ic }}"></i>{{ o.label }}</button></sc-for></div>
+      <span style="font-size:12.5px;color:var(--text-3)">New deals usually start at Lead. To record Won or Lost, use the deal page.</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:13.5px;font-weight:600">Solution type</span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ sols }}" as="o" hint-placeholder-count="7"><button onClick="{{ o.pick }}" style="min-width:56px;height:{{ chipH }};padding:0 14px;border-radius:12px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13.5px;font-weight:700;cursor:pointer">{{ o.label }}</button></sc-for></div>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ cols3 }};gap:16px">
+      <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Value</span>
+        <span style="display:flex;align-items:center;height:{{ inH }};border-radius:12px;border:1px solid var(--line-strong);background:var(--input);overflow:hidden"><span style="height:100%;padding:0 12px;display:flex;align-items:center;background:var(--bg-alt);color:var(--text-2);font-size:13px;font-weight:700;border-right:1px solid var(--line)">PKR</span><input value="{{ value }}" onChange="{{ onValue }}" inputmode="numeric" placeholder="0" style="flex:1;min-width:0;height:100%;padding:0 12px;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none;font-variant-numeric:tabular-nums;text-align:right"></span>
+        <span style="font-size:12.5px;color:var(--text-3)">{{ valueHint }}</span></label>
+      <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Probability</span>
+        <span style="display:flex;align-items:center;height:{{ inH }};border-radius:12px;border:1px solid var(--line-strong);background:var(--input);overflow:hidden"><input value="{{ prob }}" onChange="{{ onProb }}" inputmode="numeric" style="flex:1;min-width:0;height:100%;padding:0 12px;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none;font-variant-numeric:tabular-nums;text-align:right"><span style="height:100%;padding:0 12px;display:flex;align-items:center;background:var(--bg-alt);color:var(--text-2);font-size:13px;font-weight:700;border-left:1px solid var(--line)">%</span></span>
+        <span style="font-size:12.5px;color:var(--text-3)">{{ probHint }}</span></label>
+      <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Expected close</span>
+        <span style="display:flex;align-items:center;gap:8px;height:{{ inH }};padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input)"><i class="icon-calendar-days" style="font-size:17px;line-height:1;color:var(--text-3)"></i><input value="{{ close }}" onChange="{{ onClose }}" placeholder="dd Mmm yyyy" style="flex:1;min-width:0;height:100%;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none"></span></label>
+    </div>
+    <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Notes</span><textarea rows="3" value="{{ notes }}" onChange="{{ onNotes }}" placeholder="Scope, competitors, decision makers" style="resize:vertical;min-height:84px;padding:12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font-size:{{ inFs }};line-height:1.5;outline:none"></textarea></label>
+    <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:18px;border-top:1px solid var(--line)">
+      <button onClick="{{ goBack }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 18px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer">Cancel</button>
+      <button onClick="{{ save }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 22px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px" style-hover="background:var(--primary-hover)"><i class="icon-check" style="font-size:16px;line-height:1"></i>Create deal</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {company:'', title:'', stage:'lead', sol:'ETP', value:'', prob:'10', probTouched:false, close:'', notes:'', errs:{}};
+  app() { return this.props.app || {}; }
+  componentDidMount() { const a = this.app(), p = a.params || {}; const s = {company: p.company || ''}; if (a.demo === 'errors') s.errs = {co: p.company ? null : 'Choose a company.', title:'Give the deal a short title.'}; if (a.demo === 'filled') Object.assign(s, {company:'c1', title:'Water reuse, Plant 2', sol:'MBR', value:'64,500,000', prob:'25', stage:'qualified', close:'31 Mar 2027'}); this.setState(s); }
+  save() {
+    const s = this.state, a = this.app(), errs = {};
+    if (!s.company) errs.co = 'Choose a company.';
+    if (!s.title.trim()) errs.title = 'Give the deal a short title.';
+    if (Object.keys(errs).length) return this.setState({errs});
+    a.toast({title:'Deal created', sub:`${s.title} · ${a.W.co(s.company).name}`});
+    const p = a.params || {};
+    a.nav(p.company ? 'account' : 'pulse', p.company ? {company:p.company} : {});
+  }
+  renderVals() {
+    const a = this.app(), W = a.W, s = this.state;
+    if (!W) return {};
+    const phone = !!a.phone, p = a.params || {}, go = fn => e => { if (e && e.preventDefault) e.preventDefault(); fn(); };
+    const n = parseFloat(String(s.value).replace(/[^0-9.]/g, '')) || 0;
+    const sel = on => on ? {bd:'var(--primary)', bg:'var(--brand-soft)', fg:'var(--green)'} : {bd:'var(--line-strong)', bg:'var(--surface)', fg:'var(--ink)'};
+    return {
+      isDesktop: !phone, crumb: p.company ? W.co(p.company).name : 'Team Pulse',
+      goBack: go(() => a.nav(p.company ? 'account' : 'pulse', p.company ? {company:p.company} : {})),
+      company: s.company, onCompany: e => this.setState({company: e.target.value, errs:{...s.errs, co:null}}),
+      companies: W.COMPANIES.filter(c => c.status !== 'archived').map(c => ({id:c.id, label:`${c.name} — ${c.plant}, ${c.city}`})),
+      coBd: s.errs.co ? 'var(--red)' : 'var(--line-strong)', coHelp: s.errs.co || (p.company ? 'Pre-filled from the account you came from.' : 'Type to filter by company, brand, plant or city.'), coHelpFg: s.errs.co ? 'var(--red)' : 'var(--text-3)',
+      title: s.title, onTitle: e => this.setState({title: e.target.value, errs:{...s.errs, title:null}}), titleErr: s.errs.title || '', titleBd: s.errs.title ? 'var(--red)' : 'var(--line-strong)',
+      stages: W.STAGES.filter(x => W.isOpen({stage:x.key})).map(x => { const st = W.stage(x.key), on = s.stage === x.key; return {label:st.label, icon:st.icon, ic:st.fg, ...sel(on), pick: () => this.setState({stage:x.key, prob: s.probTouched ? s.prob : String(x.p)})}; }),
+      sols: W.SOL.map(x => ({label:x, ...sel(s.sol === x), pick: () => this.setState({sol:x})})),
+      value: s.value, onValue: e => this.setState({value: e.target.value}), valueHint: n ? `= ${W.money(n / 1e6)}` : 'Full amount in rupees, e.g. 86,500,000',
+      prob: s.prob, onProb: e => this.setState({prob: e.target.value, probTouched:true}), probHint: n ? `Weighted: ${W.money(n / 1e6 * (parseFloat(s.prob) || 0) / 100)}` : 'Defaults from the stage; change it if you know better.',
+      close: s.close, onClose: e => this.setState({close: e.target.value}), notes: s.notes, onNotes: e => this.setState({notes: e.target.value}),
+      save: () => this.save(),
+      cardPad: phone ? '18px 16px' : '28px', inH: phone ? '48px' : '44px', inFs: phone ? '16px' : '14.5px', chipH: phone ? '44px' : '38px', btnH: phone ? '50px' : '42px', btnFlex: phone ? '1' : 'none',
+      cols3: phone ? 'minmax(0,1fr)' : 'repeat(3,minmax(0,1fr))'
+    };
+  }
+}
+</script>
+</body>
+</html>

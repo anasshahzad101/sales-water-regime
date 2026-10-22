@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<sc-if value="{{ isFull }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="{{ label }}" style="{{ S.wrap }}">
+  <div style="{{ S.brand }}">
+    <img src="uploads/logo-white.png" alt="Water Regime" style="{{ S.logo }}">
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:14px;max-width:420px">
+        <span style="font-family:Sora,sans-serif;font-size:34px;line-height:1.15;font-weight:600;letter-spacing:-0.02em;color:#E6F2EC">Sales Hub</span>
+        <span style="font-size:16px;line-height:1.6;color:#9DB5AB">Accounts, visits and deals for the Water Regime sales team, in one place.</span>
+      </div>
+      <span style="font-size:12.5px;color:#9DB5AB">Water Regime (Pvt.) Ltd. · Internal use only</span>
+    </sc-if>
+  </div>
+  <div style="{{ S.formWrap }}">
+    <div style="width:100%;max-width:400px;display:flex;flex-direction:column;gap:20px">
+
+      <sc-if value="{{ isSignin }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:6px"><h1 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Sign in</h1><p style="margin:0;font-size:15px;color:var(--text-2)">Use your Water Regime email address.</p></div>
+        <sc-if value="{{ hasAlert }}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:{{ alert.bg }};color:{{ alert.fg }}">
+            <i class="icon-{{ alert.icon }}" style="font-size:18px;line-height:1.2"></i>
+            <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:700">{{ alert.title }}</span><span style="font-size:13.5px;line-height:1.45;color:var(--ink)">{{ alert.text }}</span></div>
+          </div>
+        </sc-if>
+        <label style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:13.5px;font-weight:600">Email</span>
+          <input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="name@waterregime.com" autocomplete="username" style="height:48px;padding:0 14px;border-radius:12px;border:1px solid {{ emailBd }};background:var(--input);color:var(--ink);font-size:16px;outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+          <sc-if value="{{ emailErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--red);font-weight:500"><i class="icon-circle-alert" style="font-size:14px;line-height:1"></i>{{ emailErr }}</span></sc-if>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:13.5px;font-weight:600">Password</span>
+          <span style="position:relative;display:flex">
+            <input type="{{ pwType }}" value="{{ pw }}" onChange="{{ onPw }}" placeholder="Your password" autocomplete="current-password" style="flex:1;height:48px;padding:0 52px 0 14px;border-radius:12px;border:1px solid {{ pwBd }};background:var(--input);color:var(--ink);font-size:16px;outline:none;min-width:0" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+            <button type="button" onClick="{{ toggleShow }}" aria-label="{{ showLabel }}" style="position:absolute;right:2px;top:2px;width:44px;height:44px;border:0;border-radius:10px;background:transparent;color:var(--text-2);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="icon-{{ eyeIcon }}" style="font-size:18px;line-height:1"></i></button>
+          </span>
+        </label>
+        <button onClick="{{ submit }}" disabled="{{ locked }}" style="height:52px;border:0;border-radius:999px;background:{{ btnBg }};color:{{ btnFg }};font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;cursor:{{ btnCursor }};box-shadow:{{ btnSh }}">
+          <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}"><i class="icon-loader-circle" style="font-size:18px;line-height:1;animation:wrspin 0.9s linear infinite"></i></sc-if>{{ btnLabel }}
+        </button>
+        <p style="margin:0;font-size:13.5px;line-height:1.5;color:var(--text-2)">Forgot your password? Ask your admin to reset it. You'll get a temporary one.</p>
+      </sc-if>
+
+      <sc-if value="{{ isSetPw }}" hint-placeholder-val="{{ false }}">
+        <span style="width:48px;height:48px;border-radius:14px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center"><i class="icon-key-round" style="font-size:22px;line-height:1"></i></span>
+        <div style="display:flex;flex-direction:column;gap:6px"><h1 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Set your own password</h1><p style="margin:0;font-size:15px;line-height:1.5;color:var(--text-2)">Everyone starts with the same shared password, so you need your own before you can continue.</p></div>
+      </sc-if>
+
+      <sc-if value="{{ showPwForm }}" hint-placeholder-val="{{ false }}">
+        <sc-if value="{{ isChange }}" hint-placeholder-val="{{ false }}">
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:13.5px;font-weight:600">Current password</span>
+            <input type="password" value="{{ cur }}" onChange="{{ onCur }}" autocomplete="current-password" style="height:{{ inH }};padding:0 14px;border-radius:12px;border:1px solid {{ curBd }};background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+            <sc-if value="{{ curErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--red);font-weight:500"><i class="icon-circle-alert" style="font-size:14px;line-height:1"></i>{{ curErr }}</span></sc-if>
+          </label>
+        </sc-if>
+        <label style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:13.5px;font-weight:600">New password</span>
+          <span style="position:relative;display:flex">
+            <input type="{{ pwType }}" value="{{ np }}" onChange="{{ onNp }}" autocomplete="new-password" style="flex:1;min-width:0;height:{{ inH }};padding:0 52px 0 14px;border-radius:12px;border:1px solid {{ npBd }};background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+            <button type="button" onClick="{{ toggleShow }}" aria-label="{{ showLabel }}" style="position:absolute;right:2px;top:2px;width:{{ eyeW }};height:{{ eyeW }};border:0;border-radius:10px;background:transparent;color:var(--text-2);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="icon-{{ eyeIcon }}" style="font-size:18px;line-height:1"></i></button>
+          </span>
+          <span style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px">
+            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="4"><span style="height:5px;border-radius:99px;background:{{ b.bg }}"></span></sc-for>
+          </span>
+          <span style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:var(--text-3)">At least 8 characters. Mix letters, numbers and a symbol to make it strong.</span><span style="font-weight:700;color:{{ strength.fg }};white-space:nowrap;margin-left:12px">{{ strength.label }}</span></span>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:13.5px;font-weight:600">Confirm new password</span>
+          <input type="{{ pwType }}" value="{{ cp }}" onChange="{{ onCp }}" autocomplete="new-password" style="height:{{ inH }};padding:0 14px;border-radius:12px;border:1px solid {{ cpBd }};background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+          <sc-if value="{{ cpMsg }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;font-weight:500;color:{{ cpFg }}"><i class="icon-{{ cpIcon }}" style="font-size:14px;line-height:1"></i>{{ cpMsg }}</span></sc-if>
+        </label>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button onClick="{{ savePw }}" style="height:{{ saveH }};flex:{{ saveFlex }};padding:0 22px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer" style-hover="background:var(--primary-hover)"><i class="icon-check" style="font-size:16px;line-height:1"></i>{{ saveLabel }}</button>
+          <sc-if value="{{ isChange }}" hint-placeholder-val="{{ false }}"><button onClick="{{ cancel }}" style="height:44px;padding:0 16px;border:0;border-radius:999px;background:transparent;color:var(--text-2);font-size:14.5px;font-weight:600;cursor:pointer">Cancel</button></sc-if>
+        </div>
+        <sc-if value="{{ isSetPw }}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:13px;color:var(--text-3)">Signed in as ali.raza@waterregime.com · <a href="#signin" onClick="{{ toSignin }}" style="color:var(--link);font-weight:600">Not you? Sign out</a></p></sc-if>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isChange }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Change password" style="display:flex;flex-direction:column;gap:20px;max-width:560px">
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:var(--text-3)">Account · Change password</span><h1 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Change password</h1><p style="margin:0;font-size:14.5px;color:var(--text-2)">You'll stay signed in on this device. Other devices will be signed out.</p></div>
+  </sc-if>
+  <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}"><p style="margin:4px 0 0;font-size:14px;line-height:1.5;color:var(--text-2)">You'll stay signed in on this device. Other devices will be signed out.</p></sc-if>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:{{ cardPad }};display:flex;flex-direction:column;gap:18px">
+    <label style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:13.5px;font-weight:600">Current password</span>
+      <input type="password" value="{{ cur }}" onChange="{{ onCur }}" autocomplete="current-password" style="height:{{ inH }};padding:0 14px;border-radius:12px;border:1px solid {{ curBd }};background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+      <sc-if value="{{ curErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--red);font-weight:500"><i class="icon-circle-alert" style="font-size:14px;line-height:1"></i>{{ curErr }}</span></sc-if>
+    </label>
+    <label style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:13.5px;font-weight:600">New password</span>
+      <input type="password" value="{{ np }}" onChange="{{ onNp }}" autocomplete="new-password" style="height:{{ inH }};padding:0 14px;border-radius:12px;border:1px solid {{ npBd }};background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+      <span style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px"><sc-for list="{{ bars }}" as="b" hint-placeholder-count="4"><span style="height:5px;border-radius:99px;background:{{ b.bg }}"></span></sc-for></span>
+      <span style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:var(--text-3)">At least 8 characters.</span><span style="font-weight:700;color:{{ strength.fg }}">{{ strength.label }}</span></span>
+    </label>
+    <label style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:13.5px;font-weight:600">Confirm new password</span>
+      <input type="password" value="{{ cp }}" onChange="{{ onCp }}" autocomplete="new-password" style="height:{{ inH }};padding:0 14px;border-radius:12px;border:1px solid {{ cpBd }};background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+      <sc-if value="{{ cpMsg }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;font-weight:500;color:{{ cpFg }}"><i class="icon-{{ cpIcon }}" style="font-size:14px;line-height:1"></i>{{ cpMsg }}</span></sc-if>
+    </label>
+    <div style="display:flex;gap:10px;align-items:center;padding-top:4px">
+      <button onClick="{{ savePw }}" style="height:{{ saveH }};flex:{{ saveFlex }};padding:0 22px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer" style-hover="background:var(--primary-hover)"><i class="icon-check" style="font-size:16px;line-height:1"></i>Update password</button>
+      <button onClick="{{ cancel }}" style="height:44px;padding:0 16px;border:0;border-radius:999px;background:transparent;color:var(--text-2);font-size:14.5px;font-weight:600;cursor:pointer">Cancel</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {email:'ali.raza@waterregime.com', pw:'', show:false, loading:false, alert:null, emailErr:'', cur:'', np:'', cp:'', curErr:'', tried:false, lockLeft:0};
+  app() { return this.props.app || {}; }
+  componentDidMount() {
+    const d = this.app().demo;
+    if (d === 'wrong') this.setState({email:'ali.raza@waterregime.com', pw:'wrongpass', alert:'wrong'});
+    if (d === 'locked') { this.setState({email:'ali.raza@waterregime.com', alert:'locked', lockLeft:892}); this.iv = setInterval(() => this.setState(s => ({lockLeft: Math.max(0, s.lockLeft - 1)})), 1000); }
+    if (d === 'deactivated') this.setState({email:'fahad.iqbal@waterregime.com', pw:'••••••••', alert:'deactivated'});
+    if (d === 'weak') this.setState({np:'water1', cp:'water'});
+    if (d === 'strong') this.setState({np:'Ravi-Valley-2026!', cp:'Ravi-Valley-2026!'});
+    if (d === 'wrongcurrent') this.setState({cur:'oldpass', np:'Kohsar#ZLD2026', cp:'Kohsar#ZLD2026', curErr:'That isn’t your current password.'});
+  }
+  componentWillUnmount() { clearInterval(this.iv); clearTimeout(this.t); }
+  submit() {
+    const s = this.state, a = this.app();
+    if (s.alert === 'locked' || s.loading) return;
+    if (!s.email.trim()) return this.setState({emailErr:'Enter your email address.'});
+    this.setState({loading:true, emailErr:'', alert:null});
+    this.t = setTimeout(() => {
+      if (s.email.startsWith('fahad')) return this.setState({loading:false, alert:'deactivated'});
+      if (s.pw && s.pw.length < 6) return this.setState({loading:false, alert:'wrong'});
+      this.setState({loading:false}); a.signIn && a.signIn();
+    }, 900);
+  }
+  strength(p) {
+    if (!p) return {n:0, label:'', fg:'var(--text-3)'};
+    if (p.length < 8) return {n:1, label:'Too short', fg:'var(--red)'};
+    const k = [/[a-z]/, /[A-Z]/, /\d/, /[^A-Za-z0-9]/].filter(r => r.test(p)).length + (p.length >= 12 ? 1 : 0);
+    return k >= 4 ? {n:4, label:'Strong', fg:'var(--green)'} : k >= 3 ? {n:3, label:'Good', fg:'var(--green)'} : {n:2, label:'Weak', fg:'var(--amber)'};
+  }
+  savePw() {
+    const s = this.state, a = this.app(), st = this.strength(s.np);
+    this.setState({tried:true});
+    if (a.page === 'changepassword' && !s.cur) return this.setState({curErr:'Enter your current password.'});
+    if (st.n < 2 || s.np !== s.cp) return;
+    a.toast && a.toast({title:'Password updated', sub: a.page === 'setpassword' ? 'Welcome to WR Sales Hub' : 'Other devices have been signed out'});
+    a.nav && a.nav('myweek');
+  }
+  renderVals() {
+    const a = this.app(), s = this.state, phone = !!a.phone, page = a.page || 'signin';
+    const isSignin = page === 'signin', isSetPw = page === 'setpassword', isChange = page === 'changepassword';
+    const go = fn => e => { if (e && e.preventDefault) e.preventDefault(); fn(); };
+    const mm = Math.floor(s.lockLeft / 60), ss = String(s.lockLeft % 60).padStart(2, '0');
+    const ALERTS = {
+      wrong: {icon:'circle-alert', fg:'var(--red)', bg:'var(--red-bg)', title:'Email or password is incorrect', text:'Check both and try again. After 2 more failed attempts, sign-in is locked for 15 minutes.'},
+      locked: {icon:'lock', fg:'var(--red)', bg:'var(--red-bg)', title:'Too many attempts — try again in 15 minutes', text:`For your security, sign-in is paused. You can try again in ${mm}:${ss}.`},
+      deactivated: {icon:'user-x', fg:'var(--amber)', bg:'var(--amber-bg)', title:'This account has been deactivated', text:'Your admin, Kamran Javed, can reactivate it. Your visits and deals are kept.'}
+    };
+    const alert = s.alert ? ALERTS[s.alert] : null;
+    const locked = s.alert === 'locked', bad = s.alert === 'wrong';
+    const st = this.strength(s.np);
+    const barCol = ['var(--line)', 'var(--red-solid)', 'var(--amber-solid)', 'var(--green-solid)', 'var(--green-solid)'];
+    const mismatch = s.cp && s.np !== s.cp, match = s.cp && s.np === s.cp && st.n >= 2;
+    const S = phone ? {
+      wrap:{flex:1, display:'flex', flexDirection:'column', background:'var(--bg)', minHeight:'100%'},
+      brand:{background:'var(--nav-bg)', padding:'12px 24px 28px', display:'flex', flexDirection:'column', alignItems:'flex-start'},
+      logo:{width:'150px', height:'auto', display:'block'},
+      formWrap:{flex:1, padding:'28px 20px 40px', display:'flex', justifyContent:'center'}
+    } : {
+      wrap:{flex:1, display:'grid', gridTemplateColumns:'minmax(380px,44%) minmax(0,1fr)', minHeight:'100%', background:'var(--bg)'},
+      brand:{background:'var(--nav-bg)', padding:'48px 56px', display:'flex', flexDirection:'column', justifyContent:'space-between', gap:'40px'},
+      logo:{width:'200px', height:'auto', display:'block'},
+      formWrap:{display:'flex', alignItems:'center', justifyContent:'center', padding:'48px'}
+    };
+    return {
+      label: isSignin ? 'Sign in' : 'Set new password', isFull: !isChange, isSignin, isSetPw, isChange, showPwForm: isSetPw, isDesktop: !phone, isPhone: phone, S,
+      hasAlert: !!alert, alert: alert || {},
+      email: s.email, pw: s.pw, onEmail: e => this.setState({email:e.target.value, emailErr:''}), onPw: e => this.setState({pw:e.target.value}),
+      emailErr: s.emailErr, emailBd: s.emailErr || bad ? 'var(--red)' : 'var(--line-strong)', pwBd: bad ? 'var(--red)' : 'var(--line-strong)',
+      pwType: s.show ? 'text' : 'password', eyeIcon: s.show ? 'eye-off' : 'eye', showLabel: s.show ? 'Hide password' : 'Show password', toggleShow: () => this.setState({show:!s.show}),
+      submit: () => this.submit(), loading: s.loading, locked,
+      btnLabel: s.loading ? 'Signing in…' : locked ? `Locked · ${mm}:${ss}` : 'Sign in',
+      btnBg: locked ? 'var(--bg-alt)' : 'var(--cta)', btnFg: locked ? 'var(--text-3)' : 'var(--on-cta)', btnCursor: locked ? 'not-allowed' : 'pointer', btnSh: locked ? 'none' : '0 12px 28px -12px rgba(0,169,80,0.75)',
+      cur: s.cur, np: s.np, cp: s.cp, curErr: s.curErr, curBd: s.curErr ? 'var(--red)' : 'var(--line-strong)',
+      onCur: e => this.setState({cur:e.target.value, curErr:''}), onNp: e => this.setState({np:e.target.value}), onCp: e => this.setState({cp:e.target.value}),
+      npBd: s.tried && st.n < 2 ? 'var(--red)' : 'var(--line-strong)', cpBd: mismatch && (s.tried || s.cp.length >= s.np.length) ? 'var(--red)' : 'var(--line-strong)',
+      bars: [1,2,3,4].map(i => ({bg: i <= st.n ? barCol[st.n] : 'var(--line)'})), strength: st,
+      cpMsg: mismatch ? 'Passwords don’t match yet.' : match ? 'Passwords match.' : '', cpFg: mismatch ? 'var(--red)' : 'var(--green)', cpIcon: mismatch ? 'circle-alert' : 'circle-check',
+      savePw: () => this.savePw(), saveLabel: isSetPw ? 'Save and continue' : 'Update password', cancel: () => a.nav && a.nav('myweek'),
+      toSignin: go(() => a.nav && a.nav('signin')),
+      inH: phone ? '48px' : '44px', inFs: phone ? '16px' : '14.5px', eyeW: phone ? '44px' : '40px', saveH: phone ? '52px' : '44px', saveFlex: phone ? '1' : 'none', cardPad: phone ? '20px 16px' : '28px'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>WR Sales Hub — Design system</title>
+<link rel="icon" href="uploads/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Sora:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/font/lucide.css">
+<style>body{margin:0;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}button,input,textarea,select{font:inherit}a{color:#007A3A;text-decoration:none}a:hover{color:#0A5C30;text-decoration:underline}@keyframes wrspin{to{transform:rotate(360deg)}}@keyframes wrpulse{0%,100%{opacity:1}50%{opacity:.55}}</style>
+</helmet>
+<div style="--bg:#F3F8F4;--bg-alt:#EEF5F0;--surface:#FFFFFF;--surface-2:#F7FAF8;--input:#FFFFFF;--ink:#06231A;--text-2:#5A6B62;--text-3:#637469;--line:#E3ECE6;--line-strong:#C9D8CE;--primary:#007A3A;--primary-hover:#0A5C30;--on-primary:#FFFFFF;--cta:#00A950;--cta-hover:#009646;--on-cta:#FFFFFF;--link:#007A3A;--focus:#0B7F85;--brand-soft:#E7F7EE;--nav-bg:#041C22;--nav-ink:#E6F2EC;--nav-muted:#9DB5AB;--nav-active:rgba(159,245,192,0.10);--nav-accent:#9FF5C0;--nav-line:rgba(255,255,255,0.08);--inverse-bg:#06231A;--inverse-ink:#F3F8F4;--inverse-accent:#9FF5C0;--inverse-line:rgba(255,255,255,0.28);--scrim:rgba(3,21,26,0.5);--skeleton:#E6EEE9;--shadow-sm:0 1px 2px rgba(6,35,26,0.06);--shadow-md:0 8px 24px -10px rgba(6,35,26,0.16);--shadow-lg:0 18px 50px -12px rgba(6,35,26,0.22);--slate:#4A5A66;--slate-bg:#EDF1F4;--aqua:#0B7178;--aqua-bg:#E4FAF9;--blue:#2D55A8;--blue-bg:#EAF0FB;--violet:#6A45A8;--violet-bg:#F2EDFB;--amber:#8A5300;--amber-bg:#FFF3D9;--green:#007A3A;--green-bg:#E7F7EE;--red:#B42318;--red-bg:#FDECEA;--red-solid:#D92D20;--amber-solid:#E89B0C;--green-solid:#00A950;--on-solid:#FFFFFF;--danger:#B42318;min-height:100%">
+<div style="{{ themeStyle }}">
+<div style="background:var(--bg);color:var(--ink);min-height:100vh;font-family:Inter,system-ui,sans-serif">
+
+<header style="position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--line)">
+  <div style="max-width:1320px;min-width:1240px;margin:0 auto;padding:0 40px;height:68px;display:flex;align-items:center;gap:20px">
+    <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="uploads/favicon.png" alt="Water Regime" style="height:30px;display:block"></sc-if>
+    <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="uploads/favicon.png" alt="Water Regime" style="height:30px;display:block"></sc-if>
+    <div style="display:flex;flex-direction:column;gap:1px">
+      <span style="font-family:Sora,sans-serif;font-size:16px;font-weight:600">WR Sales Hub · Design system</span>
+      <span style="font-size:12px;color:var(--text-3)">v0.1 · 22 Oct 2026 · for approval</span>
+    </div>
+    <nav style="display:flex;gap:4px;margin-left:12px;flex-wrap:wrap">
+      <a href="#foundations" style="height:32px;padding:0 10px;display:flex;align-items:center;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-2)">Foundations</a>
+      <a href="#buttons" style="height:32px;padding:0 10px;display:flex;align-items:center;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-2)">Buttons</a>
+      <a href="#inputs" style="height:32px;padding:0 10px;display:flex;align-items:center;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-2)">Inputs</a>
+      <a href="#status" style="height:32px;padding:0 10px;display:flex;align-items:center;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-2)">Status</a>
+      <a href="#data" style="height:32px;padding:0 10px;display:flex;align-items:center;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-2)">Data</a>
+      <a href="#feedback" style="height:32px;padding:0 10px;display:flex;align-items:center;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-2)">Shell &amp; feedback</a>
+      <a href="#overlays" style="height:32px;padding:0 10px;display:flex;align-items:center;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-2)">Overlays</a>
+      <a href="#states" style="height:32px;padding:0 10px;display:flex;align-items:center;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-2)">States</a>
+    </nav>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px">
+      <div role="radiogroup" aria-label="Theme" style="display:flex;padding:3px;border-radius:999px;background:var(--bg-alt);border:1px solid var(--line)">
+        <button onClick="{{ setLight }}" style="height:32px;padding:0 12px;border:0;border-radius:999px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;background:{{ lightBg }};color:{{ lightFg }};box-shadow:{{ lightSh }}"><i class="icon-sun" style="font-size:15px;line-height:1"></i>Light</button>
+        <button onClick="{{ setDark }}" style="height:32px;padding:0 12px;border:0;border-radius:999px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;background:{{ darkBg }};color:{{ darkFg }};box-shadow:{{ darkSh }}"><i class="icon-moon" style="font-size:15px;line-height:1"></i>Dark</button>
+      </div>
+      <a href="WR Sales Hub Screens.dc.html" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--link)">Screens<i class="icon-arrow-right" style="font-size:14px;line-height:1"></i></a>
+    </div>
+  </div>
+</header>
+
+<div style="max-width:1320px;min-width:1240px;margin:0 auto;padding:0 40px 96px">
+
+<section style="padding:48px 0 40px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:end">
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <h1 style="margin:0;font-family:Sora,sans-serif;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em">A calm, dense work tool with one loud button.</h1>
+    <p style="margin:0;font-size:16px;line-height:1.6;color:var(--text-2);max-width:620px;text-wrap:pretty">Tokens and components for WR Sales Hub. Every colour has a light and a dark value, and every status has an icon and a label as well as a colour. Use the toggle at the top right to switch this page between light and dark. The status section always shows both.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+    <div style="padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px"><i class="icon-gauge" style="font-size:18px;line-height:1;color:var(--green)"></i><span style="font-size:14px;font-weight:600">Calm and dense</span><span style="font-size:13px;line-height:1.45;color:var(--text-2)">Mist surfaces, 14px body text, tight rows. Built for all-day use.</span></div>
+    <div style="padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px"><i class="icon-alarm-clock" style="font-size:18px;line-height:1;color:var(--red)"></i><span style="font-size:14px;font-weight:600">Urgent items first</span><span style="font-size:13px;line-height:1.45;color:var(--text-2)">Overdue items, countdowns and flags go at the top of every list.</span></div>
+    <div style="padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px"><i class="icon-tag" style="font-size:18px;line-height:1;color:var(--blue)"></i><span style="font-size:14px;font-weight:600">Never colour alone</span><span style="font-size:13px;line-height:1.45;color:var(--text-2)">Every pill has an icon and a label as well as a colour.</span></div>
+    <div style="padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px"><i class="icon-notebook-pen" style="font-size:18px;line-height:1;color:var(--green)"></i><span style="font-size:14px;font-weight:600">One loud button</span><span style="font-size:13px;line-height:1.45;color:var(--text-2)">Bright green is reserved for "Log a visit".</span></div>
+  </div>
+</section>
+
+<section id="foundations" style="padding:40px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:28px">
+  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3)">01 · Foundations</span><h2 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Brand palette</h2><p style="margin:0;font-size:14px;color:var(--text-2)">Raw values from waterregime.com. Components never use these directly; they go through the semantic tokens below.</p></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px">
+    <sc-for list="{{ palette }}" as="p" hint-placeholder-count="19">
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--surface)">
+        <div style="height:64px;background:{{ p.hex }};border-bottom:1px solid var(--line)"></div>
+        <div style="padding:10px 12px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:600">{{ p.name }}</span><span style="font:500 12px ui-monospace,Menlo,monospace;color:var(--text-2)">{{ p.hex }}</span><span style="font-size:12px;color:var(--text-3)">{{ p.role }}</span></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px"><h3 style="margin:0;font-family:Sora,sans-serif;font-size:20px;font-weight:600">Semantic tokens · light / dark</h3><p style="margin:0;font-size:14px;color:var(--text-2)">CSS custom properties. Put light values on <code>:root</code> and dark values on <code>[data-theme="dark"]</code>.</p></div>
+  <div style="border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface)">
+    <div style="display:grid;grid-template-columns:200px minmax(0,1fr) 220px 220px;gap:16px;padding:10px 20px;background:var(--surface-2);font-size:11.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3)"><span>Token</span><span>Role</span><span>Light</span><span>Dark</span></div>
+    <sc-for list="{{ tokens }}" as="t" hint-placeholder-count="26">
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr) 220px 220px;gap:16px;align-items:center;padding:9px 20px;border-top:1px solid var(--line)">
+        <code style="font:600 12.5px ui-monospace,Menlo,monospace">{{ t.name }}</code>
+        <span style="font-size:13px;color:var(--text-2)">{{ t.role }}</span>
+        <span style="display:flex;align-items:center;gap:10px"><span style="width:28px;height:28px;border-radius:8px;background:{{ t.light }};border:1px solid #C9D8CE;flex:none"></span><code style="font:500 12px ui-monospace,Menlo,monospace;color:var(--text-2)">{{ t.light }}</code></span>
+        <span style="display:flex;align-items:center;gap:10px"><span style="width:28px;height:28px;border-radius:8px;background:{{ t.dark }};border:1px solid #0A3436;box-shadow:inset 0 0 0 100px {{ t.darkUnder }};flex:none"></span><code style="font:500 12px ui-monospace,Menlo,monospace;color:var(--text-2)">{{ t.dark }}</code></span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px"><h3 style="margin:0;font-family:Sora,sans-serif;font-size:20px;font-weight:600">Status hues</h3><p style="margin:0;font-size:14px;color:var(--text-2)">Seven text/tint pairs. Every text/tint pair passes 4.5:1 in both modes. A pill always has an icon and a label.</p></div>
+  <div style="border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface)">
+    <div style="display:grid;grid-template-columns:120px minmax(0,1fr) 260px 260px;gap:16px;padding:10px 20px;background:var(--surface-2);font-size:11.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3)"><span>Hue</span><span>Used for</span><span>Light (text / tint)</span><span>Dark (text / tint)</span></div>
+    <sc-for list="{{ hues }}" as="h" hint-placeholder-count="7">
+      <div style="display:grid;grid-template-columns:120px minmax(0,1fr) 260px 260px;gap:16px;align-items:center;padding:10px 20px;border-top:1px solid var(--line)">
+        <code style="font:600 12.5px ui-monospace,Menlo,monospace">--{{ h.name }}</code>
+        <span style="font-size:13px;color:var(--text-2)">{{ h.use }}</span>
+        <span style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:#FFFFFF;border:1px solid #E3ECE6"><span style="display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px 0 8px;border-radius:999px;background:{{ h.lbg }};color:{{ h.lfg }};font-size:12.5px;font-weight:600"><i class="icon-{{ h.icon }}" style="font-size:13px;line-height:1"></i>{{ h.sample }}</span><code style="font:500 11.5px ui-monospace,Menlo,monospace;color:#5A6B62">{{ h.lfg }}</code></span>
+        <span style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:#062A2B;border:1px solid #0A3436"><span style="display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px 0 8px;border-radius:999px;background:{{ h.dbg }};color:{{ h.dfg }};font-size:12.5px;font-weight:600"><i class="icon-{{ h.icon }}" style="font-size:13px;line-height:1"></i>{{ h.sample }}</span><code style="font:500 11.5px ui-monospace,Menlo,monospace;color:#A7BDB3">{{ h.dfg }}</code></span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px"><h3 style="margin:0;font-family:Sora,sans-serif;font-size:20px;font-weight:600">Type scale</h3><p style="margin:0;font-size:14px;color:var(--text-2)">Sora for headings and big numbers. Inter for everything else, with <code>tabular-nums</code> in tables. On phones, body text goes up to 15px and inputs to 16px so iOS doesn't zoom.</p></div>
+  <div style="border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface)">
+    <sc-for list="{{ typeScale }}" as="t" hint-placeholder-count="11">
+      <div style="display:grid;grid-template-columns:150px 220px minmax(0,1fr);gap:20px;align-items:baseline;padding:14px 20px;border-top:1px solid {{ t.bd }}">
+        <code style="font:600 12.5px ui-monospace,Menlo,monospace">{{ t.name }}</code>
+        <span style="font-size:12.5px;color:var(--text-3)">{{ t.spec }}</span>
+        <span style="font-family:{{ t.family }};font-size:{{ t.size }};line-height:{{ t.lh }};font-weight:{{ t.weight }};letter-spacing:{{ t.ls }};text-transform:{{ t.tt }};font-variant-numeric:tabular-nums;color:{{ t.color }}">{{ t.sample }}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:12px">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h3 style="margin:0;font-family:Sora,sans-serif;font-size:20px;font-weight:600">Spacing</h3>
+      <div style="padding:20px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ spacing }}" as="s" hint-placeholder-count="10">
+          <div style="display:flex;align-items:center;gap:12px"><code style="width:72px;font:600 12px ui-monospace,Menlo,monospace">{{ s.name }}</code><span style="height:12px;width:{{ s.px }};border-radius:3px;background:var(--aqua-bg);border:1px solid var(--aqua)"></span><span style="font-size:12px;color:var(--text-3)">{{ s.px }}</span></div>
+        </sc-for>
+        <span style="font-size:12.5px;color:var(--text-2);line-height:1.5;margin-top:4px">4px base. Card padding is 20px on desktop and 16px on phone. Rows are 44–56px tall on phone, so every touch target is at least 44px.</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h3 style="margin:0;font-family:Sora,sans-serif;font-size:20px;font-weight:600">Radii</h3>
+      <div style="padding:20px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="height:64px;border-radius:12px;background:var(--brand-soft);border:1px solid var(--green)"></span><code style="font:600 12px ui-monospace,Menlo,monospace">--radius-sm · 12</code><span style="font-size:12px;color:var(--text-3)">Inputs, icon tiles, menus</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="height:64px;border-radius:18px;background:var(--brand-soft);border:1px solid var(--green)"></span><code style="font:600 12px ui-monospace,Menlo,monospace">--radius · 18</code><span style="font-size:12px;color:var(--text-3)">Cards, panels, toasts</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="height:64px;border-radius:28px;background:var(--brand-soft);border:1px solid var(--green)"></span><code style="font:600 12px ui-monospace,Menlo,monospace">--radius-lg · 28</code><span style="font-size:12px;color:var(--text-3)">Modals, sheets, hero cards</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="height:64px;border-radius:999px;background:var(--brand-soft);border:1px solid var(--green)"></span><code style="font:600 12px ui-monospace,Menlo,monospace">--radius-pill</code><span style="font-size:12px;color:var(--text-3)">Buttons, pills, chips</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h3 style="margin:0;font-family:Sora,sans-serif;font-size:20px;font-weight:600">Elevation</h3>
+      <div style="padding:20px;border-radius:18px;background:var(--bg);border:1px solid var(--line);display:flex;flex-direction:column;gap:16px">
+        <div style="padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)"><code style="font:600 12px ui-monospace,Menlo,monospace">--shadow-sm</code><div style="font-size:12px;color:var(--text-3);margin-top:2px">Cards at rest · 0 1px 2px</div></div>
+        <div style="padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-md)"><code style="font:600 12px ui-monospace,Menlo,monospace">--shadow-md</code><div style="font-size:12px;color:var(--text-3);margin-top:2px">Menus, pickers, dragged cards · 0 8px 24px -10px</div></div>
+        <div style="padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-lg)"><code style="font:600 12px ui-monospace,Menlo,monospace">--shadow-lg</code><div style="font-size:12px;color:var(--text-3);margin-top:2px">Modals, sheets, toasts · 0 18px 50px -12px</div></div>
+        <span style="font-size:12.5px;color:var(--text-2);line-height:1.5">Shadows have a slight green tint (rgba 6,35,26). In dark mode, lighter surfaces show depth instead.</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px"><h3 style="margin:0;font-family:Sora,sans-serif;font-size:20px;font-weight:600">Icons · Lucide</h3><p style="margin:0;font-size:14px;color:var(--text-2)">2px stroke. 16px in dense rows, 18px in nav, 20–22px on phone. Every visit type, stage, outcome and flag has its own icon.</p></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px">
+    <sc-for list="{{ icons }}" as="ic" hint-placeholder-count="40">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 8px 10px;border-radius:12px;background:var(--surface);border:1px solid var(--line)">
+        <i class="icon-{{ ic.n }}" style="font-size:22px;line-height:1;color:var(--ink)"></i>
+        <span style="font-size:11.5px;font-weight:600;color:var(--ink);text-align:center">{{ ic.use }}</span>
+        <code style="font:500 10.5px ui-monospace,Menlo,monospace;color:var(--text-3)">{{ ic.n }}</code>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px"><h3 style="margin:0;font-family:Sora,sans-serif;font-size:20px;font-weight:600">Formats</h3><p style="margin:0;font-size:14px;color:var(--text-2)">Produced by one shared formatter. Lists show the short form; hovering or opening the record shows the full value.</p></div>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+    <sc-for list="{{ formats }}" as="f" hint-placeholder-count="4">
+      <div style="padding:18px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3)">{{ f.title }}</span>
+        <sc-for list="{{ f.rows }}" as="r" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:1px;padding-top:8px;border-top:1px solid var(--line)"><span style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">{{ r.ex }}</span><span style="font-size:12px;color:var(--text-2)">{{ r.rule }}</span></div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="buttons" style="padding:40px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3)">02 · Components</span><h2 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Buttons</h2><p style="margin:0;font-size:14px;color:var(--text-2)">Pill-shaped. <b>cta</b> (bright green) is only for “Log a visit”. Every other main action uses <b>primary</b> (green-700, 5.6:1).</p></div>
+  <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt)">Button</code><span style="font-size:13px;color:var(--text-2)">variant: cta · primary · secondary · ghost · danger — size: sm 32 · md 40 · lg 48 (phones 44+) — props: icon, loading, disabled</span></div>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden">
+    <div style="display:grid;grid-template-columns:120px repeat(5,minmax(0,1fr));gap:12px;padding:10px 20px;background:var(--surface-2);font-size:11.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3)"><span>Variant</span><span>Default</span><span>Hover</span><span>Focus</span><span>Disabled</span><span>Loading</span></div>
+    <sc-for list="{{ buttons }}" as="r" hint-placeholder-count="5">
+      <div style="display:grid;grid-template-columns:120px repeat(5,minmax(0,1fr));gap:12px;align-items:center;padding:16px 20px;border-top:1px solid var(--line)">
+        <code style="font:600 12.5px ui-monospace,Menlo,monospace">{{ r.name }}</code>
+        <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="5">
+          <span><button style="display:inline-flex;align-items:center;gap:8px;height:{{ r.h }};padding:0 {{ r.px }};border-radius:999px;border:1px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:{{ r.fs }};font-weight:{{ r.fw }};box-shadow:{{ c.sh }};cursor:{{ c.cur }};white-space:nowrap"><i class="icon-{{ c.icon }}" style="font-size:16px;line-height:1;animation:{{ c.anim }}"></i>{{ c.label }}</button></span>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px">
+      <code style="font:600 12.5px ui-monospace,Menlo,monospace">Sizes</code>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button style="height:32px;padding:0 14px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:13px;font-weight:600">Small · 32</button>
+        <button style="height:40px;padding:0 18px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600">Medium · 40</button>
+        <button style="height:48px;padding:0 22px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:15px;font-weight:600">Large · 48</button>
+      </div>
+      <span style="font-size:12.5px;color:var(--text-3)">On phones, buttons are full width at 46–52px, and two sit side by side as flex: 1.</span>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px">
+      <code style="font:600 12.5px ui-monospace,Menlo,monospace">IconButton</code>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button aria-label="Edit" style="width:36px;height:36px;border:0;border-radius:999px;background:transparent;color:var(--text-2);display:flex;align-items:center;justify-content:center"><i class="icon-pencil" style="font-size:16px;line-height:1"></i></button>
+        <button aria-label="Edit hover" style="width:36px;height:36px;border:0;border-radius:999px;background:var(--surface-2);color:var(--ink);display:flex;align-items:center;justify-content:center"><i class="icon-pencil" style="font-size:16px;line-height:1"></i></button>
+        <button aria-label="Delete" style="width:36px;height:36px;border:0;border-radius:999px;background:var(--red-bg);color:var(--red);display:flex;align-items:center;justify-content:center"><i class="icon-trash-2" style="font-size:16px;line-height:1"></i></button>
+        <button aria-label="More" style="width:44px;height:44px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center"><i class="icon-ellipsis" style="font-size:18px;line-height:1"></i></button>
+        <button aria-label="Log a visit" style="width:56px;height:56px;border:4px solid var(--surface);border-radius:999px;background:var(--cta);color:var(--on-cta);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px -8px rgba(0,169,80,0.7)"><i class="icon-plus" style="font-size:24px;line-height:1"></i></button>
+      </div>
+      <span style="font-size:12.5px;color:var(--text-3)">36px on desktop, 44px on phones. Every icon button has an aria-label. The 56px one is the phone Log a visit tab.</span>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px">
+      <code style="font:600 12.5px ui-monospace,Menlo,monospace">ExportButton</code>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button style="height:40px;padding:0 16px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:8px"><i class="icon-file-spreadsheet" style="font-size:16px;line-height:1;color:var(--green)"></i>Export to Excel</button>
+        <button style="height:40px;padding:0 16px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--text-2);font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:8px"><i class="icon-loader-circle" style="font-size:16px;line-height:1;color:var(--green);animation:wrspin 0.9s linear infinite"></i>Preparing .xlsx…</button>
+      </div>
+      <span style="font-size:12.5px;color:var(--text-3)">Exports exactly the filtered list on screen. When the file is ready, an info toast names it: accounts_2026-10-22.xlsx.</span>
+    </div>
+  </div>
+</section>
+
+<section id="inputs" style="padding:40px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-direction:column;gap:6px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Inputs</h2><p style="margin:0;font-size:14px;color:var(--text-2)">44px tall on desktop and 48px on phones, with 16px text on phones so iOS doesn't zoom. The label always sits above the field. Help text goes below and is replaced by the error when there is one.</p></div>
+  <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt)">TextField</code><span style="font-size:13px;color:var(--text-2)">states: default · focus · filled · error · disabled</span></div>
+  <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px">
+    <sc-for list="{{ fields }}" as="f" hint-placeholder-count="5">
+      <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600;color:{{ f.lc }}">{{ f.label }}</span><span style="display:flex;align-items:center;height:44px;padding:0 12px;border-radius:12px;border:1px solid {{ f.bd }};background:{{ f.bg }};box-shadow:{{ f.sh }};font-size:14.5px;color:{{ f.fg }}">{{ f.value }}</span><span style="font-size:12.5px;color:{{ f.hc }};display:flex;gap:5px;align-items:center;font-weight:{{ f.hw }}"><i class="icon-{{ f.hi }}" style="font-size:13px;line-height:1"></i>{{ f.help }}</span></label>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px">
+      <code style="font:600 12.5px ui-monospace,Menlo,monospace">MoneyInput · PercentInput</code>
+      <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Value</span><span style="display:flex;align-items:center;height:44px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);overflow:hidden"><span style="height:100%;padding:0 12px;display:flex;align-items:center;background:var(--bg-alt);color:var(--text-2);font-size:13px;font-weight:700;border-right:1px solid var(--line)">PKR</span><span style="flex:1;padding:0 12px;text-align:right;font-size:14.5px;font-variant-numeric:tabular-nums">86,500,000</span></span><span style="font-size:12.5px;color:var(--text-3)">= PKR 86.5M</span></label>
+      <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Probability</span><span style="display:flex;align-items:center;height:44px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);overflow:hidden;width:160px"><span style="flex:1;padding:0 12px;text-align:right;font-size:14.5px;font-variant-numeric:tabular-nums">50</span><span style="height:100%;padding:0 12px;display:flex;align-items:center;background:var(--bg-alt);color:var(--text-2);font-size:13px;font-weight:700;border-left:1px solid var(--line)">%</span></span><span style="font-size:12.5px;color:var(--text-3)">0–100. Defaults from the stage.</span></label>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px">
+      <code style="font:600 12.5px ui-monospace,Menlo,monospace">DateTimeInput (PKT) · Select · Textarea</code>
+      <span style="display:flex;align-items:center;gap:8px;height:44px;padding:0 6px 0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input)"><i class="icon-calendar-clock" style="font-size:17px;line-height:1;color:var(--text-3)"></i><span style="flex:1;font-size:14.5px">22 Oct 2026, 9:12 AM</span><span style="font-size:12px;font-weight:700;color:var(--text-2);padding:3px 7px;border-radius:6px;background:var(--bg-alt)">PKT</span><span style="height:34px;padding:0 10px;display:flex;align-items:center;color:var(--link);font-size:13px;font-weight:600">Now</span></span>
+      <span style="position:relative;display:flex;align-items:center;height:44px;padding:0 40px 0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);font-size:14.5px">Imran Qureshi — GM Utilities<i class="icon-chevron-down" style="position:absolute;right:12px;font-size:16px;line-height:1;color:var(--text-3)"></i></span>
+      <span style="display:block;min-height:72px;padding:10px 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);font-size:14px;line-height:1.5;color:var(--text-3)">What was discussed, who else was there…</span>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px">
+      <code style="font:600 12.5px ui-monospace,Menlo,monospace">Checkbox · Radio · Switch · Segmented · Chip</code>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:14px">
+        <span style="display:flex;gap:8px;align-items:center"><span style="width:22px;height:22px;border-radius:7px;border:1.5px solid var(--line-strong);background:var(--input)"></span>Off</span>
+        <span style="display:flex;gap:8px;align-items:center"><span style="width:22px;height:22px;border-radius:7px;background:var(--primary);color:var(--on-primary);display:flex;align-items:center;justify-content:center"><i class="icon-check" style="font-size:14px;line-height:1"></i></span>On</span>
+        <span style="display:flex;gap:8px;align-items:center;color:var(--text-3)"><span style="width:22px;height:22px;border-radius:7px;border:1.5px solid var(--line);background:var(--bg-alt)"></span>Disabled</span>
+        <span style="display:flex;gap:8px;align-items:center"><i class="icon-circle-dot" style="font-size:19px;line-height:1;color:var(--green)"></i>Radio</span>
+        <span style="width:44px;height:26px;border-radius:999px;background:var(--primary);position:relative;display:block"><span style="position:absolute;top:3px;left:21px;width:20px;height:20px;border-radius:999px;background:#FFFFFF;box-shadow:0 1px 2px rgba(0,0,0,0.25)"></span></span>
+      </div>
+      <div style="display:flex;padding:3px;border-radius:999px;background:var(--bg-alt);border:1px solid var(--line);align-self:flex-start"><span style="height:32px;padding:0 14px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow-sm);font-size:13.5px;font-weight:600;display:flex;align-items:center">My accounts</span><span style="height:32px;padding:0 14px;font-size:13.5px;font-weight:600;color:var(--text-2);display:flex;align-items:center">All</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px 0 10px;border-radius:999px;border:1px solid var(--primary);background:var(--brand-soft);color:var(--green);font-size:13px;font-weight:600"><i class="icon-circle-check" style="font-size:14px;line-height:1"></i>Client unavailable</span><span style="display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px 0 10px;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);font-size:13px;font-weight:500"><i class="icon-circle" style="font-size:14px;line-height:1"></i>Travel / logistics</span></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt)">CompanyPicker</code><span style="font-size:13px;color:var(--text-2)">open · typed “ra”</span></div>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:6px">
+        <span style="display:flex;align-items:center;gap:10px;height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25);background:var(--input);font-size:14.5px"><i class="icon-search" style="font-size:17px;line-height:1;color:var(--text-3)"></i>ra<span style="margin-left:auto;font-size:12px;color:var(--text-3)">334 companies</span></span>
+        <div style="border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-md)">
+          <sc-for list="{{ pickerOpts }}" as="o" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:10px;min-height:54px;padding:8px 12px;border-top:1px solid {{ o.bd }};background:{{ o.bg }}"><span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ o.name }}</span><span style="font-size:12px;color:var(--text-2)">{{ o.sub }}</span></span><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:7px;font-size:11.5px;font-weight:700;color:{{ o.p.fg }};background:{{ o.p.bg }};border:1px solid {{ o.p.bd }}"><i class="icon-{{ o.p.icon }}" style="font-size:12px;line-height:1"></i>{{ o.p.label }}</span></div></sc-for>
+          <div style="display:flex;justify-content:space-between;padding:8px 12px;border-top:1px solid var(--line);background:var(--surface-2);font-size:12px;color:var(--text-3)"><span>↑ ↓ · Enter</span><span style="color:var(--link);font-weight:600">Add company</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt)">DealPicker</code><span style="font-size:13px;color:var(--text-2)">open deals of the chosen company</span></div>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px">
+        <div style="border:1px solid var(--line);border-radius:14px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:10px;min-height:50px;padding:8px 12px;background:var(--surface)"><i class="icon-circle" style="font-size:18px;line-height:1;color:var(--text-3)"></i><span style="font-size:14px">No deal — general visit</span></div>
+          <div style="display:flex;align-items:center;gap:10px;min-height:50px;padding:8px 12px;border-top:1px solid var(--line);background:var(--brand-soft)"><i class="icon-circle-dot" style="font-size:18px;line-height:1;color:var(--green)"></i><span style="flex:1;font-size:14px;font-weight:600">ETP expansion, Plant 2</span><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12px;font-weight:600;color:var(--aqua);background:var(--aqua-bg)"><i class="icon-circle-dot" style="font-size:12px;line-height:1"></i>Qualified</span></div>
+        </div>
+        <span style="font-size:12.5px;color:var(--text-3)">Empty: “No open deals for this company. You can create one from the account page.”</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt)">DatePicker</code><span style="font-size:13px;color:var(--text-2)">popover · today ringed · selected filled</span></div>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-md)">
+        <div style="display:flex;align-items:center"><i class="icon-chevron-left" style="font-size:18px;line-height:1;color:var(--text-2)"></i><span style="flex:1;text-align:center;font-family:Sora,sans-serif;font-size:15px;font-weight:600">October 2026</span><i class="icon-chevron-right" style="font-size:18px;line-height:1;color:var(--text-2)"></i></div>
+        <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;text-align:center">
+          <sc-for list="{{ calHead }}" as="d" hint-placeholder-count="7"><span style="font-size:11.5px;font-weight:700;color:var(--text-3);padding:4px 0">{{ d }}</span></sc-for>
+          <sc-for list="{{ calDays }}" as="d" hint-placeholder-count="35"><span style="height:34px;display:flex;align-items:center;justify-content:center;border-radius:999px;font-size:13px;font-variant-numeric:tabular-nums;background:{{ d.bg }};color:{{ d.fg }};box-shadow:{{ d.sh }};font-weight:{{ d.fw }}">{{ d.n }}</span></sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="status" style="padding:40px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-direction:column;gap:6px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Status displays</h2><p style="margin:0;font-size:14px;color:var(--text-2)">Always shown in both modes, whatever the page toggle says. Every one has an icon and a label, so colour is never the only signal. All values come from one shared list.</p></div>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+    <sc-for list="{{ panels }}" as="pn" hint-placeholder-count="2">
+      <div style="{{ pn.style }}">
+        <span style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3)">{{ pn.label }}</span>
+        <sc-for list="{{ statusGroups }}" as="g" hint-placeholder-count="7">
+          <div style="display:flex;flex-direction:column;gap:8px;padding-top:14px;border-top:1px solid var(--line)">
+            <span style="display:flex;gap:8px;align-items:baseline"><code style="font:600 12.5px ui-monospace,Menlo,monospace;color:var(--ink)">{{ g.name }}</code><span style="font-size:12px;color:var(--text-3)">{{ g.note }}</span></span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
+              <sc-for list="{{ g.items }}" as="x" hint-placeholder-count="4">
+                <span style="display:flex;flex-direction:column;gap:5px;align-items:flex-start">
+                  <span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:{{ x.r }};font-size:12.5px;font-weight:600;color:{{ x.fg }};background:{{ x.bg }};border:1px solid {{ x.bd }};white-space:nowrap"><i class="icon-{{ x.icon }}" style="font-size:13px;line-height:1"></i>{{ x.label }}</span>
+                  <sc-if value="{{ x.meter }}" hint-placeholder-val="{{ false }}"><span style="width:84px;height:4px;border-radius:99px;background:var(--line);overflow:hidden;display:block"><span style="display:block;height:100%;width:{{ x.pct }};background:{{ x.bar }}"></span></span></sc-if>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:6px"><code style="font:600 12.5px ui-monospace,Menlo,monospace">Countdown rules</code><span style="font-size:13.5px;line-height:1.5;color:var(--text-2)">From the visit time until 48 hrs later: whole hours ("31 hrs left"), and minutes under 1 hr. <b style="color:var(--amber)">Amber</b> under 12 hrs. <b style="color:var(--red)">Red “Overdue · N hrs”</b> after that, and the late reason becomes required. The bar shows how much of the 48 hrs is left.</span></div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:6px"><code style="font:600 12.5px ui-monospace,Menlo,monospace">Flag thresholds</code><span style="font-size:13.5px;line-height:1.5;color:var(--text-2)">Stuck: an open deal more than 30 days in the same stage. Dormant: an owned account with no visit in 60 days. Close passed: an open deal past its expected close date. Outcome overdue: no outcome 48 hrs after the visit.</span></div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:6px"><code style="font:600 12.5px ui-monospace,Menlo,monospace">Count badge</code><span style="display:flex;gap:10px;align-items:center"><span style="min-width:22px;height:20px;padding:0 6px;border-radius:999px;background:var(--red-solid);color:var(--on-solid);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center">4</span><span style="font-size:13px;color:var(--text-2)">any overdue</span><span style="min-width:22px;height:20px;padding:0 6px;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center">3</span><span style="font-size:13px;color:var(--text-2)">none overdue</span></span><span style="font-size:12.5px;color:var(--text-3)">On My Week in the nav and the phone tab: visits awaiting an outcome. aria-label “4 visits awaiting outcome, 1 overdue”.</span></div>
+  </div>
+</section>
+
+<section id="data" style="padding:40px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-direction:column;gap:6px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Data displays</h2><p style="margin:0;font-size:14px;color:var(--text-2)">Big numbers in Sora. Table numbers in Inter with tabular figures, right-aligned. Hover any short amount to see the full value.</p></div>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:16px 18px;display:flex;flex-direction:column;gap:6px" title="PKR 2,505,900,000"><span style="display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;color:var(--text-2)"><i class="icon-layers" style="font-size:15px;line-height:1;color:var(--blue)"></i>Open pipeline</span><span style="font-family:Sora,sans-serif;font-size:26px;font-weight:600;letter-spacing:-0.02em">PKR 2,505.9M</span><span style="font-size:12.5px;color:var(--text-3)">11 open deals</span></div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:16px 18px;display:flex;flex-direction:column;gap:6px"><span style="display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;color:var(--text-2)"><i class="icon-target" style="font-size:15px;line-height:1;color:var(--green)"></i>Win rate</span><span style="font-family:Sora,sans-serif;font-size:26px;font-weight:600;letter-spacing:-0.02em">40%</span><span style="display:flex;height:6px;border-radius:99px;overflow:hidden;background:var(--red-bg)"><span style="width:40%;background:var(--green-solid)"></span></span><span style="font-size:12.5px;color:var(--text-3)">2 won · 3 lost</span></div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:16px 18px;display:flex;flex-direction:column;gap:6px"><span style="display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;color:var(--text-2)"><i class="icon-hourglass" style="font-size:15px;line-height:1;color:var(--red)"></i>KpiTile · flag</span><span style="font-family:Sora,sans-serif;font-size:26px;font-weight:600;letter-spacing:-0.02em;color:var(--red)">4</span><span style="font-size:12.5px;color:var(--text-3)">Clickable: opens the list behind it</span></div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:10px"><code style="font:600 12.5px ui-monospace,Menlo,monospace">StatRow</code><div style="display:flex;gap:16px;align-items:baseline;flex-wrap:wrap"><span style="display:flex;flex-direction:column"><span style="font-family:Sora,sans-serif;font-size:18px;font-weight:600">PKR 412.0M</span><span style="font-size:12px;color:var(--text-3)">Value</span></span><span style="width:1px;align-self:stretch;background:var(--line)"></span><span style="display:flex;flex-direction:column"><span style="font-family:Sora,sans-serif;font-size:18px;font-weight:600">70%</span><span style="font-size:12px;color:var(--text-3)">Probability</span></span><span style="width:1px;align-self:stretch;background:var(--line)"></span><span style="display:flex;flex-direction:column"><span style="font-family:Sora,sans-serif;font-size:18px;font-weight:600">18 d</span><span style="font-size:12px;color:var(--text-3)">In stage</span></span></div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden">
+      <div style="padding:14px 20px 8px;display:flex;gap:10px;align-items:baseline"><code style="font:600 12.5px ui-monospace,Menlo,monospace">PipelineByStage</code><span style="font-size:12.5px;color:var(--text-3)">bar + table in one: stage · value · count</span></div>
+      <sc-for list="{{ pipe }}" as="s" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:170px minmax(0,1fr) 40px;gap:12px;align-items:center;padding:8px 20px;border-top:1px solid var(--line)"><span style="display:flex;gap:7px;align-items:center;font-size:13.5px;font-weight:600;color:{{ s.fg }}"><i class="icon-{{ s.icon }}" style="font-size:15px;line-height:1"></i>{{ s.label }}</span><span style="display:flex;gap:10px;align-items:center"><span style="height:14px;border-radius:5px;width:{{ s.w }};background:{{ s.fg }}"></span><span style="font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums">{{ s.v }}</span></span><span style="text-align:right;font-size:13.5px;font-variant-numeric:tabular-nums">{{ s.n }}</span></div></sc-for>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden">
+      <div style="padding:14px 20px 8px;display:flex;gap:10px;align-items:baseline"><code style="font:600 12.5px ui-monospace,Menlo,monospace">LostReasonsBars</code><span style="font-size:12.5px;color:var(--text-3)">reasons with no deals stay listed, in grey</span></div>
+      <sc-for list="{{ lostBars }}" as="l" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:6px;padding:8px 20px;border-top:1px solid var(--line)"><span style="display:flex;gap:10px"><span style="flex:1;font-size:13.5px;color:{{ l.fg }}">{{ l.r }}</span><span style="font-size:13px;color:var(--text-2)">{{ l.n }}</span><span style="width:90px;text-align:right;font-size:13.5px;font-weight:600;color:{{ l.fg }}">{{ l.v }}</span></span><span style="height:8px;border-radius:99px;background:var(--bg-alt);overflow:hidden;display:block"><span style="display:block;height:100%;width:{{ l.w }};background:var(--red-solid);border-radius:99px"></span></span></div></sc-for>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;gap:10px;align-items:baseline"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt)">FilterBar + DataTable</code><span style="font-size:13px;color:var(--text-2)">sortable header · hover row · pagination</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <span style="display:flex;align-items:center;gap:8px;height:40px;width:240px;padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);font-size:14px;color:var(--text-3)"><i class="icon-search" style="font-size:16px;line-height:1"></i>Search company</span>
+        <span style="display:flex;align-items:center;gap:6px;height:40px;padding:0 12px;border-radius:999px;border:1px solid var(--primary);background:var(--brand-soft);font-size:13.5px;font-weight:500">Textiles<i class="icon-chevron-down" style="font-size:14px;line-height:1;color:var(--text-3)"></i></span>
+        <span style="display:flex;align-items:center;gap:6px;height:40px;padding:0 12px;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);font-size:13.5px;font-weight:500">All cities<i class="icon-chevron-down" style="font-size:14px;line-height:1;color:var(--text-3)"></i></span>
+        <span style="display:flex;align-items:center;gap:6px;height:40px;padding:0 14px 0 10px;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);font-size:13.5px"><i class="icon-moon" style="font-size:15px;line-height:1"></i>Dormant only</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center"><span style="display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 4px 0 12px;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:13px;font-weight:600">Textiles<i class="icon-x" style="font-size:14px;line-height:1;padding:6px"></i></span><span style="font-size:13px;font-weight:600;color:var(--link)">Clear all</span></div>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:minmax(0,1.8fr) 100px 70px 120px 110px;gap:12px;padding:10px 20px;background:var(--surface-2);font-size:11.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3)"><span style="color:var(--ink);display:flex;gap:4px;align-items:center">Company<i class="icon-arrow-down-a-z" style="font-size:13px;line-height:1"></i></span><span>City</span><span>Priority</span><span>Status</span><span>Last visit</span></div>
+        <sc-for list="{{ tableRows }}" as="r" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:minmax(0,1.8fr) 100px 70px 120px 110px;gap:12px;align-items:center;padding:11px 20px;border-top:1px solid var(--line);background:{{ r.bg }}"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ r.name }}</span><span style="font-size:12.5px;color:var(--text-2)">{{ r.bp }}</span></span><span style="font-size:13.5px">{{ r.city }}</span><span><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:7px;font-size:11.5px;font-weight:700;color:{{ r.p.fg }};background:{{ r.p.bg }};border:1px solid {{ r.p.bd }}"><i class="icon-{{ r.p.icon }}" style="font-size:12px;line-height:1"></i>{{ r.p.label }}</span></span><span><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12.5px;font-weight:600;color:{{ r.s.fg }};background:{{ r.s.bg }}"><i class="icon-{{ r.s.icon }}" style="font-size:13px;line-height:1"></i>{{ r.s.label }}</span></span><span style="font-size:13px;color:{{ r.lf }}">{{ r.last }}</span></div></sc-for>
+        <div style="display:flex;align-items:center;padding:10px 20px;border-top:1px solid var(--line);font-size:13px;color:var(--text-2)"><span>Showing 1–25 of 334</span><span style="margin-left:auto;display:flex;gap:4px"><span style="width:32px;height:32px;border-radius:10px;background:var(--brand-soft);color:var(--green);font-weight:700;display:flex;align-items:center;justify-content:center">1</span><span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center">2</span><span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center">…</span><span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center">14</span></span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;gap:10px;align-items:baseline"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt)">DataCard</code><span style="font-size:13px;color:var(--text-2)">the same row on a phone</span></div>
+      <div style="display:flex;gap:8px"><span style="flex:1;display:flex;align-items:center;gap:8px;height:48px;padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);font-size:15px;color:var(--text-3)"><i class="icon-search" style="font-size:16px;line-height:1"></i>Search</span><span style="height:48px;padding:0 14px;border-radius:12px;border:1px solid var(--line-strong);background:var(--surface);font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px"><i class="icon-sliders-horizontal" style="font-size:17px;line-height:1"></i>Filters<span style="min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center">1</span></span></div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:18px;background:var(--surface);border:1px solid var(--line)"><span style="display:flex;gap:10px"><span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15.5px;font-weight:600">Pak Tanners Group</span><span style="font-size:13px;color:var(--text-2)">PTG Leather · Unit A · Sialkot</span></span><span style="display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 7px;border-radius:7px;font-size:11.5px;font-weight:700;color:var(--surface);background:var(--ink)"><i class="icon-signal-high" style="font-size:12px;line-height:1"></i>P1</span></span><span style="display:flex;gap:8px;align-items:center"><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--amber);background:var(--amber-bg)"><i class="icon-moon" style="font-size:13px;line-height:1"></i>Dormant</span><span style="font-size:13px">Ali Raza</span><span style="margin-left:auto;font-size:12.5px;font-weight:600;color:var(--amber)">No visit in 74 d</span></span></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:280px minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">KanbanColumn · DealCard</code>
+      <div style="background:var(--bg-alt);border:1px solid var(--line);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:10px">
+        <span style="display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:700;color:var(--blue)"><i class="icon-file-text" style="font-size:15px;line-height:1"></i>Proposal Submitted<span style="margin-left:auto;min-width:24px;height:22px;border-radius:999px;background:var(--surface);color:var(--ink);font-size:12px;display:flex;align-items:center;justify-content:center">3</span></span>
+        <span style="font-family:Sora,sans-serif;font-size:16px;font-weight:600;padding:0 4px">PKR 874.5M</span>
+        <div style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)"><span style="font-size:14px;font-weight:600">MBR reuse, 4 MLD</span><span style="font-size:12.5px;color:var(--text-2);margin-top:-6px">Thal Fertilizers</span><span style="display:flex;align-items:center"><span style="font-family:Sora,sans-serif;font-size:15.5px;font-weight:600">PKR 520.0M</span><span style="margin-left:auto;height:20px;padding:0 6px;border-radius:6px;border:1px solid var(--line-strong);font-size:11px;font-weight:700;color:var(--text-2);display:flex;align-items:center">MBR</span></span><span style="display:flex;align-items:center;gap:6px;padding-top:8px;border-top:1px solid var(--line)"><span style="width:22px;height:22px;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">BA</span><span style="font-size:12.5px;color:var(--text-2)">Bilal</span><span style="margin-left:auto;display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:999px;background:var(--slate-bg);color:var(--text-2);font-size:11.5px;font-weight:600"><i class="icon-clock" style="font-size:11px;line-height:1"></i>14 d in stage</span></span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:14px;background:var(--surface);border:1px solid color-mix(in srgb, var(--red) 40%, var(--line));box-shadow:var(--shadow-sm)"><span style="font-size:14px;font-weight:600">RO + UF upgrade</span><span style="font-size:12.5px;color:var(--text-2);margin-top:-6px">Ravi Valley Beverages</span><span style="font-family:Sora,sans-serif;font-size:15.5px;font-weight:600">PKR 86.5M</span><span style="display:flex;align-items:center;gap:6px;padding-top:8px;border-top:1px solid var(--line)"><span style="width:22px;height:22px;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">AR</span><span style="font-size:12.5px;color:var(--text-2)">Ali</span><span style="margin-left:auto;display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:999px;background:var(--red-bg);color:var(--red);font-size:11.5px;font-weight:600"><i class="icon-hourglass" style="font-size:11px;line-height:1"></i>Stuck · 41 d</span></span><span style="display:flex;gap:5px;align-items:center;font-size:12px;font-weight:600;color:var(--red)"><i class="icon-calendar-x" style="font-size:12px;line-height:1"></i>Close date passed · 15 Oct 2026</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">ContactCard</code>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;gap:12px"><span style="width:40px;height:40px;border-radius:999px;background:var(--bg-alt);color:var(--text-2);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">IQ</span><span style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="display:flex;gap:8px;align-items:center"><span style="font-size:14.5px;font-weight:600">Imran Qureshi</span><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:11.5px;font-weight:700"><i class="icon-star" style="font-size:11px;line-height:1"></i>Primary</span></span><span style="font-size:13px;color:var(--text-2)">GM Utilities · Lyallpur Denim Mills</span><span style="display:flex;gap:8px;align-items:center"><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px 0 7px;border-radius:999px;font-size:12px;font-weight:600;color:var(--green);background:var(--green-bg)"><i class="icon-badge-check" style="font-size:12px;line-height:1"></i>Verified</span><span style="font-size:12.5px;color:var(--text-3)">+92 300 8421 557</span></span></span><i class="icon-pencil" style="font-size:16px;line-height:1;color:var(--text-2);padding:10px"></i><i class="icon-trash-2" style="font-size:16px;line-height:1;color:var(--red);padding:10px"></i></div>
+        <div style="display:flex;gap:8px"><span style="flex:1;height:36px;border-radius:999px;border:1px solid var(--line-strong);font-size:13.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px"><i class="icon-phone" style="font-size:15px;line-height:1;color:var(--green)"></i>Call</span><span style="flex:1;height:36px;border-radius:999px;border:1px solid var(--line-strong);font-size:13.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px"><i class="icon-message-circle" style="font-size:15px;line-height:1;color:var(--green)"></i>WhatsApp</span><span style="flex:1;height:36px;border-radius:999px;border:1px solid var(--line-strong);font-size:13.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px"><i class="icon-mail" style="font-size:15px;line-height:1;color:var(--green)"></i>Email</span></div>
+        <span style="font-size:12px;color:var(--text-3);line-height:1.5"><code>tel:+923008421557</code> · <code>https://wa.me/923008421557</code> · <code>mailto:</code>. 44px tall on phones.</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">Timeline · AuditEntry</code>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column">
+        <div style="display:flex;gap:12px"><span style="display:flex;flex-direction:column;align-items:center"><span style="width:34px;height:34px;border-radius:11px;background:var(--amber-bg);color:var(--amber);display:flex;align-items:center;justify-content:center"><i class="icon-clipboard-list" style="font-size:15px;line-height:1"></i></span><span style="flex:1;width:2px;background:var(--line);margin:4px 0"></span></span><span style="flex:1;display:flex;flex-direction:column;gap:5px;padding-bottom:16px"><span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-size:14px">Site Survey</b><span style="font-size:12.5px;color:var(--text-2)">19 Oct 2026, 2:30 PM PKT</span><span style="margin-left:auto;display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12px;font-weight:600;color:var(--red);background:var(--red-bg)"><i class="icon-alarm-clock" style="font-size:12px;line-height:1"></i>Overdue · 19 hrs</span></span><span style="font-size:13px;color:var(--text-2)">Ali Raza · met Imran Qureshi</span></span></div>
+        <div style="display:flex;gap:12px"><span style="width:34px;height:34px;flex:none;border-radius:11px;background:var(--bg-alt);color:var(--text-2);display:flex;align-items:center;justify-content:center"><i class="icon-users" style="font-size:15px;line-height:1"></i></span><span style="flex:1;display:flex;flex-direction:column;gap:5px"><span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-size:14px">Meeting</b><span style="font-size:12.5px;color:var(--text-2)">6 Oct 2026, 11:00 AM PKT</span><span style="margin-left:auto;display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12px;font-weight:600;color:var(--green);background:var(--green-bg)"><i class="icon-thumbs-up" style="font-size:12px;line-height:1"></i>Positive</span></span><span style="font-size:13px;color:var(--text-2)">Next: Plan site survey · 19 Oct 2026</span></span></div>
+        <div style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line-strong)"><span style="font-size:12.5px;color:var(--text-2)">8:41 AM PKT</span><span style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><b style="font-size:13px">Bilal Ahmed</b><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:999px;font-size:11.5px;font-weight:600;color:var(--violet);background:var(--violet-bg)"><i class="icon-arrow-right-left" style="font-size:11px;line-height:1"></i>stage changed</span><span style="font-size:12.5px;color:var(--text-2)">Deal · MBR reuse: Qualified → Proposal Submitted</span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="feedback" style="padding:40px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-direction:column;gap:6px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Shell &amp; feedback</h2><p style="margin:0;font-size:14px;color:var(--text-2)">The menu depends on the role. On desktop it's a deep-teal sidebar; on phones, a 5-tab bar with a raised Log button. Toasts use the inverse surface so they stand out in both modes.</p></div>
+  <div style="display:grid;grid-template-columns:248px 390px minmax(0,1fr);gap:20px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">SideNav</code>
+      <div style="background:var(--nav-bg);color:var(--nav-ink);border-radius:18px;padding:18px 12px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 6px"><img src="uploads/favicon.png" alt="Water Regime" style="height:26px;display:block"><span style="font-family:Sora,sans-serif;font-weight:600;font-size:16px">Sales Hub</span></div>
+        <span style="display:flex;align-items:center;gap:10px;height:44px;padding:0 10px 0 16px;border-radius:999px;background:var(--cta);color:var(--on-cta);font-weight:600;font-size:14.5px"><i class="icon-notebook-pen" style="font-size:17px;line-height:1"></i><span style="flex:1">Log a visit</span><span style="font-size:11px;font-weight:700;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,0.2)">L</span></span>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <span style="display:flex;align-items:center;gap:12px;height:40px;padding:0 10px 0 14px;border-radius:12px;background:var(--nav-active);color:var(--nav-accent);font-size:14px;font-weight:600"><i class="icon-calendar-check" style="font-size:17px;line-height:1"></i><span style="flex:1">My Week</span><span style="min-width:22px;height:20px;padding:0 6px;border-radius:999px;background:var(--red-solid);color:var(--on-solid);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center">4</span></span>
+          <span style="display:flex;align-items:center;gap:12px;height:40px;padding:0 14px;border-radius:12px;background:rgba(255,255,255,0.06);font-size:14px;font-weight:500"><i class="icon-history" style="font-size:17px;line-height:1;color:var(--nav-muted)"></i>Visits <span style="margin-left:auto;font-size:11px;color:var(--nav-muted)">hover</span></span>
+          <span style="display:flex;align-items:center;gap:12px;height:40px;padding:0 14px;border-radius:12px;font-size:14px;font-weight:500"><i class="icon-building-2" style="font-size:17px;line-height:1;color:var(--nav-muted)"></i>Accounts</span>
+          <span style="display:flex;align-items:center;gap:12px;height:40px;padding:0 14px;border-radius:12px;font-size:14px;font-weight:500;box-shadow:inset 0 0 0 2px var(--nav-accent)"><i class="icon-kanban" style="font-size:17px;line-height:1;color:var(--nav-muted)"></i>Team Pulse <span style="margin-left:auto;font-size:11px;color:var(--nav-muted)">focus</span></span>
+          <span style="padding:12px 14px 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--nav-muted)">Admin</span>
+          <span style="display:flex;align-items:center;gap:12px;height:40px;padding:0 14px;border-radius:12px;font-size:14px;font-weight:500"><i class="icon-users-round" style="font-size:17px;line-height:1;color:var(--nav-muted)"></i>Users</span>
+        </div>
+        <span style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--nav-line);border-radius:14px"><span style="width:32px;height:32px;border-radius:999px;background:rgba(159,245,192,0.14);color:var(--nav-accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">KJ</span><span style="flex:1;display:flex;flex-direction:column"><span style="font-size:13px;font-weight:600">Kamran Javed</span><span style="font-size:11.5px;color:var(--nav-muted)">Admin</span></span><i class="icon-chevrons-up-down" style="font-size:15px;line-height:1;color:var(--nav-muted)"></i></span>
+      </div>
+      <span style="font-size:12.5px;color:var(--text-3);line-height:1.5">Sales/Manager: My Week, Visits, Accounts, Team Pulse, Cockpit. Admin adds Users and Audit log. CEO: Cockpit only, plus a read-only note.</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">PhoneAppBar · BottomTabBar</code>
+      <div style="background:var(--bg);border:1px solid var(--line);border-radius:24px;overflow:hidden;display:flex;flex-direction:column">
+        <div style="height:52px;display:flex;align-items:center;gap:8px;padding:0 6px 0 16px"><img src="uploads/favicon.png" alt="" style="height:22px"><span style="flex:1;font-family:Sora,sans-serif;font-size:18px;font-weight:600">Accounts</span><i class="icon-search" style="font-size:20px;line-height:1;padding:12px"></i><span style="width:34px;height:34px;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-right:5px">AR</span></div>
+        <div style="height:52px;display:flex;align-items:center;gap:4px;padding:0 6px 0 4px;border-top:1px dashed var(--line-strong);border-bottom:1px solid var(--line)"><i class="icon-chevron-left" style="font-size:24px;line-height:1;padding:10px"></i><span style="flex:1;font-family:Sora,sans-serif;font-size:16.5px;font-weight:600">Lyallpur Denim Mills</span><span style="width:34px;height:34px;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-right:5px">AR</span></div>
+        <div style="height:120px"></div>
+        <div style="height:86px;padding:6px 6px 28px;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:start">
+          <span style="display:flex;flex-direction:column;align-items:center;gap:3px;height:52px;justify-content:center;color:var(--link)"><span style="position:relative;display:flex"><i class="icon-calendar-check" style="font-size:22px;line-height:1"></i><span style="position:absolute;top:-7px;left:14px;min-width:20px;height:18px;padding:0 5px;border-radius:999px;background:var(--red-solid);color:var(--on-solid);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--surface)">4</span></span><span style="font-size:11px;font-weight:700">My Week</span></span>
+          <span style="display:flex;flex-direction:column;align-items:center;gap:3px;height:52px;justify-content:center;color:var(--text-2)"><i class="icon-building-2" style="font-size:22px;line-height:1"></i><span style="font-size:11px;font-weight:600">Accounts</span></span>
+          <span style="display:flex;flex-direction:column;align-items:center;gap:3px;margin-top:-24px;color:var(--text-2)"><span style="width:58px;height:58px;border-radius:999px;background:var(--cta);color:var(--on-cta);display:flex;align-items:center;justify-content:center;border:4px solid var(--surface);box-shadow:0 10px 24px -8px rgba(0,169,80,0.7)"><i class="icon-plus" style="font-size:26px;line-height:1"></i></span><span style="font-size:11px;font-weight:600">Log visit</span></span>
+          <span style="display:flex;flex-direction:column;align-items:center;gap:3px;height:52px;justify-content:center;color:var(--text-2)"><i class="icon-kanban" style="font-size:22px;line-height:1"></i><span style="font-size:11px;font-weight:600">Pulse</span></span>
+          <span style="display:flex;flex-direction:column;align-items:center;gap:3px;height:52px;justify-content:center;color:var(--text-2)"><i class="icon-menu" style="font-size:22px;line-height:1"></i><span style="font-size:11px;font-weight:600">More</span></span>
+        </div>
+      </div>
+      <span style="font-size:12.5px;color:var(--text-3);line-height:1.5">Top-level pages show the logo; detail pages show Back. More opens a sheet with Visits, Cockpit, admin pages, theme and sign out.</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">PageHeader</code>
+        <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px"><span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text-3)"><span style="color:var(--text-2)">Accounts</span><i class="icon-chevron-right" style="font-size:13px;line-height:1"></i>Add company</span><span style="font-family:Sora,sans-serif;font-size:26px;font-weight:600;letter-spacing:-0.02em">Add company</span><span style="font-size:14px;color:var(--text-2)">One short line that answers the page’s question.</span></div>
+          <span style="height:40px;padding:0 16px;border:1px solid var(--line-strong);border-radius:999px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px"><i class="icon-file-spreadsheet" style="font-size:16px;line-height:1;color:var(--green)"></i>Export</span><span style="height:40px;padding:0 18px;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px"><i class="icon-plus" style="font-size:16px;line-height:1"></i>Add company</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">Toast</code>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+          <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:12px;padding:10px 8px 10px 14px;border-radius:16px;background:var(--inverse-bg);color:var(--inverse-ink);box-shadow:var(--shadow-lg)"><i class="icon-{{ t.icon }}" style="font-size:19px;line-height:1;color:{{ t.fg }}"></i><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:13.5px;font-weight:600">{{ t.title }}</span><span style="font-size:12px;opacity:0.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.sub }}</span></span><sc-if value="{{ t.undo }}" hint-placeholder-val="{{ false }}"><span style="height:32px;padding:0 10px;border-radius:999px;border:1px solid var(--inverse-line);color:var(--inverse-accent);font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:5px"><i class="icon-undo-2" style="font-size:13px;line-height:1"></i>Undo</span></sc-if><i class="icon-x" style="font-size:15px;line-height:1;padding:8px"></i></div></sc-for>
+        </div>
+        <span style="font-size:12.5px;color:var(--text-3)">role="status". Success disappears after 6 s, and the timer pauses on hover. Errors stay until dismissed. Only one shows at a time; a new one replaces it.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">ReadOnlyIndicator · UserMenu</code>
+        <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;border:1px solid var(--line-strong);color:var(--text-2);font-size:12.5px;font-weight:600"><i class="icon-eye" style="font-size:14px;line-height:1"></i>Read-only</span>
+          <div style="width:262px;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-lg);padding:8px;display:flex;flex-direction:column;gap:2px">
+            <div style="display:flex;gap:10px;align-items:center;padding:8px 8px 10px;border-bottom:1px solid var(--line)"><span style="width:36px;height:36px;border-radius:999px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">AR</span><span style="display:flex;flex-direction:column"><span style="font-size:14px;font-weight:600">Ali Raza</span><span style="font-size:12px;color:var(--text-3)">Sales · Lahore</span></span></div>
+            <span style="display:flex;align-items:center;gap:10px;height:38px;padding:0 8px;font-size:14px"><i class="icon-key-round" style="font-size:16px;line-height:1;color:var(--text-2)"></i>Change password</span>
+            <span style="display:flex;align-items:center;gap:10px;height:40px;padding:0 4px 0 8px;font-size:14px"><i class="icon-sun-moon" style="font-size:16px;line-height:1;color:var(--text-2)"></i><span style="flex:1">Theme</span><span style="display:flex;padding:3px;border-radius:999px;background:var(--bg-alt);border:1px solid var(--line)"><span style="height:26px;padding:0 9px;border-radius:999px;background:var(--surface);font-size:12px;font-weight:600;display:flex;align-items:center">Light</span><span style="height:26px;padding:0 9px;font-size:12px;font-weight:600;color:var(--text-2);display:flex;align-items:center">Dark</span></span></span>
+            <span style="display:flex;align-items:center;gap:10px;height:38px;padding:0 8px;border-top:1px solid var(--line);font-size:14px"><i class="icon-log-out" style="font-size:16px;line-height:1;color:var(--text-2)"></i>Sign out</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="overlays" style="padding:40px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-direction:column;gap:6px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Overlays</h2><p style="margin:0;font-size:14px;color:var(--text-2)">Desktop: modals for decisions, drawers for forms. Phone: both become bottom sheets. Esc and tapping the backdrop close them, focus is trapped inside, and focus goes back to the trigger afterwards. You can see each one working on the screens.</p></div>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px">
+    <div style="display:flex;flex-direction:column;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">Modal</code>
+      <div style="position:relative;height:320px;border-radius:18px;overflow:hidden;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center"><div style="position:absolute;inset:0;background:var(--scrim)"></div><div style="position:relative;width:86%;background:var(--surface);border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow-lg)"><span style="font-family:Sora,sans-serif;font-size:17px;font-weight:600">Mark as Won (PO)?</span><span style="font-size:13px;line-height:1.5;color:var(--text-2)">Probability becomes 100%.</span><span style="display:flex;gap:8px"><span style="flex:1;height:38px;border-radius:999px;border:1px solid var(--line-strong);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center">Cancel</span><span style="flex:1;height:38px;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center">Mark as Won</span></span></div></div><span style="font-size:12.5px;color:var(--text-3)">Lost reason: 4.11b · Edit deal: 4.11c</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">Drawer</code>
+      <div style="position:relative;height:320px;border-radius:18px;overflow:hidden;background:var(--bg);border:1px solid var(--line);display:flex;justify-content:flex-end"><div style="position:absolute;inset:0;background:var(--scrim)"></div><div style="position:relative;width:70%;background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-lg)"><span style="font-family:Sora,sans-serif;font-size:16px;font-weight:600">Add contact</span><span style="height:36px;border-radius:10px;border:1px solid var(--line-strong);background:var(--input)"></span><span style="height:36px;border-radius:10px;border:1px solid var(--line-strong);background:var(--input)"></span><span style="height:36px;border-radius:10px;border:1px solid var(--line-strong);background:var(--input)"></span><span style="margin-top:auto;height:38px;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center">Add contact</span></div></div><span style="font-size:12.5px;color:var(--text-3)">Add contact: 3.8c · Add user: 6.13c</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">BottomSheet</code>
+      <div style="position:relative;height:320px;border-radius:18px;overflow:hidden;background:var(--bg);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:flex-end"><div style="position:absolute;inset:0;background:var(--scrim)"></div><div style="position:relative;background:var(--surface);border-radius:24px 24px 0 0;padding:8px 14px 16px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-lg)"><span style="width:36px;height:4px;border-radius:99px;background:var(--line-strong);align-self:center"></span><span style="font-family:Sora,sans-serif;font-size:16px;font-weight:600">Set outcome</span><span style="display:flex;align-items:center;gap:10px;height:44px;padding:0 10px;border-radius:12px;border:1px solid var(--line);font-size:13.5px"><span style="width:28px;height:28px;border-radius:8px;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center"><i class="icon-thumbs-up" style="font-size:15px;line-height:1"></i></span>Positive — move forward</span><span style="display:flex;align-items:center;gap:10px;height:44px;padding:0 10px;border-radius:12px;border:1px solid var(--line);font-size:13.5px"><span style="width:28px;height:28px;border-radius:8px;background:var(--aqua-bg);color:var(--aqua);display:flex;align-items:center;justify-content:center"><i class="icon-info" style="font-size:15px;line-height:1"></i></span>Neutral — info only</span></div></div><span style="font-size:12.5px;color:var(--text-3)">Outcome: 2.3e · Filters: 2.5d · More: 6.Sc</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">ConfirmDialog</code>
+      <div style="position:relative;height:320px;border-radius:18px;overflow:hidden;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center"><div style="position:absolute;inset:0;background:var(--scrim)"></div><div style="position:relative;width:86%;background:var(--surface);border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-lg)"><span style="width:38px;height:38px;border-radius:12px;background:var(--red-bg);color:var(--red);display:flex;align-items:center;justify-content:center"><i class="icon-trash-2" style="font-size:18px;line-height:1"></i></span><span style="font-family:Sora,sans-serif;font-size:17px;font-weight:600">Delete Sadia Noor?</span><span style="font-size:12.5px;line-height:1.5;color:var(--text-2)">Past visits keep the name.</span><span style="display:flex;gap:8px"><span style="flex:1;height:38px;border-radius:999px;border:1px solid var(--line-strong);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center">Cancel</span><span style="flex:1;height:38px;border-radius:999px;background:var(--danger);color:#FFFFFF;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center">Delete</span></span></div></div><span style="font-size:12.5px;color:var(--text-3)">role="alertdialog". Cancel gets focus first. Live: 3.8b, 3.8g</span></div>
+  </div>
+</section>
+
+<section id="states" style="padding:40px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-direction:column;gap:6px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">States</h2><p style="margin:0;font-size:14px;color:var(--text-2)">Every list has empty, loading and error states. Every form has inline errors plus a summary at the top. Empty states always offer the next step.</p></div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">EmptyState</code>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:32px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span style="width:52px;height:52px;border-radius:16px;background:var(--bg-alt);color:var(--text-2);display:flex;align-items:center;justify-content:center"><i class="icon-search-x" style="font-size:24px;line-height:1"></i></span><span style="font-family:Sora,sans-serif;font-size:17px;font-weight:600">No companies match</span><span style="font-size:13.5px;color:var(--text-2);line-height:1.5">Try another spelling or clear the filters.</span><span style="display:flex;gap:8px;margin-top:4px"><span style="height:38px;padding:0 14px;border:1px solid var(--line-strong);border-radius:999px;font-size:13.5px;font-weight:600;display:flex;align-items:center">Clear filters</span><span style="height:38px;padding:0 14px;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:13.5px;font-weight:600;display:flex;align-items:center">Add company</span></span></div>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:flex;gap:12px;align-items:center"><span style="width:40px;height:40px;border-radius:999px;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center"><i class="icon-circle-check" style="font-size:20px;line-height:1"></i></span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14.5px;font-weight:600">All clear</span><span style="font-size:13px;color:var(--text-2)">Every visit has an outcome.</span></span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">Skeleton · ErrorBanner</code>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden"><sc-for list="{{ skel }}" as="k" hint-placeholder-count="4"><div style="display:flex;gap:14px;align-items:center;padding:14px 18px;border-top:1px solid {{ k }}"><span style="width:36px;height:36px;border-radius:12px;background:var(--skeleton);animation:wrshimmer 1.4s ease-in-out infinite"></span><span style="flex:1;display:flex;flex-direction:column;gap:7px"><span style="width:55%;height:11px;border-radius:6px;background:var(--skeleton);animation:wrshimmer 1.4s ease-in-out infinite"></span><span style="width:30%;height:9px;border-radius:6px;background:var(--skeleton);animation:wrshimmer 1.4s ease-in-out infinite"></span></span><span style="width:64px;height:22px;border-radius:999px;background:var(--skeleton);animation:wrshimmer 1.4s ease-in-out infinite"></span></div></sc-for></div>
+      <div role="alert" style="display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:var(--red-bg);color:var(--red)"><i class="icon-wifi-off" style="font-size:18px;line-height:1"></i><span style="flex:1;font-size:13.5px;color:var(--ink)"><b style="color:var(--red)">Couldn't load visits.</b> Check your connection.</span><span style="height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--red);color:var(--red);font-size:13px;font-weight:600;display:flex;align-items:center">Retry</span></div>
+      <span style="font-size:12.5px;color:var(--text-3)">Skeletons match the shape of the real rows and pulse at 1.4 s. They're replaced row by row, never by a spinner over the whole page.</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">ValidationSummary · InlineHelp</code>
+      <div role="alert" style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:var(--red-bg);color:var(--red)"><i class="icon-circle-alert" style="font-size:18px;line-height:1.2"></i><span style="display:flex;flex-direction:column;gap:3px"><b style="font-size:14px">Fix 2 things before saving</b><span style="font-size:13px;color:var(--ink)">· Choose the company you visited.</span><span style="font-size:13px;color:var(--ink)">· Choose why this visit was skipped.</span></span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--aqua-bg);font-size:13.5px;line-height:1.5"><i class="icon-timer" style="font-size:16px;line-height:1.3;color:var(--aqua)"></i><span><b>Not sure yet? Leave it as Pending.</b> You have 48 hours to set the outcome.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--amber-bg);font-size:13.5px;line-height:1.5"><i class="icon-copy" style="font-size:16px;line-height:1.3;color:var(--amber)"></i><span><b style="color:var(--amber)">Possible duplicate:</b> Lyallpur Denim Mills — LDM Denim · Plant 2</span></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px"><code style="font:600 13px ui-monospace,Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--bg-alt);align-self:flex-start">ErrorPage · 403 / 404 / 500</code>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+      <sc-for list="{{ errs }}" as="e" hint-placeholder-count="3"><div style="background:#041C22;color:#E6F2EC;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:8px;min-height:200px"><img src="uploads/logo-white.png" alt="Water Regime" style="width:72px;height:auto;display:block"><span style="font-family:Sora,sans-serif;font-size:44px;font-weight:600;line-height:1;color:#9FF5C0;margin-top:auto">{{ e.c }}</span><span style="font-family:Sora,sans-serif;font-size:16px;font-weight:600">{{ e.t }}</span><span style="display:flex;gap:8px;margin-top:4px"><span style="height:32px;padding:0 12px;border-radius:999px;background:#00A950;color:#FFFFFF;font-size:12.5px;font-weight:700;display:flex;align-items:center">{{ e.a }}</span></span></div></sc-for>
+    </div>
+    <span style="font-size:12.5px;color:var(--text-3)">Full pages: 6.15a–f. Deep teal in both modes. These are the only full-bleed brand screens apart from sign-in.</span>
+  </div>
+</section>
+
+<section style="padding:40px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:12px">
+  <h2 style="margin:0;font-family:Sora,sans-serif;font-size:22px;font-weight:600">Component inventory → React</h2>
+  <p style="margin:0;font-size:14px;line-height:1.7;color:var(--text-2);max-width:1100px">AppShell · SideNav · NavItem · BottomTabBar · PhoneAppBar · UserMenu · ReadOnlyIndicator · PageHeader · Breadcrumbs · Button · IconButton · ExportButton · TextField · Textarea · Select · Checkbox · Radio · Switch · SegmentedControl · Chip · DatePicker · DateTimeInput · MoneyInput · PercentInput · CompanyPicker · DealPicker · StagePill · OutcomeChip · PriorityBadge · StatusBadge · VerifiedBadge · FlagBadge · Countdown · CountBadge · KpiTile · StatRow · PipelineByStage · LostReasonsBars · FilterBar · FilterChip · DataTable · DataCard · Pagination · KanbanBoard · KanbanColumn · DealCard · StageTabs · ContactCard · Timeline · TimelineItem · AuditEntry · OutcomeQueue · OutcomeQuickPicker · OutcomeDetailsStep · ActionChecklist · StageControl · LostReasonDialog · ProposalRow · Toast · Modal · Drawer · BottomSheet · ConfirmDialog · EmptyState · Skeleton · ErrorBanner · ValidationSummary · InlineHelp · ErrorPage</p>
+</section>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DARK = {'--bg':'#03151A','--bg-alt':'#041C22','--surface':'#062A2B','--surface-2':'#0A3436','--input':'#04201F','--ink':'#E6F2EC','--text-2':'#A7BDB3','--text-3':'#87A096','--line':'rgba(255,255,255,0.12)','--line-strong':'rgba(255,255,255,0.22)','--primary':'#00A950','--primary-hover':'#1FBF68','--on-primary':'#03151A','--cta':'#00A950','--cta-hover':'#1FBF68','--on-cta':'#03151A','--link':'#9FF5C0','--focus':'#5FE3E8','--brand-soft':'rgba(0,169,80,0.16)','--nav-bg':'#021013','--nav-ink':'#E6F2EC','--nav-muted':'#9DB5AB','--nav-active':'rgba(159,245,192,0.10)','--nav-accent':'#9FF5C0','--nav-line':'rgba(255,255,255,0.08)','--inverse-bg':'#E6F2EC','--inverse-ink':'#06231A','--inverse-accent':'#007A3A','--inverse-line':'rgba(6,35,26,0.25)','--scrim':'rgba(0,0,0,0.6)','--skeleton':'rgba(255,255,255,0.08)','--shadow-sm':'0 1px 2px rgba(0,0,0,0.3)','--shadow-md':'0 8px 24px -10px rgba(0,0,0,0.5)','--shadow-lg':'0 18px 50px -12px rgba(0,0,0,0.65)','--slate':'#B4C3CE','--slate-bg':'rgba(180,195,206,0.14)','--aqua':'#6FE0E5','--aqua-bg':'rgba(20,194,201,0.16)','--blue':'#A3BDF7','--blue-bg':'rgba(120,155,235,0.18)','--violet':'#C9B2F5','--violet-bg':'rgba(170,140,240,0.18)','--amber':'#FFC766','--amber-bg':'rgba(255,184,64,0.16)','--green':'#9FF5C0','--green-bg':'rgba(0,169,80,0.18)','--red':'#FF9B8F','--red-bg':'rgba(255,99,82,0.16)','--red-solid':'#FF6B5B','--amber-solid':'#FFB840','--green-solid':'#00A950','--on-solid':'#03151A','--danger':'#C4321F'};
+
+const PALETTE = [
+  ['green','#00A950','Primary brand green'],['green-600','#009646','Hover'],['green-700','#007A3A','Green text & links on white'],['green-800','#0A5C30','Deepest green'],['green-soft','#E7F7EE','Tinted backgrounds'],
+  ['aqua','#14C2C9','Secondary accent (water)'],['aqua-soft','#E4FAF9','Tinted backgrounds'],['mint','#9FF5C0','Accent text on dark'],
+  ['ink','#06231A','Main text'],['muted','#5A6B62','Secondary text'],['muted-2','#85958C','Icons, disabled (3.1:1)'],['line','#E3ECE6','Borders'],
+  ['paper','#FFFFFF','Cards'],['mist','#F3F8F4','Page background'],['mist-2','#EEF5F0','Alternate background'],
+  ['deep','#041C22','Dark sections, sidebar'],['deep-2','#062A2B','Dark cards'],['night','#03151A','Darkest background'],['line-dark','rgba(255,255,255,0.12)','Borders on dark']
+].map(([name,hex,role]) => ({name,hex,role}));
+
+const TOKENS = [
+  ['--bg','Page background','#F3F8F4','#03151A'],['--bg-alt','Alternate background, icon tiles','#EEF5F0','#041C22'],['--surface','Cards, sheets, menus','#FFFFFF','#062A2B'],['--surface-2','Row hover, table head, nested panel','#F7FAF8','#0A3436'],['--input','Field background','#FFFFFF','#04201F'],
+  ['--ink','Primary text','#06231A','#E6F2EC'],['--text-2','Secondary text','#5A6B62','#A7BDB3'],['--text-3','Tertiary text (AA-safe; replaces muted-2)','#637469','#87A096'],
+  ['--line','Borders, dividers','#E3ECE6','rgba(255,255,255,0.12)'],['--line-strong','Field borders, checkboxes','#C9D8CE','rgba(255,255,255,0.22)'],
+  ['--primary','Primary buttons, selected states','#007A3A','#00A950'],['--primary-hover','Primary hover','#0A5C30','#1FBF68'],['--on-primary','Text on primary','#FFFFFF','#03151A'],
+  ['--cta','“Log a visit” only','#00A950','#00A950'],['--cta-hover','CTA hover','#009646','#1FBF68'],['--on-cta','Text on CTA','#FFFFFF','#03151A'],
+  ['--link','Links, green text','#007A3A','#9FF5C0'],['--focus','Focus ring (3px, 25% halo)','#0B7F85','#5FE3E8'],['--brand-soft','Selected tint','#E7F7EE','rgba(0,169,80,0.16)'],
+  ['--nav-bg','Sidebar','#041C22','#021013'],['--nav-accent','Active nav text','#9FF5C0','#9FF5C0'],
+  ['--inverse-bg','Toasts','#06231A','#E6F2EC'],['--scrim','Overlay backdrop','rgba(3,21,26,0.5)','rgba(0,0,0,0.6)'],['--skeleton','Loading placeholders','#E6EEE9','rgba(255,255,255,0.08)'],
+  ['--danger','Destructive buttons (white text)','#B42318','#C4321F'],['--red-solid','Count badges, meters','#D92D20','#FF6B5B']
+].map(([name,role,light,dark]) => ({name,role,light,dark,darkUnder: dark.startsWith('rgba') ? '#062A2B' : 'transparent'}));
+
+const HUES = [
+  ['slate','Lead · Skipped · Archived · neutral counts','circle-dashed','Lead','#4A5A66','#EDF1F4','#B4C3CE','rgba(180,195,206,0.14)'],
+  ['aqua','Qualified · Neutral outcome','circle-dot','Qualified','#0B7178','#E4FAF9','#6FE0E5','rgba(20,194,201,0.16)'],
+  ['blue','Proposal Submitted','file-text','Proposal Submitted','#2D55A8','#EAF0FB','#A3BDF7','rgba(120,155,235,0.18)'],
+  ['violet','Negotiation','handshake','Negotiation','#6A45A8','#F2EDFB','#C9B2F5','rgba(170,140,240,0.18)'],
+  ['amber','No show · Dormant · To confirm · < 12 hrs','moon','Dormant','#8A5300','#FFF3D9','#FFC766','rgba(255,184,64,0.16)'],
+  ['green','Won (PO) · Positive · Active · Verified','trophy','Won (PO)','#007A3A','#E7F7EE','#9FF5C0','rgba(0,169,80,0.18)'],
+  ['red','Lost · Negative · Overdue · Stuck · Close passed','alarm-clock','Overdue','#B42318','#FDECEA','#FF9B8F','rgba(255,99,82,0.16)']
+].map(([name,use,icon,sample,lfg,lbg,dfg,dbg]) => ({name,use,icon,sample,lfg,lbg,dfg,dbg}));
+
+const S = 'Sora, sans-serif', I = 'Inter, system-ui, sans-serif';
+const TYPE = [
+  ['display','Sora 600 · 40/44 · −2.5%',S,'40px','44px',600,'-0.025em','none','var(--ink)','Good morning, Ali'],
+  ['h1','Sora 600 · 30/36 · −2%',S,'30px','36px',600,'-0.02em','none','var(--ink)','Kohsar Chemicals'],
+  ['h2','Sora 600 · 22/28',S,'22px','28px',600,'-0.01em','none','var(--ink)','Awaiting outcome'],
+  ['h3','Sora 600 · 17/24',S,'17px','24px',600,'0','none','var(--ink)','My open deals'],
+  ['kpi','Sora 600 · 32/36',S,'32px','36px',600,'-0.02em','none','var(--ink)','PKR 2,148.6M'],
+  ['body-lg','Inter 400 · 15/24',I,'15px','24px',400,'0','none','var(--ink)','Every visit needs an outcome within 48 hours.'],
+  ['body','Inter 400 · 14/20',I,'14px','20px',400,'0','none','var(--ink)','Send revised RO proposal to procurement.'],
+  ['label','Inter 600 · 13.5/20',I,'13.5px','20px',600,'0','none','var(--ink)','Company *'],
+  ['small','Inter 400 · 13/18',I,'13px','18px',400,'0','none','var(--text-2)','Site Survey · 19 Oct 2026, 2:30 PM PKT'],
+  ['caption','Inter 500 · 12/16',I,'12px','16px',500,'0','none','var(--text-3)','Updated 4 min ago by Sana Malik'],
+  ['overline','Inter 700 · 11.5/16 · +6% caps',I,'11.5px','16px',700,'0.06em','uppercase','var(--text-3)','Later this week']
+].map(([name,spec,family,size,lh,weight,ls,tt,color,sample],i) => ({name,spec,family,size,lh,weight,ls,tt,color,sample,bd: i ? 'var(--line)' : 'transparent'}));
+
+const SPACING = [['space-1','4px'],['space-2','8px'],['space-3','12px'],['space-4','16px'],['space-5','20px'],['space-6','24px'],['space-8','32px'],['space-10','40px'],['space-12','48px'],['space-16','64px']].map(([name,px]) => ({name,px}));
+
+const ICONS = [
+  ['calendar-check','My Week'],['notebook-pen','Log visit'],['history','Visits'],['building-2','Accounts'],['kanban','Team Pulse'],['gauge','Cockpit'],['users-round','Users'],['scroll-text','Audit log'],
+  ['map-pin','Visit'],['phone','Call'],['mail','Email'],['users','Meeting'],['clipboard-list','Site Survey'],['presentation','Proposal Mtg'],
+  ['circle-dashed','Lead'],['circle-dot','Qualified'],['file-text','Proposal'],['handshake','Negotiation'],['trophy','Won (PO)'],['circle-x','Lost'],
+  ['clock','Pending'],['thumbs-up','Positive'],['info','Neutral'],['thumbs-down','Negative'],['calendar-clock','No show'],['skip-forward','Skipped'],
+  ['timer','Countdown'],['alarm-clock','Overdue'],['hourglass','Stuck'],['moon','Dormant'],['calendar-x','Close passed'],['badge-check','Verified'],['circle-help','To confirm'],
+  ['signal-high','P1'],['signal-medium','P2'],['signal-low','P3'],['archive','Archived'],['eye','Read-only'],
+  ['message-circle','WhatsApp'],['plus','Add'],['search','Search'],['sliders-horizontal','Filters'],['file-spreadsheet','Export'],['pencil','Edit'],['trash-2','Delete'],['undo-2','Undo'],['hand','Claim'],['key-round','Password']
+].map(([n,use]) => ({n,use}));
+
+const FORMATS = [
+  {title:'Money', rows:[{ex:'PKR 850',rule:'under 1,000: exact'},{ex:'PKR 450K',rule:'under 1M: K, no decimals'},{ex:'PKR 1.2M',rule:'1M and up: M, 1 decimal'},{ex:'PKR 7,392.3M',rule:'thousands separators stay in M'},{ex:'PKR 7,392,300,000',rule:'full value on hover or detail'}]},
+  {title:'Dates', rows:[{ex:'22 Oct 2026',rule:'default'},{ex:'Thu 22 Oct',rule:'within the current week'},{ex:'Today · Yesterday',rule:'feeds and timelines only'},{ex:'7 d ago',rule:'relative, with the full date on hover'}]},
+  {title:'Times · PKT', rows:[{ex:'3:30 PM PKT',rule:'always labelled with the zone'},{ex:'22 Oct 2026, 3:30 PM PKT',rule:'date + time'},{ex:'UTC+5',rule:'stored in UTC, shown in PKT'}]},
+  {title:'Durations', rows:[{ex:'45 min',rule:'under 1 hr'},{ex:'6.5 hrs',rule:'under 48 hrs'},{ex:'2.0 days',rule:'48 hrs and over'},{ex:'31 hrs left',rule:'countdown: whole hours'},{ex:'12 d in stage',rule:'deal age in stage'}]}
+];
+
+const BTN = [
+  ['cta','var(--cta)','var(--cta-hover)','var(--on-cta)','transparent','48px','22px','15px',700,'Log a visit','notebook-pen'],
+  ['primary','var(--primary)','var(--primary-hover)','var(--on-primary)','transparent','40px','18px','14px',600,'Save visit','check'],
+  ['secondary','var(--surface)','var(--surface-2)','var(--ink)','var(--line-strong)','40px','16px','14px',600,'New deal','plus'],
+  ['ghost','transparent','var(--bg-alt)','var(--text-2)','transparent','40px','14px','14px',600,'Cancel','x'],
+  ['danger','var(--danger)','#912018','#FFFFFF','transparent','40px','18px','14px',600,'Delete','trash-2']
+].map(([name,bg,hv,fg,bd,h,px,fs,fw,label,icon]) => ({name,h,px,fs,fw, cells:[
+  {bg,fg,bd,sh:'none',cur:'pointer',icon,anim:'none',label},
+  {bg:hv,fg,bd,sh:'none',cur:'pointer',icon,anim:'none',label},
+  {bg,fg,bd,sh:'0 0 0 2px var(--surface), 0 0 0 4px var(--focus)',cur:'pointer',icon,anim:'none',label},
+  {bg: name === 'ghost' ? 'transparent' : 'var(--bg-alt)',fg:'var(--text-3)',bd: name === 'secondary' ? 'var(--line)' : 'transparent',sh:'none',cur:'not-allowed',icon,anim:'none',label},
+  {bg,fg,bd,sh:'none',cur:'progress',icon:'loader-circle',anim:'wrspin 0.9s linear infinite',label:'Saving…'}
+]}));
+const FIELDS = [
+  {label:'Website', value:'company.pk', fg:'var(--text-3)', bd:'var(--line-strong)', bg:'var(--input)', sh:'none', help:'Optional', hi:'info', hc:'var(--text-3)', hw:400, lc:'var(--ink)'},
+  {label:'Website', value:'lyallpurdenim|', fg:'var(--ink)', bd:'var(--focus)', bg:'var(--input)', sh:'0 0 0 3px rgba(20,194,201,0.25)', help:'Leave out https://', hi:'info', hc:'var(--text-3)', hw:400, lc:'var(--ink)'},
+  {label:'Name', value:'Imran Qureshi', fg:'var(--ink)', bd:'var(--line-strong)', bg:'var(--input)', sh:'none', help:'Looks good', hi:'circle-check', hc:'var(--text-3)', hw:400, lc:'var(--ink)'},
+  {label:'Name *', value:'Full name', fg:'var(--text-3)', bd:'var(--red)', bg:'var(--input)', sh:'none', help:'Enter a name.', hi:'circle-alert', hc:'var(--red)', hw:500, lc:'var(--ink)'},
+  {label:'Sub-sector', value:'Pick a sector first', fg:'var(--text-3)', bd:'var(--line)', bg:'var(--bg-alt)', sh:'none', help:'Depends on the sector', hi:'lock', hc:'var(--text-3)', hw:400, lc:'var(--text-3)'}
+];
+const PK = {P1:{label:'P1',icon:'signal-high',fg:'var(--surface)',bg:'var(--ink)',bd:'var(--ink)'}, P2:{label:'P2',icon:'signal-medium',fg:'var(--green)',bg:'var(--green-bg)',bd:'transparent'}, P3:{label:'P3',icon:'signal-low',fg:'var(--text-2)',bg:'transparent',bd:'var(--line-strong)'}};
+const PICKER = [['Ravi Valley Beverages','RVB Bottling · Sheikhupura Plant · Sheikhupura','P1'],['Karakoram Spinning','KSM · Mill 3 · Faisalabad','P2'],['Indus Crest Power','Indus Crest · Unit 2 · Hyderabad','P1']].map(([name,sub,p],i) => ({name,sub,p:PK[p],bd: i ? 'var(--line)' : 'transparent', bg: i ? 'var(--surface)' : 'var(--surface-2)'}));
+const CAL = [...Array(3).fill(''), ...Array.from({length:31}, (_, i) => i + 1), ''].map(n => ({n, bg: n === 29 ? 'var(--primary)' : 'transparent', fg: n === 29 ? 'var(--on-primary)' : n && n < 22 ? 'var(--text-2)' : 'var(--ink)', sh: n === 22 ? 'inset 0 0 0 1.5px var(--primary)' : 'none', fw: n === 22 || n === 29 ? 700 : 400}));
+
+const LIGHT = Object.fromEntries('--bg:#F3F8F4;--bg-alt:#EEF5F0;--surface:#FFFFFF;--surface-2:#F7FAF8;--input:#FFFFFF;--ink:#06231A;--text-2:#5A6B62;--text-3:#637469;--line:#E3ECE6;--line-strong:#C9D8CE;--primary:#007A3A;--on-primary:#FFFFFF;--slate:#4A5A66;--slate-bg:#EDF1F4;--aqua:#0B7178;--aqua-bg:#E4FAF9;--blue:#2D55A8;--blue-bg:#EAF0FB;--violet:#6A45A8;--violet-bg:#F2EDFB;--amber:#8A5300;--amber-bg:#FFF3D9;--green:#007A3A;--green-bg:#E7F7EE;--red:#B42318;--red-bg:#FDECEA;--red-solid:#D92D20;--amber-solid:#E89B0C;--green-solid:#00A950'.split(';').map(d => d.split(':')));
+const PANEL = v => ({...v, background:'var(--surface)', color:'var(--ink)', border:'1px solid var(--line)', borderRadius:'18px', padding:'20px', display:'flex', flexDirection:'column', gap:'14px'});
+const sp = (h, label, icon) => ({label, icon, fg:`var(--${h})`, bg:`var(--${h}-bg)`, bd:'transparent', r:'999px', meter:false});
+const STATUS = [
+  {name:'StagePill', note:'stage', items:[sp('slate','Lead','circle-dashed'), sp('aqua','Qualified','circle-dot'), sp('blue','Proposal Submitted','file-text'), sp('violet','Negotiation','handshake'), sp('green','Won (PO)','trophy'), sp('red','Lost','circle-x')]},
+  {name:'OutcomeChip', note:'outcome', items:[sp('slate','Pending','clock'), sp('green','Positive — move forward','thumbs-up'), sp('aqua','Neutral — info only','info'), sp('red','Negative — pushback','thumbs-down'), sp('amber','No show / rescheduled','calendar-clock'), sp('slate','Skipped','skip-forward')]},
+  {name:'PriorityBadge', note:'P1 highest', items:[{...PK.P1, r:'7px', meter:false}, {...PK.P2, r:'7px', meter:false}, {...PK.P3, r:'7px', meter:false}]},
+  {name:'StatusBadge', note:'account', items:[sp('green','Active','circle-check'), sp('amber','Dormant','moon'), sp('slate','Archived','archive')]},
+  {name:'VerifiedBadge', note:'contact', items:[sp('green','Verified','badge-check'), sp('amber','To confirm','circle-help')]},
+  {name:'FlagBadge', note:'self-correction', items:[sp('red','Stuck · 41 d','hourglass'), sp('amber','Dormant · 74 d','moon'), sp('red','Outcome overdue','alarm-clock'), sp('red','Close passed','calendar-x')]},
+  {name:'Countdown', note:'48-hour rule', items:[{...sp('slate','31 hrs left','timer'), fg:'var(--text-2)', meter:true, pct:'65%', bar:'var(--green-solid)'}, {...sp('amber','7 hrs left','timer'), meter:true, pct:'15%', bar:'var(--amber-solid)'}, {...sp('amber','45 min left','timer'), meter:true, pct:'4%', bar:'var(--amber-solid)'}, {...sp('red','Overdue · 19 hrs','alarm-clock'), meter:true, pct:'100%', bar:'var(--red-solid)'}]}
+];
+
+class Component extends DCLogic {
+  state = {theme: 'light'};
+  renderVals() {
+    const dark = this.state.theme === 'dark';
+    const on = {bg:'var(--surface)', fg:'var(--ink)', sh:'var(--shadow-sm)'}, off = {bg:'transparent', fg:'var(--text-2)', sh:'none'};
+    const L = dark ? off : on, D = dark ? on : off;
+    return {
+      themeStyle: dark ? DARK : {},
+      isLight: !dark, isDark: dark,
+      setLight: () => this.setState({theme:'light'}), setDark: () => this.setState({theme:'dark'}),
+      lightBg: L.bg, lightFg: L.fg, lightSh: L.sh, darkBg: D.bg, darkFg: D.fg, darkSh: D.sh,
+      palette: PALETTE, tokens: TOKENS, hues: HUES, typeScale: TYPE, spacing: SPACING, icons: ICONS, formats: FORMATS,
+      buttons: BTN, fields: FIELDS, pickerOpts: PICKER, calHead: ['Mo','Tu','We','Th','Fr','Sa','Su'], calDays: CAL,
+      pipe: [['slate','Lead','circle-dashed','PKR 89.4M',3,8],['aqua','Qualified','circle-dot','PKR 219.0M',2,22],['blue','Proposal Submitted','file-text','PKR 874.5M',3,88],['violet','Negotiation','handshake','PKR 1,323.0M',3,140],['green','Won (PO)','trophy','PKR 114.5M',2,12],['red','Lost','circle-x','PKR 454.0M',3,48]].map(([h,label,icon,v,n,w]) => ({fg:`var(--${h})`, label, icon, v, n, w: w + 'px'})),
+      lostBars: [['Project cancelled or postponed',1,'PKR 310.0M',100],['Lost to competitor',1,'PKR 132.0M',43],['Price too high',1,'PKR 12.0M',4],['No budget',0,'—',0]].map(([r,n,v,w]) => ({r, n: n + (n === 1 ? ' deal' : ' deals'), v, w: w + '%', fg: n ? 'var(--ink)' : 'var(--text-3)'})),
+      tableRows: [['Kohsar Chemicals','Kohsar · Port Qasim Plant','Karachi','P1','active','22 Oct 2026'],['Lyallpur Denim Mills','LDM Denim · Plant 2','Faisalabad','P1','active','19 Oct 2026'],['Punjab Ceramics','PC Tiles · Kiln Unit','Gujranwala','P3','dormant','63 d · dormant']].map(([name,bp,city,p,s,last],i) => ({name,bp,city,p:PK[p],s: s === 'dormant' ? sp('amber','Dormant','moon') : sp('green','Active','circle-check'),last, lf: s === 'dormant' ? 'var(--amber)' : 'var(--text-2)', bg: i === 1 ? 'var(--surface-2)' : 'transparent'})),
+      toasts: [['circle-check','Outcome saved','Positive — move forward · Lyallpur Denim Mills',true,'success'],['circle-alert','Couldn’t save the visit','Connection lost. Your entry is kept — try again.',false,'error'],['triangle-alert','Outcome is overdue','Lyallpur Denim Mills · 19 hrs past 48 hrs',false,'warning'],['info','Export ready','accounts_2026-10-22.xlsx · 334 rows',false,'info']].map(([icon,title,sub,undo,tone]) => ({icon,title,sub,undo, fg: dark ? {success:'#007A3A',error:'#B42318',warning:'#8A5300',info:'#0B7178'}[tone] : {success:'#9FF5C0',error:'#FF9B8F',warning:'#FFC766',info:'#6FE0E5'}[tone]})),
+      skel: ['transparent','var(--line)','var(--line)','var(--line)'],
+      errs: [{c:'403', t:'You don’t have access to this page', a:'Go to My Week'}, {c:'404', t:'We can’t find that page', a:'Go to My Week'}, {c:'500', t:'Something went wrong on our side', a:'Try again'}],
+      panels: [{label:'Light', style:PANEL(LIGHT)}, {label:'Dark', style:PANEL({...DARK, background:'#062A2B'})}], statusGroups: STATUS
+    };
+  }
+}
+</script>
+</body>
+</html>

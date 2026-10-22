@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-screen-label="{{ label }}" style="flex:1;min-height:100%;display:flex;flex-direction:column;background:var(--nav-bg);color:#E6F2EC;padding:{{ pad }}">
+  <img src="uploads/logo-white.png" alt="Water Regime" style="width:{{ logoW }};height:auto;display:block">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px;max-width:600px;padding:40px 0">
+    <span style="font-family:Sora,sans-serif;font-size:{{ codeSize }};line-height:1;font-weight:600;letter-spacing:-0.04em;color:#9FF5C0">{{ code }}</span>
+    <h1 style="margin:0;font-family:Sora,sans-serif;font-size:{{ h1 }};line-height:1.2;font-weight:600;letter-spacing:-0.02em">{{ title }}</h1>
+    <p style="margin:0;font-size:16px;line-height:1.6;color:#B7CCC2;text-wrap:pretty">{{ text }}</p>
+    <sc-if value="{{ hasRef }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-self:flex-start;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);font:500 13px ui-monospace,Menlo,monospace;color:#B7CCC2"><i class="icon-hash" style="font-size:14px;line-height:1"></i>ERR-7F3K2-1022 · 22 Oct 2026, 9:14 AM PKT</span></sc-if>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
+      <button onClick="{{ primary }}" style="height:52px;flex:{{ btnFlex }};padding:0 24px;border:0;border-radius:999px;background:#00A950;color:#FFFFFF;font-size:16px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 12px 28px -12px rgba(0,169,80,0.8)"><i class="icon-{{ pIcon }}" style="font-size:18px;line-height:1"></i>{{ pLabel }}</button>
+      <button onClick="{{ secondary }}" style="height:52px;flex:{{ btnFlex }};padding:0 22px;border:1px solid rgba(255,255,255,0.22);border-radius:999px;background:transparent;color:#E6F2EC;font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px"><i class="icon-{{ sIcon }}" style="font-size:17px;line-height:1"></i>{{ sLabel }}</button>
+    </div>
+  </div>
+  <span style="font-size:12.5px;color:#9DB5AB">WR Sales Hub · Water Regime (Pvt.) Ltd.</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  app() { return this.props.app || {}; }
+  renderVals() {
+    const a = this.app(), phone = !!a.phone, code = (a.page || 'e404').slice(1), ceo = a.role === 'ceo';
+    const home = ceo ? 'cockpit' : 'myweek', homeLabel = ceo ? 'Go to Cockpit' : 'Go to My Week';
+    const C = {
+      '403': {title:'You don’t have access to this page', text: ceo ? 'Your CEO account is read-only and opens from the Cockpit. Use the Cockpit drill-downs to see accounts and deals.' : 'Users and the audit log are only for admins. If you need access, ask Kamran Javed.', pLabel:homeLabel, pIcon:'arrow-left', primary:() => a.nav(home), sLabel:'Sign in as someone else', sIcon:'log-out', secondary:() => a.nav('signin')},
+      '404': {title:'We can’t find that page', text:'The link may be out of date, or the record may have been deleted. Deleted records can be traced in the audit log.', pLabel:homeLabel, pIcon:'arrow-left', primary:() => a.nav(home), sLabel:'Search accounts', sIcon:'search', secondary:() => a.nav(ceo ? 'cockpit' : 'accounts')},
+      '500': {title:'Something went wrong on our side', text:'Everything you saved before this is safe. Try again in a moment. If it keeps happening, send the reference below to your admin.', pLabel:'Try again', pIcon:'refresh-cw', primary:() => a.toast && a.toast({title:'Retrying…', tone:'info'}), sLabel:homeLabel, sIcon:'arrow-left', secondary:() => a.nav(home)}
+    }[code] || {};
+    return {...C, code, label:`Error ${code}`, hasRef: code === '500',
+      pad: phone ? '20px 24px 28px' : '40px 64px', logoW: phone ? '120px' : '150px', codeSize: phone ? '72px' : '120px', h1: phone ? '26px' : '36px', btnFlex: phone ? '1 1 100%' : 'none'};
+  }
+}
+</script>
+</body>
+</html>

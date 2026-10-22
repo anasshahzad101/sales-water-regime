@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>WR Sales Hub</title>
+<link rel="icon" href="uploads/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Sora:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/font/lucide.css">
+<style>body{margin:0;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}button,input,textarea,select{font:inherit}a{color:#007A3A;text-decoration:none}a:hover{color:#0A5C30;text-decoration:underline}@keyframes wrspin{to{transform:rotate(360deg)}}@keyframes wrshimmer{0%,100%{opacity:1}50%{opacity:.45}}</style>
+</helmet>
+<div style="--bg:#F3F8F4;--bg-alt:#EEF5F0;--surface:#FFFFFF;--surface-2:#F7FAF8;--input:#FFFFFF;--ink:#06231A;--text-2:#5A6B62;--text-3:#637469;--line:#E3ECE6;--line-strong:#C9D8CE;--primary:#007A3A;--primary-hover:#0A5C30;--on-primary:#FFFFFF;--cta:#00A950;--cta-hover:#009646;--on-cta:#FFFFFF;--link:#007A3A;--focus:#0B7F85;--brand-soft:#E7F7EE;--nav-bg:#041C22;--nav-ink:#E6F2EC;--nav-muted:#9DB5AB;--nav-active:rgba(159,245,192,0.10);--nav-accent:#9FF5C0;--nav-line:rgba(255,255,255,0.08);--inverse-bg:#06231A;--inverse-ink:#F3F8F4;--inverse-accent:#9FF5C0;--inverse-line:rgba(255,255,255,0.28);--scrim:rgba(3,21,26,0.5);--skeleton:#E6EEE9;--shadow-sm:0 1px 2px rgba(6,35,26,0.06);--shadow-md:0 8px 24px -10px rgba(6,35,26,0.16);--shadow-lg:0 18px 50px -12px rgba(6,35,26,0.22);--slate:#4A5A66;--slate-bg:#EDF1F4;--aqua:#0B7178;--aqua-bg:#E4FAF9;--blue:#2D55A8;--blue-bg:#EAF0FB;--violet:#6A45A8;--violet-bg:#F2EDFB;--amber:#8A5300;--amber-bg:#FFF3D9;--green:#007A3A;--green-bg:#E7F7EE;--red:#B42318;--red-bg:#FDECEA;--red-solid:#D92D20;--amber-solid:#E89B0C;--green-solid:#00A950;--on-solid:#FFFFFF;--danger:#B42318;height:100%;font-family:Inter,system-ui,sans-serif">
+<div style="{{ themeStyle }}">
+<div data-screen-label="{{ screenLabel }}" style="{{ rootStyle }}">
+
+  <sc-if value="{{ deskShell }}" hint-placeholder-val="{{ true }}">
+    <aside style="background:var(--nav-bg);color:var(--nav-ink);display:flex;flex-direction:column;gap:22px;padding:20px 14px 16px;border-right:1px solid var(--nav-line)">
+      <div style="display:flex;align-items:center;gap:10px;padding:2px 8px">
+        <img src="uploads/favicon.png" alt="Water Regime" style="height:30px;width:auto;display:block">
+        <div style="display:flex;flex-direction:column;gap:1px"><span style="font-family:Sora,sans-serif;font-weight:600;font-size:17px;letter-spacing:-0.01em;line-height:1.1">Sales Hub</span><span style="font-size:11.5px;color:var(--nav-muted)">Water Regime</span></div>
+      </div>
+      <sc-if value="{{ canLog }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ goLog }}" style="display:flex;align-items:center;gap:10px;height:48px;padding:0 10px 0 18px;border:0;border-radius:999px;background:var(--cta);color:var(--on-cta);font-weight:600;font-size:15px;cursor:pointer;box-shadow:0 10px 24px -12px rgba(0,169,80,0.8);text-align:left" style-hover="background:var(--cta-hover)">
+          <i class="icon-notebook-pen" style="font-size:18px;line-height:1"></i><span style="flex:1">Log a visit</span>
+          <span style="font-size:11px;font-weight:700;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:7px;background:rgba(255,255,255,0.2)">L</span>
+        </button>
+      </sc-if>
+      <nav style="display:flex;flex-direction:column;gap:2px">
+        <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="5">
+          <sc-if value="{{ n.divider }}" hint-placeholder-val="{{ false }}"><span style="padding:14px 14px 6px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--nav-muted)">Admin</span></sc-if>
+          <button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:12px;height:42px;padding:0 10px 0 14px;border:0;border-radius:12px;background:{{ n.bg }};color:{{ n.fg }};font-size:14px;font-weight:{{ n.fw }};cursor:pointer;text-align:left" style-hover="background:rgba(255,255,255,0.06)">
+            <i class="icon-{{ n.icon }}" style="font-size:18px;line-height:1;color:{{ n.ic }}"></i><span style="flex:1">{{ n.label }}</span>
+            <sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}"><span title="{{ badgeTitle }}" style="min-width:22px;height:20px;padding:0 6px;border-radius:999px;background:{{ badgeBg }};color:{{ badgeFg }};font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ badgeCount }}</span></sc-if>
+          </button>
+        </sc-for>
+      </nav>
+      <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px">
+        <sc-if value="{{ isCeo }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:14px;background:rgba(159,245,192,0.06);border:1px solid var(--nav-line);font-size:12.5px;line-height:1.45;color:var(--nav-muted)"><i class="icon-eye" style="font-size:16px;line-height:1.2;color:var(--nav-accent)"></i><span><b style="color:var(--nav-ink)">Read-only access.</b> You can open any record but not change it.</span></div>
+        </sc-if>
+        <button onClick="{{ toggleUserMenu }}" style="display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:1px solid var(--nav-line);border-radius:14px;background:rgba(255,255,255,0.03);color:var(--nav-ink);cursor:pointer;text-align:left">
+          <span style="width:34px;height:34px;border-radius:999px;background:rgba(159,245,192,0.14);color:var(--nav-accent);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;flex:none">{{ me.initials }}</span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:1px;min-width:0"><span style="font-size:13.5px;font-weight:600">{{ me.name }}</span><span style="font-size:12px;color:var(--nav-muted)">{{ me.roleLabel }} · {{ me.region }}</span></span>
+          <i class="icon-chevrons-up-down" style="font-size:16px;line-height:1;color:var(--nav-muted)"></i>
+        </button>
+      </div>
+    </aside>
+  </sc-if>
+
+  <div style="{{ mainStyle }}">
+    <sc-if value="{{ deskShell }}" hint-placeholder-val="{{ true }}">
+      <header style="height:64px;flex:none;display:flex;align-items:center;gap:16px;padding:0 32px;border-bottom:1px solid var(--line)">
+        <div style="display:flex;align-items:center;gap:10px;height:40px;width:440px;max-width:100%;padding:0 8px 0 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--text-3)">
+          <i class="icon-search" style="font-size:16px;line-height:1"></i><span style="flex:1;font-size:14px">Search companies, brands, plants or deals</span>
+          <span style="font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:6px;border:1px solid var(--line);color:var(--text-2)">/</span>
+        </div>
+        <span style="margin-left:auto;display:flex;align-items:center;gap:14px">
+          <sc-if value="{{ isCeo }}" hint-placeholder-val="{{ false }}"><span title="CEO access is view-only" style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;border:1px solid var(--line-strong);color:var(--text-2);font-size:12.5px;font-weight:600"><i class="icon-eye" style="font-size:14px;line-height:1"></i>Read-only</span></sc-if>
+          <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2)"><i class="icon-clock" style="font-size:15px;line-height:1"></i>Thu 22 Oct 2026 · 9:12 AM PKT</span>
+        </span>
+      </header>
+    </sc-if>
+
+    <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+      <div style="height:46px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 32px;font-size:15px;font-weight:600;color:{{ statusFg }};background:{{ statusBg }}">
+        <span>9:41</span><span style="display:flex;gap:6px;align-items:center"><i class="icon-signal" style="font-size:16px;line-height:1"></i><i class="icon-wifi" style="font-size:16px;line-height:1"></i><i class="icon-battery-full" style="font-size:18px;line-height:1"></i></span>
+      </div>
+    </sc-if>
+    <sc-if value="{{ phoneShell }}" hint-placeholder-val="{{ false }}">
+      <div style="height:52px;flex:none;display:flex;align-items:center;gap:4px;padding:0 6px 0 {{ barPadL }};border-bottom:1px solid {{ barBd }}">
+        <sc-if value="{{ hasBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ goBack }}" aria-label="Back" style="width:44px;height:44px;border:0;border-radius:999px;background:transparent;color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="icon-chevron-left" style="font-size:24px;line-height:1"></i></button></sc-if>
+        <sc-if value="{{ noBack }}" hint-placeholder-val="{{ true }}"><img src="uploads/favicon.png" alt="Water Regime" style="height:24px;width:auto;display:block;margin-right:6px"></sc-if>
+        <span style="flex:1;min-width:0;font-family:Sora,sans-serif;font-size:{{ barTitleSize }};font-weight:600;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ barTitle }}</span>
+        <sc-if value="{{ isCeo }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--line-strong);color:var(--text-2);font-size:12px;font-weight:600"><i class="icon-eye" style="font-size:13px;line-height:1"></i>Read-only</span></sc-if>
+        <sc-if value="{{ noBack }}" hint-placeholder-val="{{ true }}"><button aria-label="Search" style="width:44px;height:44px;border:0;border-radius:999px;background:transparent;color:var(--ink);display:flex;align-items:center;justify-content:center"><i class="icon-search" style="font-size:20px;line-height:1"></i></button></sc-if>
+        <button onClick="{{ openMore }}" aria-label="Account menu" style="width:44px;height:44px;border:0;border-radius:999px;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:34px;height:34px;border-radius:999px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">{{ me.initials }}</span></button>
+      </div>
+    </sc-if>
+
+    <div ref="{{ contentRef }}" style="{{ contentStyle }}">
+      <sc-if value="{{ pg.auth }}" hint-placeholder-val="{{ false }}"><dc-import name="Auth" app="{{ app }}" hint-size="100%,700px"></dc-import></sc-if>
+      <sc-if value="{{ pg.myweek }}" hint-placeholder-val="{{ false }}"><dc-import name="PageMyWeek" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.log }}" hint-placeholder-val="{{ false }}"><dc-import name="PageLogVisit" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.visits }}" hint-placeholder-val="{{ false }}"><dc-import name="PageVisits" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.accounts }}" hint-placeholder-val="{{ false }}"><dc-import name="PageAccounts" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.addcompany }}" hint-placeholder-val="{{ false }}"><dc-import name="PageAddCompany" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.account }}" hint-placeholder-val="{{ false }}"><dc-import name="PageAccount" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.pulse }}" hint-placeholder-val="{{ false }}"><dc-import name="PagePulse" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.newdeal }}" hint-placeholder-val="{{ false }}"><dc-import name="PageNewDeal" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.deal }}" hint-placeholder-val="{{ false }}"><dc-import name="PageDeal" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.cockpit }}" hint-placeholder-val="{{ false }}"><dc-import name="PageCockpit" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.users }}" hint-placeholder-val="{{ false }}"><dc-import name="PageUsers" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.audit }}" hint-placeholder-val="{{ false }}"><dc-import name="PageAudit" app="{{ app }}" hint-size="100%,900px"></dc-import></sc-if>
+      <sc-if value="{{ pg.error }}" hint-placeholder-val="{{ false }}"><dc-import name="PageError" app="{{ app }}" hint-size="100%,700px"></dc-import></sc-if>
+    </div>
+
+    <sc-if value="{{ phoneTabs }}" hint-placeholder-val="{{ false }}">
+      <nav style="flex:none;height:86px;padding:6px 6px 28px;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:start">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+          <sc-if value="{{ t.isLog }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ t.go }}" aria-label="Log a visit" style="display:flex;flex-direction:column;align-items:center;gap:3px;margin-top:-24px;border:0;background:transparent;color:var(--text-2);cursor:pointer;padding:0">
+              <span style="width:58px;height:58px;border-radius:999px;background:var(--cta);color:var(--on-cta);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px -8px rgba(0,169,80,0.7);border:4px solid var(--surface)"><i class="icon-plus" style="font-size:26px;line-height:1"></i></span>
+              <span style="font-size:11px;font-weight:600">Log visit</span>
+            </button>
+          </sc-if>
+          <sc-if value="{{ t.isTab }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ t.go }}" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:52px;border:0;background:transparent;color:{{ t.fg }};cursor:pointer;padding:0">
+              <span style="position:relative;display:flex"><i class="icon-{{ t.icon }}" style="font-size:22px;line-height:1"></i>
+                <sc-if value="{{ t.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-7px;left:14px;min-width:20px;height:18px;padding:0 5px;border-radius:999px;background:{{ tabBadgeBg }};color:{{ tabBadgeFg }};font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--surface)">{{ badgeCount }}</span></sc-if>
+              </span>
+              <span style="font-size:11px;font-weight:{{ t.fw }}">{{ t.label }}</span>
+            </button>
+          </sc-if>
+        </sc-for>
+      </nav>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ userMenu }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeMenus }}" style="position:absolute;inset:0;z-index:40"></div>
+    <div role="menu" style="position:absolute;left:14px;bottom:72px;z-index:41;width:272px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-lg);padding:8px;display:flex;flex-direction:column;gap:2px">
+      <div style="display:flex;gap:10px;align-items:center;padding:10px 10px 12px;border-bottom:1px solid var(--line);margin-bottom:4px">
+        <span style="width:38px;height:38px;border-radius:999px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">{{ me.initials }}</span>
+        <span style="display:flex;flex-direction:column;gap:1px"><span style="font-size:14px;font-weight:600">{{ me.name }}</span><span style="font-size:12.5px;color:var(--text-2)">{{ me.email }}</span><span style="font-size:12px;color:var(--text-3)">{{ me.roleLabel }} · {{ me.region }}</span></span>
+      </div>
+      <button onClick="{{ goChangePw }}" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 10px;border:0;border-radius:10px;background:transparent;color:var(--ink);font-size:14px;cursor:pointer;text-align:left" style-hover="background:var(--surface-2)"><i class="icon-key-round" style="font-size:16px;line-height:1;color:var(--text-2)"></i>Change password</button>
+      <div style="display:flex;align-items:center;gap:10px;height:44px;padding:0 6px 0 10px;font-size:14px"><i class="icon-sun-moon" style="font-size:16px;line-height:1;color:var(--text-2)"></i><span style="flex:1">Theme</span>
+        <span style="display:flex;padding:3px;border-radius:999px;background:var(--bg-alt);border:1px solid var(--line)">
+          <button onClick="{{ setLight }}" style="height:28px;padding:0 10px;border:0;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;background:{{ lightBg }};color:{{ lightFg }}">Light</button>
+          <button onClick="{{ setDark }}" style="height:28px;padding:0 10px;border:0;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;background:{{ darkBg }};color:{{ darkFg }}">Dark</button>
+        </span>
+      </div>
+      <button onClick="{{ signOut }}" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 10px;border:0;border-top:1px solid var(--line);border-radius:0 0 10px 10px;margin-top:4px;background:transparent;color:var(--ink);font-size:14px;cursor:pointer;text-align:left" style-hover="background:var(--surface-2)"><i class="icon-log-out" style="font-size:16px;line-height:1;color:var(--text-2)"></i>Sign out</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ moreOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;justify-content:flex-end">
+      <div onClick="{{ closeMenus }}" style="position:absolute;inset:0;background:var(--scrim)"></div>
+      <div role="dialog" aria-label="Menu" style="position:relative;background:var(--surface);color:var(--ink);border-radius:28px 28px 0 0;padding:8px 16px 30px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow-lg)">
+        <div style="width:40px;height:5px;border-radius:99px;background:var(--line-strong);margin:0 auto 10px"></div>
+        <div style="display:flex;gap:12px;align-items:center;padding:4px 4px 14px;border-bottom:1px solid var(--line)">
+          <span style="width:44px;height:44px;border-radius:999px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">{{ me.initials }}</span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:15.5px;font-weight:600">{{ me.name }}</span><span style="font-size:13px;color:var(--text-2)">{{ me.roleLabel }} · {{ me.region }}</span></span>
+          <button onClick="{{ closeMenus }}" aria-label="Close" style="width:44px;height:44px;border:0;border-radius:999px;background:transparent;color:var(--text-2);display:flex;align-items:center;justify-content:center"><i class="icon-x" style="font-size:22px;line-height:1"></i></button>
+        </div>
+        <sc-for list="{{ moreItems }}" as="m" hint-placeholder-count="3">
+          <button onClick="{{ m.go }}" style="display:flex;align-items:center;gap:14px;min-height:52px;padding:0 8px;border:0;border-radius:12px;background:{{ m.bg }};color:var(--ink);font-size:15.5px;font-weight:500;cursor:pointer;text-align:left"><i class="icon-{{ m.icon }}" style="font-size:20px;line-height:1;color:var(--text-2)"></i><span style="flex:1">{{ m.label }}</span><i class="icon-chevron-right" style="font-size:18px;line-height:1;color:var(--text-3)"></i></button>
+        </sc-for>
+        <div style="display:flex;align-items:center;gap:14px;min-height:56px;padding:0 8px;border-top:1px solid var(--line);margin-top:4px;font-size:15.5px"><i class="icon-sun-moon" style="font-size:20px;line-height:1;color:var(--text-2)"></i><span style="flex:1">Theme</span>
+          <span style="display:flex;padding:3px;border-radius:999px;background:var(--bg-alt);border:1px solid var(--line)">
+            <button onClick="{{ setLight }}" style="height:38px;padding:0 14px;border:0;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;background:{{ lightBg }};color:{{ lightFg }}">Light</button>
+            <button onClick="{{ setDark }}" style="height:38px;padding:0 14px;border:0;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;background:{{ darkBg }};color:{{ darkFg }}">Dark</button>
+          </span>
+        </div>
+        <button onClick="{{ goChangePw }}" style="display:flex;align-items:center;gap:14px;min-height:52px;padding:0 8px;border:0;border-radius:12px;background:transparent;color:var(--ink);font-size:15.5px;cursor:pointer;text-align:left"><i class="icon-key-round" style="font-size:20px;line-height:1;color:var(--text-2)"></i>Change password</button>
+        <button onClick="{{ signOut }}" style="display:flex;align-items:center;gap:14px;min-height:52px;padding:0 8px;border:0;border-radius:12px;background:transparent;color:var(--red);font-size:15.5px;font-weight:500;cursor:pointer;text-align:left"><i class="icon-log-out" style="font-size:20px;line-height:1"></i>Sign out</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showToast }}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="{{ toastStyle }}">
+      <i class="icon-{{ toastIcon }}" style="font-size:20px;line-height:1;color:{{ toastIconFg }}"></i>
+      <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ toastTitle }}</span><sc-if value="{{ hasToastSub }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;opacity:0.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ toastSub }}</span></sc-if></span>
+      <sc-if value="{{ hasUndo }}" hint-placeholder-val="{{ false }}"><button onClick="{{ onUndo }}" style="height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--inverse-line);background:transparent;color:var(--inverse-accent);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px"><i class="icon-undo-2" style="font-size:14px;line-height:1"></i>Undo</button></sc-if>
+      <button onClick="{{ dismissToast }}" aria-label="Dismiss" style="width:36px;height:36px;border:0;border-radius:999px;background:transparent;color:var(--inverse-ink);cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="icon-x" style="font-size:16px;line-height:1"></i></button>
+    </div>
+  </sc-if>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;device&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;desktop&quot;,&quot;phone&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;'auto' | 'desktop' | 'phone'&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;},&quot;role&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;sales&quot;,&quot;manager&quot;,&quot;ceo&quot;,&quot;admin&quot;],&quot;default&quot;:&quot;sales&quot;,&quot;tsType&quot;:&quot;'sales' | 'manager' | 'ceo' | 'admin'&quot;},&quot;page&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;signin&quot;,&quot;setpassword&quot;,&quot;changepassword&quot;,&quot;myweek&quot;,&quot;log&quot;,&quot;visits&quot;,&quot;accounts&quot;,&quot;addcompany&quot;,&quot;account&quot;,&quot;pulse&quot;,&quot;newdeal&quot;,&quot;deal&quot;,&quot;cockpit&quot;,&quot;drill&quot;,&quot;users&quot;,&quot;audit&quot;,&quot;e403&quot;,&quot;e404&quot;,&quot;e500&quot;],&quot;default&quot;:&quot;myweek&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;scenario&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;default&quot;,&quot;allclear&quot;,&quot;new&quot;,&quot;empty&quot;,&quot;loading&quot;,&quot;error&quot;],&quot;default&quot;:&quot;default&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;demo&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;none&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;company&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;c1&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;deal&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;d4&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;flag&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;stuck&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;fixedHeight&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;resetKey&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;number&quot;}}">
+const DARK = {'--bg':'#03151A','--bg-alt':'#041C22','--surface':'#062A2B','--surface-2':'#0A3436','--input':'#04201F','--ink':'#E6F2EC','--text-2':'#A7BDB3','--text-3':'#87A096','--line':'rgba(255,255,255,0.12)','--line-strong':'rgba(255,255,255,0.22)','--primary':'#00A950','--primary-hover':'#1FBF68','--on-primary':'#03151A','--cta':'#00A950','--cta-hover':'#1FBF68','--on-cta':'#03151A','--link':'#9FF5C0','--focus':'#5FE3E8','--brand-soft':'rgba(0,169,80,0.16)','--nav-bg':'#021013','--nav-ink':'#E6F2EC','--nav-muted':'#9DB5AB','--nav-active':'rgba(159,245,192,0.10)','--nav-accent':'#9FF5C0','--nav-line':'rgba(255,255,255,0.08)','--inverse-bg':'#E6F2EC','--inverse-ink':'#06231A','--inverse-accent':'#007A3A','--inverse-line':'rgba(6,35,26,0.25)','--scrim':'rgba(0,0,0,0.6)','--skeleton':'rgba(255,255,255,0.08)','--shadow-sm':'0 1px 2px rgba(0,0,0,0.3)','--shadow-md':'0 8px 24px -10px rgba(0,0,0,0.5)','--shadow-lg':'0 18px 50px -12px rgba(0,0,0,0.65)','--slate':'#B4C3CE','--slate-bg':'rgba(180,195,206,0.14)','--aqua':'#6FE0E5','--aqua-bg':'rgba(20,194,201,0.16)','--blue':'#A3BDF7','--blue-bg':'rgba(120,155,235,0.18)','--violet':'#C9B2F5','--violet-bg':'rgba(170,140,240,0.18)','--amber':'#FFC766','--amber-bg':'rgba(255,184,64,0.16)','--green':'#9FF5C0','--green-bg':'rgba(0,169,80,0.18)','--red':'#FF9B8F','--red-bg':'rgba(255,99,82,0.16)','--red-solid':'#FF6B5B','--amber-solid':'#FFB840','--green-solid':'#00A950','--on-solid':'#03151A','--danger':'#C4321F'};
+
+/* ---------- shared reference data (one source for every dropdown) ---------- */
+const pill = (h, label, icon) => ({label, icon, fg:`var(--${h})`, bg:`var(--${h}-bg)`, bd:'transparent', h});
+const STAGES = [
+  {key:'lead',label:'Lead',icon:'circle-dashed',h:'slate',p:10},{key:'qualified',label:'Qualified',icon:'circle-dot',h:'aqua',p:25},
+  {key:'proposal',label:'Proposal Submitted',icon:'file-text',h:'blue',p:50},{key:'negotiation',label:'Negotiation',icon:'handshake',h:'violet',p:70},
+  {key:'won',label:'Won (PO)',icon:'trophy',h:'green',p:100},{key:'lost',label:'Lost',icon:'circle-x',h:'red',p:0}];
+const OUTCOMES = [
+  {key:'pending',label:'Pending',short:'Pending',icon:'clock',h:'slate'},{key:'positive',label:'Positive — move forward',short:'Positive',icon:'thumbs-up',h:'green'},
+  {key:'neutral',label:'Neutral — info only',short:'Neutral',icon:'info',h:'aqua'},{key:'negative',label:'Negative — pushback',short:'Negative',icon:'thumbs-down',h:'red'},
+  {key:'noshow',label:'No show / rescheduled',short:'No show',icon:'calendar-clock',h:'amber'},{key:'skipped',label:'Skipped — reason required',short:'Skipped',icon:'skip-forward',h:'slate'}];
+const VISIT_TYPES = [{key:'Visit',icon:'map-pin'},{key:'Call',icon:'phone'},{key:'Email',icon:'mail'},{key:'Meeting',icon:'users'},{key:'Site Survey',icon:'clipboard-list'},{key:'Proposal Meeting',icon:'presentation'}];
+const SKIP = ['Client unavailable','Rescheduled by client','Travel / logistics','Internal priority shift','No access to decision maker','Other (specify in notes)'];
+const LOST = ['Price too high','Lost to competitor','Project cancelled or postponed','No budget','Technical mismatch','No response from client','Other (specify)'];
+const SOL = ['RO','ETP','STP','MBR','ZLD','UF','Mixed'];
+const SOURCES = ['Target','Live Signal','WR Pipeline','Partner'];
+const ROLES = [{key:'sales',label:'Sales'},{key:'manager',label:'Manager'},{key:'ceo',label:'CEO (read-only)'},{key:'admin',label:'Admin'}];
+const PROP_STATUS = [{key:'Submitted',h:'blue',icon:'send'},{key:'Revised',h:'violet',icon:'file-pen'},{key:'Accepted',h:'green',icon:'circle-check'},{key:'Rejected',h:'red',icon:'circle-x'}];
+const SECTORS = {'Textiles':['Spinning','Weaving','Denim','Dyeing & finishing'],'Beverages':['Bottled water','Soft drinks','Juices'],'Pharma':['Formulations','APIs','Sterile'],'Food processing':['Dairy','Edible oil','Poultry','Sugar'],'Chemicals':['Fertilizer','Petrochemicals','Specialty'],'Power':['IPP','Captive'],'Steel':['Rolling mills','Melting'],'Leather':['Tanneries'],'Building materials':['Ceramics','Cement']};
+const CITIES = ['Lahore','Karachi','Faisalabad','Sialkot','Multan','Gujranwala','Islamabad','Sheikhupura','Hyderabad'];
+
+const USERS = [
+  ['u1','Ali Raza','ali.raza@waterregime.com','sales','Lahore',true,'3 Feb 2026'],['u2','Sana Malik','sana.malik@waterregime.com','sales','Karachi',true,'3 Feb 2026'],
+  ['u3','Bilal Ahmed','bilal.ahmed@waterregime.com','manager','Lahore',true,'3 Feb 2026'],['u4','Hina Farooq','hina.farooq@waterregime.com','sales','Islamabad',true,'14 Apr 2026'],
+  ['u5','Omar Sheikh','omar.sheikh@waterregime.com','sales','Faisalabad',true,'2 Jun 2026'],['u6','Zainab Qureshi','zainab.qureshi@waterregime.com','ceo','Head office',true,'3 Feb 2026'],
+  ['u7','Kamran Javed','kamran.javed@waterregime.com','admin','Head office',true,'1 Feb 2026'],['u8','Fahad Iqbal','fahad.iqbal@waterregime.com','sales','Multan',false,'3 Feb 2026']
+].map(([id,name,email,role,region,active,created]) => ({id,name,email,role,region,active,created,initials:name.split(' ').map(s=>s[0]).join(''),roleLabel:ROLES.find(r=>r.key===role).label.replace(' (read-only)','')}));
+
+const COMPANIES = [
+  ['c1','Lyallpur Denim Mills','LDM Denim','Plant 2','Lyallpur Group','Textiles','Denim','Faisalabad','P1','Target','ETP upgrade + water reuse',2.4,'u1','active','19 Oct 2026',3,'lyallpurdenim.pk'],
+  ['c2','Ravi Valley Beverages','RVB Bottling','Sheikhupura Plant','Ravi Valley Holdings','Beverages','Soft drinks','Sheikhupura','P1','Live Signal','RO for process water',0.8,'u1','active','20 Oct 2026',2,'ravivalley.pk'],
+  ['c3','Margalla Biopharma','Margalla','Sterile Unit','—','Pharma','Sterile','Islamabad','P2','WR Pipeline','Purified water / WFI',0.15,'u1','active','21 Oct 2026',1,'margallabio.pk'],
+  ['c4','Kohsar Chemicals','Kohsar','Port Qasim Plant','Kohsar Industries','Chemicals','Specialty','Karachi','P1','Target','Zero liquid discharge',1.2,'u1','active','22 Oct 2026',0,'kohsarchem.pk'],
+  ['c5','Sutlej Steel Works','Sutlej Steel','Rolling Mill 1','Sutlej Group','Steel','Rolling mills','Lahore','P2','Partner','Cooling water recycling',3.5,'u1','active','16 Oct 2026',6,'sutlejsteel.pk'],
+  ['c6','Chenab Agro Foods','Chenab Dairy','Multan Plant','—','Food processing','Dairy','Multan','P2','Target','Sewage treatment',0.5,'u1','active','19 Oct 2026',3,'chenabagro.pk'],
+  ['c7','Pak Tanners Group','PTG Leather','Unit A','Pak Tanners Group','Leather','Tanneries','Sialkot','P1','Live Signal','ETP + chrome recovery',0.9,'u1','dormant','9 Aug 2026',74,'paktanners.pk'],
+  ['c8','Punjab Ceramics','PC Tiles','Kiln Unit','—','Building materials','Ceramics','Gujranwala','P3','Target','Process water RO',0.3,'u1','dormant','20 Aug 2026',63,'punjabceramics.pk'],
+  ['c9','Indus Crest Power','Indus Crest','Unit 2','Crest Energy','Power','IPP','Hyderabad','P1','WR Pipeline','DM water + blowdown recovery',6.0,'u2','active','14 Oct 2026',8,'induscrest.pk'],
+  ['c10','Karakoram Spinning','KSM','Mill 3','Karakoram Group','Textiles','Spinning','Faisalabad','P2','Target','Humidification RO',0.4,'u5','active','2 Oct 2026',20,'karakoramspinning.pk'],
+  ['c11','Bolan Edible Oils','Bolan','Karachi Refinery','—','Food processing','Edible oil','Karachi','P2','Partner','Refinery effluent',1.1,'u2','active','12 Oct 2026',10,'bolanoils.pk'],
+  ['c12','Shalimar Poultry','Shalimar Feeds','Processing Plant','Shalimar Group','Food processing','Poultry','Lahore','P3','Target','STP + reuse',0.6,'u3','active','5 Oct 2026',17,'shalimarpoultry.pk'],
+  ['c13','Thal Fertilizers','Thal Agro','Daharki Complex','Thal Industries','Chemicals','Fertilizer','Multan','P1','Target','MBR for reuse',4.2,'u3','active','29 Sep 2026',23,'thalfert.pk'],
+  ['c14','Potohar Pharma','Potohar','Formulations Unit','—','Pharma','Formulations','Islamabad','P2','WR Pipeline','RO + EDI',0.2,'u4','active','15 Oct 2026',7,'potoharpharma.pk'],
+  ['c15','Mangla Juices','Mangla Fresh','Gujranwala Plant','—','Beverages','Juices','Gujranwala','P3','Live Signal','Wastewater ETP',0.35,null,'active','—',null,'manglajuices.pk'],
+  ['c16','Hub Petrochem','Hub','Terminal Plant','Hub Energy','Chemicals','Petrochemicals','Karachi','P1','Target','Zero liquid discharge',2.0,null,'active','—',null,'hubpetrochem.pk'],
+  ['c17','Kasur Tanning Co.','Kasur Tanning','Unit 1','—','Leather','Tanneries','Lahore','P3','Target','ETP',0.4,'u5','archived','11 Jan 2026',284,'']
+].map(([id,name,brand,plant,group,sector,sub,city,pri,source,need,mld,owner,status,lastVisit,lastDays,website]) => ({id,name,brand,plant,group,sector,sub,city,pri,source,need,mld,owner,status,lastVisit,lastDays,website}));
+
+const CONTACTS = [
+  ['k1','c1','Imran Qureshi','GM Utilities','imran.qureshi@ldm.pk','+92 300 8421 557',true,true],['k2','c1','Sadia Noor','Procurement Manager','sadia.noor@ldm.pk','+92 321 4470 912',false,false],['k3','c1','Waqas Anjum','Plant Engineer, ETP','waqas.anjum@ldm.pk','+92 333 6120 448',false,true],
+  ['k4','c2','Ayesha Khan','Plant Manager','ayesha.khan@ravivalley.pk','+92 300 5512 090',true,true],['k5','c3','Dr. Faraz Hussain','Head of QA','faraz.hussain@margallabio.pk','+92 51 2894 410',true,true],
+  ['k6','c4','Usman Tariq','Director Projects','usman.tariq@kohsarchem.pk','+92 21 3472 8810',true,true],['k7','c5','Nadeem Akhtar','Chief Engineer','nadeem.akhtar@sutlejsteel.pk','+92 42 3578 2204',true,false],
+  ['k8','c6','Kashif Raza','Operations Head','kashif.raza@chenabagro.pk','+92 61 4512 337',true,true],['k9','c9','Engr. Rashid Mehmood','Chemistry Manager','rashid.mehmood@induscrest.pk','+92 22 2786 551',true,true]
+].map(([id,co,name,title,email,phone,primary,verified]) => ({id,co,name,title,email,phone,primary,verified,linkedin:true}));
+
+const DEALS = [
+  ['d1','ZLD plant, 1.2 MLD','c4','u1','negotiation','ZLD',412.0,70,'30 Nov 2026',18,false],['d2','Cooling water recycling','c5','u1','proposal','Mixed',268.0,50,'15 Oct 2026',9,true],
+  ['d3','ETP expansion, Plant 2','c1','u1','qualified','ETP',145.0,30,'31 Jan 2027',12,false],['d4','RO + UF upgrade','c2','u1','proposal','RO',86.5,50,'15 Nov 2026',41,false],
+  ['d5','RO-EDI purified water','c3','u1','lead','RO',38.4,10,'28 Feb 2027',33,false],['d6','STP, 0.5 MLD','c6','u1','lead','STP',22.0,10,'31 Mar 2027',6,false],
+  ['d7','DM plant + blowdown recovery','c9','u2','negotiation','Mixed',865.0,65,'20 Dec 2026',22,false],['d8','Refinery ETP retrofit','c11','u2','qualified','ETP',74.0,30,'31 Jan 2027',37,false],
+  ['d9','MBR reuse, 4 MLD','c13','u3','proposal','MBR',520.0,50,'31 Dec 2026',14,false],['d10','Humidification RO','c10','u5','won','RO',18.5,100,'10 Oct 2026',12,false],
+  ['d11','RO + EDI, formulations','c14','u4','negotiation','RO',46.0,70,'5 Oct 2026',27,true],['d12','STP + reuse','c12','u3','lead','STP',29.0,10,'31 Mar 2027',52,false],
+  ['d13','Chrome recovery + ETP','c7','u1','lost','ETP',132.0,0,'30 Sep 2026',21,false,'Lost to competitor'],['d14','Process water RO','c8','u1','lost','RO',12.0,0,'31 Aug 2026',40,false,'Price too high'],
+  ['d15','UF pre-treatment','c9','u2','won','UF',96.0,100,'2 Sep 2026',30,false],['d16','Effluent ZLD study','c16','u2','lost','ZLD',310.0,0,'31 Dec 2026',1,false,'Project cancelled or postponed']
+].map(([id,title,co,owner,stage,sol,value,prob,close,days,closePassed,lostReason]) => ({id,title,co,owner,stage,sol,value,prob,close,days,closePassed,lostReason:lostReason||null}));
+
+const VISITS = [
+  ['v1','c1','Site Survey','Mon','19 Oct 2026','2:30 PM','Imran Qureshi','u1','pending',-18.7,'Walked the ETP with the utilities team. Equalisation tank undersized for Plant 2 flows.','','','d3'],
+  ['v2','c2','Meeting','Tue','20 Oct 2026','4:00 PM','Ayesha Khan','u1','pending',6.8,'Reviewed RO sizing; they want UF ahead of RO.','','','d4'],
+  ['v3','c3','Call','Wed','21 Oct 2026','10:30 AM','Dr. Faraz Hussain','u1','pending',25.3,'Asked about EDI validation documents.','','','d5'],
+  ['v4','c4','Proposal Meeting','Thu','22 Oct 2026','8:00 AM','Usman Tariq','u1','pending',46.8,'Walked through revised ZLD commercial offer.','','','d1'],
+  ['v5','c5','Call','Fri','16 Oct 2026','11:00 AM','Nadeem Akhtar','u1','positive',null,'Wants references from two operating steel plants.','Share ETP reference sites','21 Oct 2026','d2'],
+  ['v6','c2','Meeting','Tue','13 Oct 2026','3:00 PM','Ayesha Khan','u1','neutral',null,'Procurement asked for a revised RO proposal.','Send revised RO proposal','20 Oct 2026','d4'],
+  ['v7','c9','Site Survey','Wed','14 Oct 2026','10:00 AM','Engr. Rashid Mehmood','u2','positive',null,'Blowdown sampling done. Data supports recovery case.','Share lab results','23 Oct 2026','d7'],
+  ['v8','c11','Visit','Mon','12 Oct 2026','12:30 PM','Saima Baig','u2','negative',null,'Budget frozen until Q1 2027.','Check budget in January','11 Jan 2027','d8'],
+  ['v9','c13','Proposal Meeting','Tue','29 Sep 2026','2:00 PM','Tariq Jamil','u3','positive',null,'Board wants MBR pilot results.','Send pilot plan','6 Oct 2026','d9'],
+  ['v10','c10','Meeting','Fri','2 Oct 2026','11:30 AM','Asad Butt','u5','positive',null,'PO received for humidification RO.','Kick-off meeting','12 Oct 2026','d10'],
+  ['v11','c14','Call','Thu','15 Oct 2026','4:15 PM','Mehwish Ali','u4','noshow',null,'Client did not join; moved to next week.','Re-book call','22 Oct 2026','d11'],
+  ['v12','c6','Call','Mon','19 Oct 2026','9:45 AM','Kashif Raza','u1','positive',null,'Agreed to a site survey in November.','Confirm site survey date','22 Oct 2026','d6'],
+  ['v13','c1','Meeting','Tue','6 Oct 2026','11:00 AM','Sadia Noor','u1','positive',null,'Shared budget window for Plant 2 ETP.','Plan site survey','19 Oct 2026','d3'],
+  ['v14','c7','Visit','Sun','9 Aug 2026','11:00 AM','—','u1','skipped',null,'Skipped: Client unavailable.','','',null]
+].map(([id,co,type,wd,date,time,contact,owner,outcome,hrsLeft,notes,next,nextDate,deal]) => ({id,co,type,wd,date,time,contact,owner,outcome,hrsLeft,notes,next,nextDate,deal}));
+
+const PROPOSALS = [
+  ['p1','d1','WR-P-2026-104','28 Aug 2026',436.0,'Revised','First offer; client asked for phased CAPEX.'],['p2','d1','WR-P-2026-118','18 Sep 2026',412.0,'Submitted','Phased offer with O&M option.'],
+  ['p3','d2','WR-P-2026-121','2 Oct 2026',268.0,'Submitted',''],['p4','d4','WR-P-2026-096','9 Sep 2026',86.5,'Submitted','RO + UF, 0.8 MLD.'],
+  ['p5','d9','WR-P-2026-112','10 Sep 2026',520.0,'Submitted',''],['p6','d10','WR-P-2026-097','28 Aug 2026',18.5,'Accepted','']
+].map(([id,deal,ref,date,amount,status,notes]) => ({id,deal,ref,date,amount,status,notes}));
+
+const AUDIT = [
+  ['22 Oct 2026','9:05 AM','u1','visit','created','Proposal Meeting — Kohsar Chemicals'],['22 Oct 2026','8:41 AM','u3','deal','stage changed','MBR reuse, 4 MLD: Qualified → Proposal Submitted'],
+  ['21 Oct 2026','6:12 PM','u2','deal','stage changed','Effluent ZLD study: Negotiation → Lost (Project cancelled or postponed)'],['21 Oct 2026','4:30 PM','u1','visit','outcome set','Call — Chenab Agro Foods: Positive — move forward'],
+  ['21 Oct 2026','2:02 PM','u4','company','claimed','Potohar Pharma → Hina Farooq'],['21 Oct 2026','11:20 AM','u1','contact','updated','Sadia Noor (Lyallpur Denim Mills): phone changed'],
+  ['20 Oct 2026','5:45 PM','u7','user','role changed','Bilal Ahmed: Sales → Manager'],['20 Oct 2026','3:10 PM','u2','proposal','created','WR-P-2026-124 · Indus Crest Power · PKR 865.0M'],
+  ['20 Oct 2026','10:00 AM','u7','user','password reset','Omar Sheikh — must change at next login'],['19 Oct 2026','7:30 PM','u5','company','created','Karakoram Spinning — Mill 3, Faisalabad'],
+  ['19 Oct 2026','1:15 PM','u1','contact','deleted','Junaid Khan (Ravi Valley Beverages)'],['18 Oct 2026','9:00 AM','u7','user','deactivated','Fahad Iqbal'],
+  ['17 Oct 2026','4:40 PM','u3','proposal','status changed','WR-P-2026-097: Submitted → Accepted'],['17 Oct 2026','10:22 AM','u1','deal','updated','RO + UF upgrade: value PKR 92.0M → PKR 86.5M']
+].map(([date,time,who,entity,action,detail],i) => ({id:'a'+i,date,time,who,entity,action,detail}));
+
+const money = m => m == null ? '—' : m >= 1 ? 'PKR ' + m.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1}) + 'M' : m >= 0.001 ? 'PKR ' + Math.round(m*1000) + 'K' : 'PKR ' + Math.round(m*1e6);
+const full = m => 'PKR ' + Math.round(m*1e6).toLocaleString('en-US');
+const W = {
+  STAGES, OUTCOMES, VISIT_TYPES, SKIP, LOST, SOL, SOURCES, ROLES, PROP_STATUS, SECTORS, CITIES, USERS, COMPANIES, CONTACTS, DEALS, VISITS, PROPOSALS, AUDIT,
+  money, full, pill,
+  stage: k => { const s = STAGES.find(x => x.key === k) || STAGES[0]; return {...pill(s.h, s.label, s.icon), key:s.key, p:s.p}; },
+  outcome: k => { const o = OUTCOMES.find(x => x.key === k) || OUTCOMES[0]; return {...pill(o.h, o.label, o.icon), short:o.short, key:o.key}; },
+  vtIcon: t => (VISIT_TYPES.find(x => x.key === t) || VISIT_TYPES[0]).icon,
+  pri: p => p === 'P1' ? {label:'P1',icon:'signal-high',fg:'var(--surface)',bg:'var(--ink)',bd:'var(--ink)'} : p === 'P2' ? {label:'P2',icon:'signal-medium',fg:'var(--green)',bg:'var(--green-bg)',bd:'transparent'} : {label:'P3',icon:'signal-low',fg:'var(--text-2)',bg:'transparent',bd:'var(--line-strong)'},
+  status: s => s === 'dormant' ? pill('amber','Dormant','moon') : s === 'archived' ? pill('slate','Archived','archive') : pill('green','Active','circle-check'),
+  verified: v => v ? pill('green','Verified','badge-check') : pill('amber','To confirm','circle-help'),
+  flag: (k, t) => ({stuck:pill('red', t || 'Stuck','hourglass'), dormant:pill('amber', t || 'Dormant','moon'), outcome:pill('red', t || 'Outcome overdue','alarm-clock'), close:pill('red', t || 'Close passed','calendar-x')})[k],
+  propStatus: s => { const p = PROP_STATUS.find(x => x.key === s) || PROP_STATUS[0]; return pill(p.h, p.key, p.icon); },
+  user: id => USERS.find(u => u.id === id) || null,
+  co: id => COMPANIES.find(c => c.id === id) || null,
+  isOpen: d => !['won','lost'].includes(d.stage),
+  cd: h => {
+    if (h == null) return null;
+    if (h < 0) { const l = Math.round(-h); return {label:`Overdue · ${l} hrs`, short:'Overdue', lateBy:`${l} hrs`, fg:'var(--red)', bg:'var(--red-bg)', bar:'var(--red-solid)', pct:'100%', icon:'alarm-clock', overdue:true}; }
+    const label = h < 1 ? `${Math.round(h*60)} min left` : `${Math.round(h)} hrs left`, pct = Math.max(4, Math.round(h/48*100)) + '%';
+    return h < 12 ? {label, short:label, fg:'var(--amber)', bg:'var(--amber-bg)', bar:'var(--amber-solid)', pct, icon:'timer'} : {label, short:label, fg:'var(--text-2)', bg:'var(--slate-bg)', bar:'var(--green-solid)', pct, icon:'timer'};
+  }
+};
+W.deal = (id, store) => { const d = DEALS.find(x => x.id === id); if (!d) return null; const o = store && store.deals && store.deals[id]; return o ? {...d, ...o} : d; };
+W.allDeals = store => DEALS.map(d => W.deal(d.id, store));
+W.isStuck = d => W.isOpen(d) && d.days > 30;
+W.isClosePassed = d => W.isOpen(d) && !!d.closePassed;
+W.allVisits = store => [...((store && store.newVisits) || []), ...VISITS].map(v => store && store.outcomes && store.outcomes[v.id] ? {...v, outcome:store.outcomes[v.id].key, hrsLeft:null} : v);
+
+const PAGES = {
+  signin:{c:'auth',shell:false}, setpassword:{c:'auth',shell:false}, changepassword:{c:'auth',title:'Change password',back:'myweek'},
+  myweek:{c:'myweek',title:'My Week',nav:'myweek'}, log:{c:'log',title:'Log a visit',nav:'log',back:'myweek'}, visits:{c:'visits',title:'Visits',nav:'visits'},
+  accounts:{c:'accounts',title:'Accounts',nav:'accounts'}, addcompany:{c:'addcompany',title:'Add company',nav:'accounts',back:'accounts'}, account:{c:'account',title:'Account',nav:'accounts',back:'accounts'},
+  pulse:{c:'pulse',title:'Team Pulse',nav:'pulse',wide:true}, newdeal:{c:'newdeal',title:'New deal',nav:'pulse',back:'pulse'}, deal:{c:'deal',title:'Deal',nav:'pulse',back:'pulse'},
+  cockpit:{c:'cockpit',title:'Cockpit',nav:'cockpit'}, drill:{c:'cockpit',title:'Cockpit',nav:'cockpit',back:'cockpit'},
+  users:{c:'users',title:'Users',nav:'users'}, audit:{c:'audit',title:'Audit log',nav:'audit'},
+  e403:{c:'error',shell:false}, e404:{c:'error',shell:false}, e500:{c:'error',shell:false}
+};
+const NAV = [
+  {key:'myweek',label:'My Week',icon:'calendar-check',roles:['sales','manager','admin']},{key:'visits',label:'Visits',icon:'history',roles:['sales','manager','admin']},
+  {key:'accounts',label:'Accounts',icon:'building-2',roles:['sales','manager','admin']},{key:'pulse',label:'Team Pulse',icon:'kanban',roles:['sales','manager','admin']},
+  {key:'cockpit',label:'Cockpit',icon:'gauge',roles:['sales','manager','admin','ceo']},
+  {key:'users',label:'Users',icon:'users-round',roles:['admin'],divider:true},{key:'audit',label:'Audit log',icon:'scroll-text',roles:['admin']}
+];
+const ME = {sales:'u1', manager:'u3', ceo:'u6', admin:'u7'};
+
+class Component extends DCLogic {
+  state = {page:null, params:null, theme:null, role:null, userMenu:false, more:false, toast:null, store:{outcomes:{}, deals:{}, newVisits:[], claimed:{}, done:{}}, w:1440};
+  contentRef = React.createRef();
+
+  componentDidMount() {
+    this.onResize = () => this.setState({w: window.innerWidth});
+    window.addEventListener('resize', this.onResize); this.onResize();
+    const P = this.props, T = {
+      visit:{title:'Visit logged', sub:'Site Survey · Lyallpur Denim Mills · outcome due by 24 Oct, 9:12 AM PKT', undo:() => {}},
+      outcome:{title:'Outcome saved', sub:'Positive — move forward · Lyallpur Denim Mills', undo:() => {}},
+      lost:{title:'Moved to Lost', sub:'RO + UF upgrade · Price too high', undo:() => {}},
+      success:{title:'Changes saved', sub:'Kohsar Chemicals · ZLD plant, 1.2 MLD'},
+      error:{title:'Couldn’t save the visit', sub:'Connection lost. Your entry is kept — try again.', tone:'error'},
+      warning:{title:'Outcome is overdue', sub:'Lyallpur Denim Mills · 19 hrs past the 48-hour window', tone:'warning'},
+      info:{title:'Export is being prepared', sub:'accounts_2026-10-22.xlsx · 334 rows', tone:'info'}
+    };
+    if (P.demoToast && T[P.demoToast]) this.toast({...T[P.demoToast], ms: 1e9});
+    if (P.open === 'menu') this.setState({userMenu:true});
+    if (P.open === 'more') this.setState({more:true});
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); clearTimeout(this.tt); }
+  componentDidUpdate(prev) {
+    const P = this.props;
+    if (prev.resetKey !== P.resetKey) this.setState({page:null, params:null, role:null, theme:null, userMenu:false, more:false, toast:null, store:{outcomes:{}, deals:{}, newVisits:[], claimed:{}, done:{}}});
+    else {
+      if (prev.theme !== P.theme) this.setState({theme:null});
+      if (prev.role !== P.role) this.setState({role:null, page:null});
+      if (prev.page !== P.page) this.setState({page:null, params:null});
+    }
+  }
+  device() { const d = this.props.device || 'auto'; return d === 'auto' ? (this.state.w < 760 ? 'phone' : 'desktop') : d; }
+  cur() {
+    const P = this.props, s = this.state;
+    const role = s.role || P.role || 'sales';
+    const page = s.page || P.page || (role === 'ceo' ? 'cockpit' : 'myweek');
+    const params = s.params || {company:P.company, deal:P.deal, flag:P.flag, code:P.code, view:P.view};
+    return {role, page, params, theme: s.theme || P.theme || 'light'};
+  }
+  nav(page, params) {
+    if (this.cur().role === 'ceo' && !['cockpit','drill','account','deal','changepassword','signin','e403','e404','e500'].includes(page)) page = 'e403';
+    this.setState({page, params: params || {}, userMenu:false, more:false});
+    const el = this.contentRef.current; if (el) el.scrollTop = 0;
+  }
+  toast(t) {
+    clearTimeout(this.tt);
+    this.setState({toast: typeof t === 'string' ? {title:t} : t});
+    this.tt = setTimeout(() => this.setState({toast:null}), (t && t.ms) || 6000);
+  }
+
+  renderVals() {
+    const P = this.props, st = this.state, {role, page, params, theme} = this.cur();
+    const device = this.device(), phone = device === 'phone', dark = theme === 'dark';
+    const meta = PAGES[page] || PAGES.myweek, shell = meta.shell !== false, ceo = role === 'ceo';
+    const me = W.user(ME[role]);
+    const pending = VISITS.filter(v => v.owner === 'u1' && v.outcome === 'pending' && !st.store.outcomes[v.id]);
+    const overdue = pending.filter(v => v.hrsLeft < 0).length;
+    const fixedH = !!P.fixedHeight;
+
+    const app = {
+      device, phone, theme, role, readOnly: ceo, me, page, params, W, store: st.store,
+      scenario: P.scenario || 'default', demo: P.demo || 'none',
+      nav: (p, prm) => this.nav(p, prm), toast: t => this.toast(t),
+      update: fn => this.setState(s => ({store: fn(s.store)})),
+      setTheme: t => this.setState({theme:t}), signIn: (r) => this.setState({role: r || role, page: (r || role) === 'ceo' ? 'cockpit' : 'myweek', params:{}})
+    };
+
+    let barTitle = meta.title || '';
+    if (page === 'account' && params.company) barTitle = (W.co(params.company) || {}).name || 'Account';
+    if (page === 'deal' && params.deal) barTitle = (W.deal(params.deal, st.store) || {}).title || 'Deal';
+    if (page === 'drill') barTitle = 'Flag list';
+    const hasBack = phone && !!meta.back;
+
+    const rootStyle = !shell ? {position:'relative', height:'100%', minHeight: fixedH ? 0 : '100%', display:'flex', flexDirection:'column', background:'var(--bg)', color:'var(--ink)', overflow: phone || fixedH ? 'hidden' : 'visible'}
+      : phone ? {position:'relative', height:'100%', display:'flex', flexDirection:'column', overflow:'hidden', background:'var(--bg)', color:'var(--ink)'}
+      : {position:'relative', display:'grid', gridTemplateColumns:'248px minmax(0,1fr)', height:'100%', minHeight: fixedH ? 0 : '100%', overflow: fixedH ? 'hidden' : 'visible', background:'var(--bg)', color:'var(--ink)'};
+    const mainStyle = phone || !shell ? {flex:1, minHeight:0, display:'flex', flexDirection:'column'} : {display:'flex', flexDirection:'column', minWidth:0};
+    const contentStyle = !shell ? {flex:1, minHeight:0, display:'flex', flexDirection:'column', overflowY: phone ? 'auto' : 'visible'}
+      : phone ? {flex:1, minHeight:0, overflowY:'auto', padding:'8px 16px 28px', scrollbarWidth:'none'}
+      : {padding:'28px 32px 56px', maxWidth: meta.wide ? 'none' : '1240px', width:'100%'};
+
+    const navKey = meta.nav;
+    const navItems = NAV.filter(n => n.roles.includes(role)).map(n => {
+      const a = n.key === navKey;
+      return {...n, divider: !!n.divider, bg: a ? 'var(--nav-active)' : 'transparent', fg: a ? 'var(--nav-accent)' : 'var(--nav-ink)', ic: a ? 'var(--nav-accent)' : 'var(--nav-muted)', fw: a ? 600 : 500, hasBadge: n.key === 'myweek' && pending.length > 0, go: () => this.nav(n.key)};
+    });
+    const tabs = [{key:'myweek',label:'My Week',icon:'calendar-check'},{key:'accounts',label:'Accounts',icon:'building-2'},{key:'log',isLog:true},{key:'pulse',label:'Pulse',icon:'kanban'},{key:'more',label:'More',icon:'menu'}]
+      .map(t => { const a = t.key === navKey || (t.key === 'more' && ['visits','cockpit','users','audit'].includes(navKey)); return {...t, isLog: !!t.isLog, isTab: !t.isLog, fg: a ? 'var(--link)' : 'var(--text-2)', fw: a ? 700 : 600, hasBadge: t.key === 'myweek' && pending.length > 0, go: t.key === 'more' ? () => this.setState({more:true}) : () => this.nav(t.key)}; });
+    const moreItems = [{key:'visits',label:'Visit history',icon:'history'},{key:'cockpit',label:'Cockpit',icon:'gauge'},{key:'users',label:'Users',icon:'users-round',admin:true},{key:'audit',label:'Audit log',icon:'scroll-text',admin:true}]
+      .filter(m => ceo ? m.key === 'cockpit' : (!m.admin || role === 'admin')).map(m => ({...m, bg: m.key === navKey ? 'var(--surface-2)' : 'transparent', go: () => this.nav(m.key)}));
+
+    const t = st.toast, tone = (t && t.tone) || 'success';
+    const toneIcon = {success:'circle-check', error:'circle-alert', warning:'triangle-alert', info:'info'}[tone];
+    const toneFg = dark ? {success:'#007A3A', error:'#B42318', warning:'#8A5300', info:'#0B7178'}[tone] : {success:'#9FF5C0', error:'#FF9B8F', warning:'#FFC766', info:'#6FE0E5'}[tone];
+    const toastStyle = {position:'absolute', zIndex:60, display:'flex', alignItems:'center', gap:'12px', padding:'10px 8px 10px 16px', borderRadius:'16px', background:'var(--inverse-bg)', color:'var(--inverse-ink)', boxShadow:'var(--shadow-lg)', ...(phone ? {left:'12px', right:'12px', bottom: shell && !ceo ? '98px' : '24px'} : {top:'80px', right:'32px', width:'420px'})};
+    const on = {bg:'var(--surface)', fg:'var(--ink)'}, off = {bg:'transparent', fg:'var(--text-2)'};
+    const pg = {}; Object.keys(PAGES).forEach(k => {}); ['auth','myweek','log','visits','accounts','addcompany','account','pulse','newdeal','deal','cockpit','users','audit','error'].forEach(c => pg[c] = meta.c === c);
+
+    return {
+      themeStyle: {...(dark ? DARK : {}), height:'100%'},
+      screenLabel: `${meta.title || page} · ${phone ? 'Phone' : 'Desktop'}`,
+      rootStyle, mainStyle, contentStyle, contentRef: this.contentRef,
+      deskShell: shell && !phone, phoneShell: shell && phone, isPhone: phone, phoneTabs: shell && phone && !ceo,
+      statusBg: shell ? 'transparent' : 'var(--nav-bg)', statusFg: shell ? 'var(--ink)' : '#E6F2EC',
+      barPadL: hasBack ? '4px' : '16px', barBd: hasBack ? 'var(--line)' : 'transparent', barTitleSize: hasBack ? '16.5px' : '18px',
+      hasBack, noBack: !hasBack, barTitle, goBack: () => this.nav(meta.back, page === 'deal' && params.from ? {company: params.from} : {}),
+      canLog: !ceo, isCeo: ceo, goLog: () => this.nav('log'), me,
+      navItems, tabs, moreItems,
+      badgeCount: pending.length, badgeTitle: `${pending.length} visits awaiting outcome${overdue ? `, ${overdue} overdue` : ''}`,
+      badgeBg: overdue ? 'var(--red-solid)' : 'rgba(159,245,192,0.16)', badgeFg: overdue ? 'var(--on-solid)' : 'var(--nav-accent)',
+      tabBadgeBg: overdue ? 'var(--red-solid)' : 'var(--primary)', tabBadgeFg: overdue ? 'var(--on-solid)' : 'var(--on-primary)',
+      userMenu: st.userMenu && !phone, moreOpen: st.more && phone,
+      toggleUserMenu: () => this.setState(s => ({userMenu: !s.userMenu})), openMore: () => this.setState({more:true}), closeMenus: () => this.setState({userMenu:false, more:false}),
+      goChangePw: () => this.nav('changepassword'), signOut: () => this.nav('signin'),
+      setLight: () => this.setState({theme:'light'}), setDark: () => this.setState({theme:'dark'}),
+      lightBg: dark ? off.bg : on.bg, lightFg: dark ? off.fg : on.fg, darkBg: dark ? on.bg : off.bg, darkFg: dark ? on.fg : off.fg,
+      showToast: !!t, toastStyle, toastIcon: toneIcon, toastIconFg: toneFg, toastTitle: t ? t.title : '', toastSub: t && t.sub ? t.sub : '', hasToastSub: !!(t && t.sub),
+      hasUndo: !!(t && t.undo), onUndo: () => { if (t && t.undo) t.undo(); this.setState({toast:null}); }, dismissToast: () => this.setState({toast:null}),
+      pg, app
+    };
+  }
+}
+</script>
+</body>
+</html>

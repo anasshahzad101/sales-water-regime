@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-screen-label="Log a visit" style="display:flex;flex-direction:column;gap:20px;max-width:880px;padding-bottom:{{ padB }}">
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <sc-if value="{{ fromAccount }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text-3)"><a href="#accounts" onClick="{{ goAccounts }}" style="color:var(--text-2)">Accounts</a><i class="icon-chevron-right" style="font-size:13px;line-height:1"></i><a href="#account" onClick="{{ goBackAcc }}" style="color:var(--text-2)">{{ coName }}</a><i class="icon-chevron-right" style="font-size:13px;line-height:1"></i>Log a visit</span></sc-if>
+      <h1 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Log a visit</h1>
+      <p style="margin:0;font-size:14.5px;color:var(--text-2)">Record what happened. Calls, emails and meetings count too.</p>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasErrors }}" hint-placeholder-val="{{ false }}">
+    <div role="alert" style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:var(--red-bg);color:var(--red)">
+      <i class="icon-circle-alert" style="font-size:18px;line-height:1.2"></i>
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:14px;font-weight:700">Fix {{ errCount }} before saving</span><sc-for list="{{ errList }}" as="e" hint-placeholder-count="2"><span style="font-size:13.5px;color:var(--ink)">· {{ e }}</span></sc-for></div>
+    </div>
+  </sc-if>
+
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:{{ cardPad }};display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:13.5px;font-weight:600">Company <span style="color:var(--red)">*</span></span>
+      <sc-if value="{{ hasCompany }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 8px 12px 14px;border-radius:14px;border:1px solid var(--line-strong);background:var(--surface-2)">
+          <span style="width:38px;height:38px;flex:none;border-radius:12px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center"><i class="icon-factory" style="font-size:18px;line-height:1"></i></span>
+          <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{ coName }}</span><span style="font-size:13px;color:var(--text-2)">{{ coSub }}</span></span>
+          <button onClick="{{ clearCompany }}" style="height:44px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:var(--link);font-size:14px;font-weight:600;cursor:pointer">Change</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ noCompany }}" hint-placeholder-val="{{ true }}">
+        <div style="position:relative">
+          <span style="display:flex;align-items:center;gap:10px;height:{{ inH }};padding:0 12px;border-radius:12px;border:1px solid {{ coBd }};background:var(--input);box-shadow:{{ coRing }}">
+            <i class="icon-search" style="font-size:17px;line-height:1;color:var(--text-3)"></i>
+            <input value="{{ coQuery }}" onChange="{{ onCoQuery }}" onFocus="{{ openPicker }}" placeholder="Type a company, brand, plant or city" style="flex:1;min-width:0;height:100%;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none">
+            <span style="font-size:12px;color:var(--text-3);white-space:nowrap">334 companies</span>
+          </span>
+          <sc-if value="{{ pickerOpen }}" hint-placeholder-val="{{ false }}">
+            <div role="listbox" style="margin-top:6px;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:var(--shadow-md);overflow:hidden">
+              <sc-for list="{{ coOptions }}" as="o" hint-placeholder-count="5">
+                <button onClick="{{ o.pick }}" role="option" style="display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 14px;border:0;border-top:1px solid {{ o.bd }};background:{{ o.bg }};color:var(--ink);text-align:left;cursor:pointer" style-hover="background:var(--surface-2)">
+                  <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14.5px;font-weight:600">{{ o.name }}</span><span style="font-size:12.5px;color:var(--text-2)">{{ o.sub }}</span></span>
+                  <span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:7px;font-size:11.5px;font-weight:700;color:{{ o.pri.fg }};background:{{ o.pri.bg }};border:1px solid {{ o.pri.bd }}"><i class="icon-{{ o.pri.icon }}" style="font-size:12px;line-height:1"></i>{{ o.pri.label }}</span>
+                  <span style="font-size:12px;color:var(--text-3);width:78px;text-align:right;display:{{ ownerD }}">{{ o.owner }}</span>
+                </button>
+              </sc-for>
+              <sc-if value="{{ noOptions }}" hint-placeholder-val="{{ false }}"><div style="padding:16px 14px;font-size:14px;color:var(--text-2)">No company matches “{{ coQuery }}”.</div></sc-if>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);background:var(--surface-2);font-size:12.5px;color:var(--text-3)"><span>↑ ↓ to move · Enter to pick</span><a href="#addcompany" onClick="{{ goAdd }}" style="font-weight:600;color:var(--link)">Can't find it? Add company</a></div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{ coErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--red);font-weight:500"><i class="icon-circle-alert" style="font-size:14px;line-height:1"></i>{{ coErr }}</span></sc-if>
+    </div>
+
+    <sc-if value="{{ hasCompany }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:13.5px;font-weight:600">Deal <span style="font-weight:400;color:var(--text-3)">· optional</span></span>
+        <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;overflow:hidden">
+          <sc-for list="{{ dealOptions }}" as="o" hint-placeholder-count="2">
+            <button onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:12px;min-height:52px;padding:8px 14px;border:0;border-top:1px solid {{ o.bd }};background:{{ o.bg }};color:var(--ink);text-align:left;cursor:pointer">
+              <i class="icon-{{ o.radio }}" style="font-size:18px;line-height:1;color:{{ o.rc }}"></i>
+              <span style="flex:1;min-width:0;font-size:14.5px;font-weight:{{ o.fw }}">{{ o.label }}</span>
+              <sc-if value="{{ o.isDeal }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;color:{{ o.st.fg }};background:{{ o.st.bg }}"><i class="icon-{{ o.st.icon }}" style="font-size:12px;line-height:1"></i>{{ o.st.label }}</span><span style="font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums;min-width:86px;text-align:right">{{ o.value }}</span></sc-if>
+            </button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ noDeals }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--text-3)">No open deals for this company. You can create one from the account page.</span></sc-if>
+      </div>
+    </sc-if>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:13.5px;font-weight:600">Visit type</span>
+      <div style="display:grid;grid-template-columns:{{ typeCols }};gap:8px">
+        <sc-for list="{{ types }}" as="t" hint-placeholder-count="6">
+          <button onClick="{{ t.pick }}" style="display:flex;align-items:center;gap:8px;height:{{ chipH }};padding:0 12px;border-radius:12px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};font-size:14px;font-weight:{{ t.fw }};cursor:pointer;text-align:left"><i class="icon-{{ t.icon }}" style="font-size:16px;line-height:1"></i>{{ t.key }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:{{ cols2 }};gap:18px">
+      <label style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:13.5px;font-weight:600">Date &amp; time</span>
+        <span style="display:flex;align-items:center;gap:8px;height:{{ inH }};padding:0 6px 0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input)">
+          <i class="icon-calendar-clock" style="font-size:17px;line-height:1;color:var(--text-3)"></i>
+          <input value="{{ dt }}" onChange="{{ onDt }}" style="flex:1;min-width:0;height:100%;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none">
+          <span style="font-size:12px;font-weight:700;color:var(--text-2);padding:3px 7px;border-radius:6px;background:var(--bg-alt)">PKT</span>
+          <button onClick="{{ setNow }}" style="height:34px;padding:0 10px;border:0;border-radius:999px;background:transparent;color:var(--link);font-size:13px;font-weight:600;cursor:pointer">Now</button>
+        </span>
+        <span style="font-size:12.5px;color:var(--text-3)">Defaults to now, Pakistan time.</span>
+      </label>
+      <label style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:13.5px;font-weight:600">Contact met</span>
+        <span style="position:relative;display:flex">
+          <select value="{{ contact }}" onChange="{{ onContact }}" style="flex:1;appearance:none;-webkit-appearance:none;height:{{ inH }};padding:0 40px 0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none">
+            <option value="">Choose a contact</option>
+            <sc-for list="{{ contacts }}" as="c" hint-placeholder-count="2"><option value="{{ c.id }}">{{ c.label }}</option></sc-for>
+            <option value="other">Someone not listed</option>
+          </select>
+          <i class="icon-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:16px;line-height:1;color:var(--text-3);pointer-events:none"></i>
+        </span>
+      </label>
+    </div>
+
+    <label style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:13.5px;font-weight:600">Discussion</span>
+      <textarea rows="4" value="{{ discussion }}" onChange="{{ onDiscussion }}" placeholder="What was discussed, who else was there, anything technical worth remembering" style="resize:vertical;min-height:104px;padding:12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font-size:{{ inFs }};line-height:1.5;outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)"></textarea>
+    </label>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:13.5px;font-weight:600">Outcome <span style="color:var(--red)">*</span></span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ outcomes }}" as="o" hint-placeholder-count="6">
+          <button onClick="{{ o.pick }}" style="display:inline-flex;align-items:center;gap:7px;height:{{ chipH }};padding:0 14px 0 12px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:14px;font-weight:{{ o.fw }};cursor:pointer"><i class="icon-{{ o.icon }}" style="font-size:15px;line-height:1;color:{{ o.ic }}"></i>{{ o.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--aqua-bg);color:var(--ink);font-size:13.5px;line-height:1.5"><i class="icon-timer" style="font-size:16px;line-height:1.3;color:var(--aqua)"></i><span><b>Not sure yet? Leave it as Pending.</b> You have 48 hours to set the outcome from My Week. After that the visit is overdue and you'll need to give a late reason.</span></div>
+      <sc-if value="{{ isSkipped }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:8px;padding-top:4px">
+          <span style="font-size:13.5px;font-weight:600">Skip reason <span style="color:var(--red)">*</span></span>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ skips }}" as="s" hint-placeholder-count="6">
+              <button onClick="{{ s.pick }}" style="display:inline-flex;align-items:center;gap:6px;height:{{ chipH }};padding:0 12px 0 10px;border-radius:999px;border:1px solid {{ s.bd }};background:{{ s.bg }};color:{{ s.fg }};font-size:13.5px;font-weight:500;cursor:pointer"><i class="icon-{{ s.icon }}" style="font-size:14px;line-height:1"></i>{{ s.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ skipErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--red);font-weight:500"><i class="icon-circle-alert" style="font-size:14px;line-height:1"></i>{{ skipErr }}</span></sc-if>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="display:grid;grid-template-columns:{{ colsNext }};gap:18px;padding-top:18px;border-top:1px solid var(--line)">
+      <label style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:13.5px;font-weight:600">Next action</span>
+        <input value="{{ next }}" onChange="{{ onNext }}" placeholder="e.g. Send revised ETP proposal" style="height:{{ inH }};padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:13.5px;font-weight:600">Next action date</span>
+        <span style="display:flex;align-items:center;gap:8px;height:{{ inH }};padding:0 12px;border-radius:12px;border:1px solid {{ ndBd }};background:var(--input)"><i class="icon-calendar-days" style="font-size:17px;line-height:1;color:var(--text-3)"></i><input value="{{ nextDate }}" onChange="{{ onNextDate }}" placeholder="dd Mmm yyyy" style="flex:1;min-width:0;height:100%;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none"></span>
+        <sc-if value="{{ ndErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--red);font-weight:500">{{ ndErr }}</span></sc-if>
+      </label>
+    </div>
+
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;justify-content:flex-end;align-items:center;gap:10px;padding-top:18px;border-top:1px solid var(--line)">
+        <span style="margin-right:auto;font-size:12.5px;color:var(--text-3)">Saved to the account timeline and the audit log.</span>
+        <button onClick="{{ cancel }}" style="height:42px;padding:0 18px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer">Cancel</button>
+        <button onClick="{{ save }}" style="height:42px;padding:0 22px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px" style-hover="background:var(--primary-hover)"><sc-if value="{{ saving }}" hint-placeholder-val="{{ false }}"><i class="icon-loader-circle" style="font-size:16px;line-height:1;animation:wrspin 0.9s linear infinite"></i></sc-if><sc-if value="{{ notSaving }}" hint-placeholder-val="{{ true }}"><i class="icon-check" style="font-size:16px;line-height:1"></i></sc-if>{{ saveLabel }}</button>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+    <div style="position:sticky;bottom:-28px;margin:0 -16px -28px;padding:12px 16px 16px;background:var(--surface);border-top:1px solid var(--line);display:flex;gap:10px;z-index:5">
+      <button onClick="{{ save }}" style="flex:1;height:52px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><sc-if value="{{ saving }}" hint-placeholder-val="{{ false }}"><i class="icon-loader-circle" style="font-size:18px;line-height:1;animation:wrspin 0.9s linear infinite"></i></sc-if>{{ saveLabel }}</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {company:null, coQuery:'', coOpen:false, deal:'none', type:'Visit', dt:'22 Oct 2026, 9:12 AM', contact:'', discussion:'', outcome:'pending', skip:'', next:'', nextDate:'', errors:{}, saving:false, init:false};
+  app() { return this.props.app || {}; }
+  componentDidMount() {
+    const a = this.app(), p = a.params || {}, d = a.demo;
+    const s = {company: p.company || null};
+    if (d === 'picker') Object.assign(s, {company:null, coOpen:true, coQuery:'ra'});
+    if (d === 'errors') Object.assign(s, {company:null, outcome:'skipped', nextDate:'24 Oct 2026', errors:{co:'Choose the company you visited.', skip:'Choose why this visit was skipped.', nd:'Add the next action, or clear the date.'}});
+    if (d === 'filled') Object.assign(s, {company:'c1', deal:'d3', type:'Site Survey', contact:'k1', discussion:'Walked the ETP. Equalisation tank undersized for Plant 2 flows; they want a phased upgrade.', outcome:'positive', next:'Send phased ETP proposal', nextDate:'29 Oct 2026'});
+    this.setState(s);
+  }
+  componentWillUnmount() { clearTimeout(this.t); }
+  validate() {
+    const s = this.state, e = {};
+    if (!s.company) e.co = 'Choose the company you visited.';
+    if (s.outcome === 'skipped' && !s.skip) e.skip = 'Choose why this visit was skipped.';
+    if (s.nextDate && !s.next.trim()) e.nd = 'Add the next action, or clear the date.';
+    return e;
+  }
+  save() {
+    const e = this.validate(), a = this.app(), W = a.W, s = this.state;
+    if (Object.keys(e).length) return this.setState({errors:e});
+    this.setState({saving:true, errors:{}});
+    this.t = setTimeout(() => {
+      const co = W.co(s.company), k = W.CONTACTS.find(c => c.id === s.contact);
+      const [date, time] = s.dt.split(', ');
+      const v = {id:'n' + Date.now(), co:s.company, type:s.type, wd:'Thu', date, time: time || '9:12 AM', contact: k ? k.name : '—', owner:'u1', outcome:s.outcome, hrsLeft: s.outcome === 'pending' ? 48 : null, notes:s.discussion, next:s.next, nextDate:s.nextDate, deal: s.deal === 'none' ? null : s.deal, isNew:true};
+      a.update(st => ({...st, newVisits:[v, ...(st.newVisits || [])]}));
+      const from = (a.params || {}).company;
+      a.toast({title:'Visit logged', sub: s.outcome === 'pending' ? `${s.type} · ${co.name} · outcome due by 24 Oct, 9:12 AM PKT` : `${s.type} · ${co.name} · ${W.outcome(s.outcome).label}`, undo: () => a.update(st => ({...st, newVisits:(st.newVisits || []).filter(x => x.id !== v.id)}))});
+      this.setState({saving:false});
+      a.nav(from ? 'account' : 'myweek', from ? {company: from} : {});
+    }, 700);
+  }
+  renderVals() {
+    const a = this.app(), W = a.W, s = this.state;
+    if (!W) return {};
+    const phone = !!a.phone, go = fn => e => { if (e && e.preventDefault) e.preventDefault(); fn(); };
+    const co = s.company ? W.co(s.company) : null, from = (a.params || {}).company;
+    const q = s.coQuery.trim().toLowerCase();
+    const matches = W.COMPANIES.filter(c => c.status !== 'archived' && (!q || [c.name, c.brand, c.plant, c.city].join(' ').toLowerCase().includes(q))).slice(0, 6);
+    const sel = (on, h) => on ? {bd:'var(--primary)', bg:'var(--brand-soft)', fg:'var(--green)', fw:600} : {bd:'var(--line-strong)', bg:'var(--surface)', fg:'var(--ink)', fw:500};
+    const openDeals = co ? W.allDeals(a.store).filter(d => d.co === co.id && W.isOpen(d)) : [];
+    const dealOptions = [{id:'none', label:'No deal — general visit'}, ...openDeals.map(d => ({id:d.id, label:d.title, st:W.stage(d.stage), value:W.money(d.value), isDeal:true}))]
+      .map((o, i) => ({...o, isDeal: !!o.isDeal, st: o.st || {}, value: o.value || '', bd: i ? 'var(--line)' : 'transparent', bg: s.deal === o.id ? 'var(--brand-soft)' : 'var(--surface)', radio: s.deal === o.id ? 'circle-dot' : 'circle', rc: s.deal === o.id ? 'var(--green)' : 'var(--text-3)', fw: s.deal === o.id ? 600 : 500, pick: () => this.setState({deal:o.id})}));
+    const e = s.errors, errList = [e.co, e.skip, e.nd].filter(Boolean);
+    return {
+      isDesktop: !phone, isPhone: phone, fromAccount: !!from, coName: co ? co.name : (from ? W.co(from).name : ''), coSub: co ? `${co.brand} · ${co.plant} · ${co.city}` : '',
+      goAccounts: go(() => a.nav('accounts')), goBackAcc: go(() => a.nav('account', {company: from})), goAdd: go(() => a.nav('addcompany')),
+      hasErrors: errList.length > 0, errCount: errList.length === 1 ? '1 thing' : `${errList.length} things`, errList,
+      hasCompany: !!co, noCompany: !co, clearCompany: () => this.setState({company:null, deal:'none', contact:'', coOpen:true, coQuery:''}),
+      coQuery: s.coQuery, onCoQuery: ev => this.setState({coQuery: ev.target.value, coOpen:true}), openPicker: () => this.setState({coOpen:true}),
+      pickerOpen: s.coOpen && !co, coBd: e.co ? 'var(--red)' : s.coOpen ? 'var(--focus)' : 'var(--line-strong)', coRing: s.coOpen ? '0 0 0 3px rgba(20,194,201,0.25)' : 'none',
+      coOptions: matches.map((c, i) => ({name:c.name, sub:`${c.brand} · ${c.plant} · ${c.city}`, pri:W.pri(c.pri), owner: c.owner ? W.user(c.owner).name.split(' ')[0] : 'Unassigned', bd: i ? 'var(--line)' : 'transparent', bg: i === 0 && q ? 'var(--surface-2)' : 'var(--surface)', pick: () => this.setState({company:c.id, coOpen:false, coQuery:'', deal:'none', contact:'', errors:{...s.errors, co:null}})})),
+      noOptions: matches.length === 0, coErr: e.co || '',
+      dealOptions, noDeals: !!co && openDeals.length === 0,
+      types: W.VISIT_TYPES.map(t => ({...t, ...sel(s.type === t.key), pick: () => this.setState({type:t.key})})),
+      dt: s.dt, onDt: ev => this.setState({dt: ev.target.value}), setNow: () => this.setState({dt:'22 Oct 2026, 9:12 AM'}),
+      contact: s.contact, onContact: ev => this.setState({contact: ev.target.value}),
+      contacts: co ? W.CONTACTS.filter(c => c.co === co.id).map(c => ({id:c.id, label:`${c.name} — ${c.title}`})) : [],
+      discussion: s.discussion, onDiscussion: ev => this.setState({discussion: ev.target.value}),
+      outcomes: W.OUTCOMES.map(o => { const on = s.outcome === o.key, p = W.outcome(o.key); return {label: o.key === 'skipped' ? 'Skipped' : o.label, icon:o.icon, bd: on ? p.fg : 'var(--line-strong)', bg: on ? p.bg : 'var(--surface)', fg: on ? p.fg : 'var(--ink)', ic: p.fg, fw: on ? 700 : 500, pick: () => this.setState({outcome:o.key, errors:{...s.errors, skip:null}})}; }),
+      isSkipped: s.outcome === 'skipped',
+      skips: W.SKIP.map(r => { const on = s.skip === r; return {label:r, bd: on ? 'var(--primary)' : 'var(--line-strong)', bg: on ? 'var(--brand-soft)' : 'var(--surface)', fg: on ? 'var(--green)' : 'var(--ink)', icon: on ? 'circle-check' : 'circle', pick: () => this.setState({skip:r, errors:{...s.errors, skip:null}})}; }),
+      skipErr: e.skip || '',
+      next: s.next, onNext: ev => this.setState({next: ev.target.value, errors:{...s.errors, nd:null}}), nextDate: s.nextDate, onNextDate: ev => this.setState({nextDate: ev.target.value}),
+      ndErr: e.nd || '', ndBd: e.nd ? 'var(--red)' : 'var(--line-strong)',
+      save: () => this.save(), cancel: () => a.nav(from ? 'account' : 'myweek', from ? {company:from} : {}), saving: s.saving, notSaving: !s.saving, saveLabel: s.saving ? 'Saving…' : 'Save visit',
+      cardPad: phone ? '18px 16px' : '28px', inH: phone ? '48px' : '44px', inFs: phone ? '16px' : '14.5px', chipH: phone ? '44px' : '38px',
+      typeCols: phone ? 'repeat(2,minmax(0,1fr))' : 'repeat(6,minmax(0,1fr))', cols2: phone ? 'minmax(0,1fr)' : 'repeat(2,minmax(0,1fr))', colsNext: phone ? 'minmax(0,1fr)' : 'minmax(0,1.6fr) minmax(0,1fr)',
+      padB: '0', ownerD: phone ? 'none' : 'block'
+    };
+  }
+}
+</script>
+</body>
+</html>

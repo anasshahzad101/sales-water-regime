@@ -1,31 +1,31 @@
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.so
-*.egg-info/
-.venv/
-venv/
-env/
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
 
-# Flask
-instance/
-*.db
-*.sqlite
-*.sqlite3
+# Next.js / build output
+/.next/
+/out/
+/build
+*.tsbuildinfo
+next-env.d.ts
 
-# Env
-.env
-.env.*
+# local data (JSON store used for development)
+/.data/
+
+# env files (keep the example)
+.env*
 !.env.example
 
-# IDE
+# Vercel
+.vercel
+
+# logs & OS
+npm-debug.log*
+*.log
+.DS_Store
+*.pem
+
+# editor
 .vscode/
 .idea/
-*.swp
-.DS_Store
-
-# Logs
-*.log
-logs/

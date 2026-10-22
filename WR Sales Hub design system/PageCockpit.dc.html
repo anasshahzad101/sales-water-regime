@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<sc-if value="{{ isMain }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="CEO Cockpit" style="display:flex;flex-direction:column;gap:20px">
+  <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap">
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><div style="flex:1;min-width:260px;display:flex;flex-direction:column;gap:6px"><h1 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Cockpit</h1><p style="margin:0;font-size:14.5px;color:var(--text-2)">How sales is going, and what needs attention · {{ rangeText }}</p></div></sc-if>
+    <div role="radiogroup" aria-label="Date range" style="display:flex;padding:3px;border-radius:999px;background:var(--bg-alt);border:1px solid var(--line);flex:{{ segFlex }};overflow-x:auto">
+      <sc-for list="{{ ranges }}" as="r" hint-placeholder-count="4"><button onClick="{{ r.pick }}" style="flex:1;height:{{ segH }};padding:0 14px;border:0;border-radius:999px;font-size:13.5px;font-weight:600;cursor:pointer;background:{{ r.bg }};color:{{ r.fg }};box-shadow:{{ r.sh }};white-space:nowrap">{{ r.label }}</button></sc-for>
+    </div>
+  </div>
+  <sc-if value="{{ isCustom }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:-6px"><span style="display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-radius:12px;border:1px solid var(--primary);background:var(--input);font-size:14px"><i class="icon-calendar-days" style="font-size:16px;line-height:1;color:var(--text-3)"></i>1 Sep 2026</span><span style="color:var(--text-3)">to</span><span style="display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);font-size:14px"><i class="icon-calendar-days" style="font-size:16px;line-height:1;color:var(--text-3)"></i>22 Oct 2026</span><button style="height:40px;padding:0 16px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:13.5px;font-weight:600">Apply</button></div>
+  </sc-if>
+  <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--text-2);margin-top:-8px">{{ rangeText }}</span></sc-if>
+
+  <div style="display:grid;grid-template-columns:{{ kpiCols }};gap:{{ gap }}">
+    <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="6">
+      <div title="{{ k.title }}" style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:{{ kpiPad }};display:flex;flex-direction:column;gap:6px;min-width:0">
+        <span style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text-2)"><i class="icon-{{ k.icon }}" style="font-size:15px;line-height:1;color:{{ k.ic }}"></i>{{ k.label }}</span>
+        <span style="font-family:Sora,sans-serif;font-size:{{ kpiSize }};font-weight:600;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;white-space:nowrap">{{ k.value }}</span>
+        <sc-if value="{{ k.hasBar }}" hint-placeholder-val="{{ false }}"><span style="display:flex;height:6px;border-radius:99px;overflow:hidden;background:var(--red-bg)"><span style="width:{{ k.bar }};background:var(--green-solid)"></span></span></sc-if>
+        <span style="font-size:12.5px;color:var(--text-3);line-height:1.35">{{ k.sub }}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+    <div style="display:flex;align-items:center;gap:10px;padding:16px 20px 6px;flex-wrap:wrap"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">Self-correction flags</h2><span style="font-size:13px;color:var(--text-2)">Click a flag to see what's behind it.</span></div>
+    <div style="display:grid;grid-template-columns:{{ flagCols }};gap:12px;padding:12px 20px 20px">
+      <sc-for list="{{ flags }}" as="f" hint-placeholder-count="4">
+        <button onClick="{{ f.go }}" style="display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-radius:14px;border:1px solid {{ f.bd }};background:{{ f.tint }};color:var(--ink);text-align:left;cursor:pointer" style-hover="box-shadow:var(--shadow-md)">
+          <span style="display:flex;align-items:center;gap:8px"><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12.5px;font-weight:600;color:{{ f.fg }};background:{{ f.bg }}"><i class="icon-{{ f.icon }}" style="font-size:13px;line-height:1"></i>{{ f.label }}</span><i class="icon-arrow-up-right" style="margin-left:auto;font-size:16px;line-height:1;color:var(--text-3)"></i></span>
+          <span style="font-family:Sora,sans-serif;font-size:28px;font-weight:600">{{ f.count }}</span>
+          <span style="font-size:12.5px;color:var(--text-2);line-height:1.35">{{ f.sub }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </section>
+
+  <div style="display:grid;grid-template-columns:{{ twoCols }};gap:20px;align-items:start">
+    <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px;padding:16px 20px 10px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">Pipeline by stage</h2></div>
+      <div style="display:grid;grid-template-columns:{{ stageCols }};gap:12px;padding:6px 20px;font-size:11.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3)"><span>Stage</span><span>Value</span><span style="text-align:right">Deals</span><sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><span style="text-align:right">Weighted</span></sc-if></div>
+      <sc-for list="{{ stages }}" as="s" hint-placeholder-count="6">
+        <div style="display:grid;grid-template-columns:{{ stageCols }};gap:12px;align-items:center;padding:9px 20px;border-top:1px solid var(--line)">
+          <span style="display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:{{ s.st.fg }};min-width:0"><i class="icon-{{ s.st.icon }}" style="font-size:15px;line-height:1"></i><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.st.label }}</span></span>
+          <span style="display:flex;align-items:center;gap:10px;min-width:0"><span style="height:14px;border-radius:5px;width:{{ s.w }};min-width:3px;background:{{ s.bar }};flex:none"></span><span title="{{ s.full }}" style="font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap">{{ s.money }}</span></span>
+          <span style="text-align:right;font-size:13.5px;font-variant-numeric:tabular-nums">{{ s.count }}</span>
+          <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><span style="text-align:right;font-size:13.5px;color:var(--text-2);font-variant-numeric:tabular-nums">{{ s.weighted }}</span></sc-if>
+        </div>
+      </sc-for>
+    </section>
+
+    <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px;padding:16px 20px 10px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">Lost reasons</h2><span style="font-size:13px;color:var(--text-3)">{{ lostSummary }}</span></div>
+      <sc-for list="{{ lost }}" as="l" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;gap:6px;padding:9px 20px;border-top:1px solid var(--line)">
+          <span style="display:flex;gap:10px;align-items:baseline"><span style="flex:1;min-width:0;font-size:13.5px;color:{{ l.fg }}">{{ l.reason }}</span><span style="font-size:13px;color:var(--text-2);font-variant-numeric:tabular-nums">{{ l.count }} {{ l.word }}</span><span style="width:96px;text-align:right;font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums;color:{{ l.fg }}">{{ l.money }}</span></span>
+          <span style="height:8px;border-radius:99px;background:var(--bg-alt);overflow:hidden;display:block"><span style="display:block;height:100%;width:{{ l.w }};background:var(--red-solid);border-radius:99px"></span></span>
+        </div>
+      </sc-for>
+    </section>
+  </div>
+
+  <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+    <div style="display:flex;align-items:center;gap:10px;padding:16px 20px 10px;flex-wrap:wrap"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">By salesperson</h2><span style="font-size:13px;color:var(--text-3)">Sales and Manager users only</span></div>
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:minmax(0,1.4fr) 100px 120px 140px 130px minmax(0,1fr);gap:12px;padding:8px 20px;background:var(--surface-2);font-size:11.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3)"><span>Salesperson</span><span style="text-align:right">Open deals</span><span style="text-align:right">Open value</span><span style="text-align:right">Weighted</span><span style="text-align:right">Visits · 7 d</span><span>Flags</span></div>
+    </sc-if>
+    <sc-for list="{{ people }}" as="p" hint-placeholder-count="5">
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:minmax(0,1.4fr) 100px 120px 140px 130px minmax(0,1fr);gap:12px;align-items:center;padding:11px 20px;border-top:1px solid var(--line)">
+          <span style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ p.initials }}</span><span style="display:flex;flex-direction:column;gap:1px"><span style="font-size:14px;font-weight:600">{{ p.name }}</span><span style="font-size:12px;color:var(--text-3)">{{ p.role }} · {{ p.region }}</span></span></span>
+          <span style="text-align:right;font-size:14px;font-variant-numeric:tabular-nums">{{ p.open }}</span>
+          <span style="text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums">{{ p.value }}</span>
+          <span style="text-align:right;font-size:14px;color:var(--text-2);font-variant-numeric:tabular-nums">{{ p.weighted }}</span>
+          <span style="display:flex;align-items:center;justify-content:flex-end;gap:8px"><span style="width:56px;height:6px;border-radius:99px;background:var(--bg-alt);overflow:hidden;display:block"><span style="display:block;height:100%;width:{{ p.vw }};background:var(--aqua-solid, #14C2C9)"></span></span><span style="font-size:14px;font-variant-numeric:tabular-nums;width:22px;text-align:right">{{ p.visits }}</span></span>
+          <span style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ p.flags }}" as="f" hint-placeholder-count="1"><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:999px;font-size:11.5px;font-weight:600;color:{{ f.fg }};background:{{ f.bg }}"><i class="icon-{{ f.icon }}" style="font-size:11px;line-height:1"></i>{{ f.label }}</span></sc-for><sc-if value="{{ p.clean }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:var(--text-3)">None</span></sc-if></span>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-top:1px solid var(--line)">
+          <span style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ p.initials }}</span><span style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:15px;font-weight:600">{{ p.name }}</span><span style="font-size:12.5px;color:var(--text-3)">{{ p.role }} · {{ p.region }}</span></span><span style="font-family:Sora,sans-serif;font-size:15px;font-weight:600">{{ p.value }}</span></span>
+          <span style="display:flex;gap:14px;font-size:13px;color:var(--text-2)"><span>{{ p.open }} open deals</span><span>{{ p.visits }} visits · 7 d</span></span>
+          <span style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ p.flags }}" as="f" hint-placeholder-count="1"><span style="display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:600;color:{{ f.fg }};background:{{ f.bg }}"><i class="icon-{{ f.icon }}" style="font-size:12px;line-height:1"></i>{{ f.label }}</span></sc-for></span>
+        </div>
+      </sc-if>
+    </sc-for>
+  </section>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDrill }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Cockpit drill-down" style="display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
+    <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:6px">
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text-3)"><a href="#cockpit" onClick="{{ goCockpit }}" style="color:var(--text-2)">Cockpit</a><i class="icon-chevron-right" style="font-size:13px;line-height:1"></i>{{ drill.title }}</span></sc-if>
+      <span style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px 0 10px;border-radius:999px;font-size:13.5px;font-weight:600;color:{{ drill.fg }};background:{{ drill.bg }}"><i class="icon-{{ drill.icon }}" style="font-size:14px;line-height:1"></i>{{ drill.label }}</span><h1 style="margin:0;font-family:Sora,sans-serif;font-size:{{ h1 }};font-weight:600;letter-spacing:-0.02em">{{ drill.count }} {{ drill.title }}</h1></span>
+      <p style="margin:0;font-size:14px;color:var(--text-2)">{{ drill.rule }}</p>
+    </div>
+    <sc-if value="{{ readOnly }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line-strong);color:var(--text-2);font-size:13px;font-weight:600"><i class="icon-eye" style="font-size:14px;line-height:1"></i>Read-only list</span></sc-if>
+    <button onClick="{{ exportXlsx }}" style="height:40px;padding:0 16px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px"><i class="icon-file-spreadsheet" style="font-size:16px;line-height:1;color:var(--green)"></i>{{ exportLabel }}</button>
+  </div>
+  <div role="tablist" style="display:flex;gap:8px;flex-wrap:wrap;overflow-x:auto">
+    <sc-for list="{{ flagTabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.go }}" style="height:{{ tabH }};padding:0 14px;border-radius:999px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fgc }};font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-{{ t.icon }}" style="font-size:14px;line-height:1;color:{{ t.fg }}"></i>{{ t.label }} <span style="color:var(--text-3);font-weight:500">{{ t.count }}</span></button></sc-for>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 150px 170px 24px;gap:14px;padding:10px 20px;background:var(--surface-2);font-size:11.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3)"><span>{{ drill.c1 }}</span><span>{{ drill.c2 }}</span><span>Owner</span><span>{{ drill.c4 }}</span><span></span></div></sc-if>
+    <sc-for list="{{ drillRows }}" as="r" hint-placeholder-count="4">
+      <a href="#open" onClick="{{ r.go }}" style="display:grid;grid-template-columns:{{ drillCols }};gap:{{ drillGap }};align-items:center;padding:12px 20px;border-top:1px solid var(--line);color:var(--ink);text-decoration:none" style-hover="background:var(--surface-2);color:var(--ink);text-decoration:none">
+        <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:14.5px;font-weight:600">{{ r.a }}</span><span style="font-size:12.5px;color:var(--text-2)">{{ r.a2 }}</span></span>
+        <span style="font-size:13.5px;color:var(--text-2)">{{ r.b }}</span>
+        <span style="font-size:13.5px">{{ r.owner }}</span>
+        <span style="display:inline-flex;align-items:center;gap:5px;justify-self:start;height:24px;padding:0 9px 0 8px;border-radius:999px;font-size:12.5px;font-weight:600;color:{{ drill.fg }};background:{{ drill.bg }}"><i class="icon-{{ drill.icon }}" style="font-size:13px;line-height:1"></i>{{ r.d }}</span>
+        <i class="icon-chevron-right" style="font-size:16px;line-height:1;color:var(--text-3)"></i>
+      </a>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const VIS7 = {u1:9, u2:6, u3:3, u4:3, u5:2};
+class Component extends DCLogic {
+  state = {range:'quarter', exporting:false};
+  app() { return this.props.app || {}; }
+  componentWillUnmount() { clearTimeout(this.t); }
+  renderVals() {
+    const a = this.app(), W = a.W, s = this.state;
+    if (!W) return {};
+    const phone = !!a.phone, store = a.store || {}, ro = !!a.readOnly;
+    const deals = W.allDeals(store), open = deals.filter(W.isOpen), won = deals.filter(d => d.stage === 'won'), lostD = deals.filter(d => d.stage === 'lost');
+    const sum = l => l.reduce((n, d) => n + d.value, 0), wsum = l => l.reduce((n, d) => n + d.value * d.prob / 100, 0);
+    const winRate = won.length + lostD.length ? Math.round(won.length / (won.length + lostD.length) * 100) : 0;
+    const overdueV = W.allVisits(store).filter(v => v.outcome === 'pending' && v.hrsLeft != null && v.hrsLeft < 0);
+    const stuck = open.filter(W.isStuck), closeP = open.filter(W.isClosePassed), dormant = W.COMPANIES.filter(c => c.status === 'dormant');
+    const seg = on => on ? {bg:'var(--surface)', fg:'var(--ink)', sh:'var(--shadow-sm)'} : {bg:'transparent', fg:'var(--text-2)', sh:'none'};
+    const RT = {month:'1–22 Oct 2026', quarter:'Q4 · 1 Oct – 22 Oct 2026', year:'1 Jan – 22 Oct 2026', custom:'1 Sep – 22 Oct 2026'};
+    const go = fn => e => { if (e && e.preventDefault) e.preventDefault(); fn(); };
+    const FL = {
+      outcome:{label:'Outcome overdue', title:'overdue outcomes', icon:'alarm-clock', h:'red', rule:'Visits with no outcome more than 48 hours after the visit.', c1:'Visit', c2:'Company', c4:'Overdue by', list: overdueV},
+      stuck:{label:'Stuck', title:'stuck deals', icon:'hourglass', h:'red', rule:'Open deals that have been in the same stage for more than 30 days.', c1:'Deal', c2:'Stage', c4:'In stage', list: stuck},
+      dormant:{label:'Dormant', title:'dormant accounts', icon:'moon', h:'amber', rule:'Owned accounts with no visit in the last 60 days.', c1:'Account', c2:'City', c4:'Last visit', list: dormant},
+      close:{label:'Close passed', title:'overdue close dates', icon:'calendar-x', h:'red', rule:'Open deals whose expected close date has passed.', c1:'Deal', c2:'Expected close', c4:'Days past', list: closeP}
+    };
+    const flagKey = (a.params || {}).flag || 'stuck', F = FL[flagKey] || FL.stuck;
+    const people = W.USERS.filter(u => ['sales','manager'].includes(u.role) && u.active);
+    const maxStage = Math.max(...W.STAGES.map(st => sum(deals.filter(d => d.stage === st.key))), 1);
+    const lostBy = W.LOST.map(r => { const l = lostD.filter(d => d.lostReason === r); return {reason:r, count:l.length, value:sum(l)}; }).sort((x, y) => y.value - x.value);
+    const maxLost = Math.max(...lostBy.map(l => l.value), 1);
+    const isDrill = a.page === 'drill';
+    const drillRows = F.list.map(x => {
+      if (flagKey === 'dormant') return {a:x.name, a2:`${x.brand} · ${x.plant}`, b:x.city, owner: x.owner ? W.user(x.owner).name : 'Unassigned', d:`${x.lastDays} d · ${x.lastVisit}`, go: go(() => a.nav('account', {company:x.id}))};
+      if (flagKey === 'outcome') { const co = W.co(x.co); return {a:`${x.type} · ${x.date}`, a2:`${x.time} PKT`, b:co.name, owner:W.user(x.owner).name, d:`${Math.round(-x.hrsLeft)} hrs`, go: go(() => a.nav('account', {company:co.id}))}; }
+      const co = W.co(x.co);
+      return {a:x.title, a2:`${co.name} · ${W.money(x.value)}`, b: flagKey === 'close' ? x.close : W.stage(x.stage).label, owner:W.user(x.owner).name, d: flagKey === 'close' ? (x.id === 'd2' ? '7 d' : '17 d') : `${x.days} d`, go: go(() => a.nav('deal', {deal:x.id}))};
+    });
+    return {
+      isMain: !isDrill, isDrill, isDesktop: !phone, isPhone: phone, readOnly: ro, rangeText: RT[s.range], isCustom: s.range === 'custom',
+      ranges: [['month','This month'],['quarter','This quarter'],['year','This year'],['custom','Custom']].map(([k, l]) => ({label: phone ? l.replace('This ', '').replace(/^./, c => c.toUpperCase()) : l, ...seg(s.range === k), pick: () => this.setState({range:k})})),
+      kpis: [
+        {label:'Open pipeline', icon:'layers', ic:'var(--blue)', value:W.money(sum(open)), title:W.full(sum(open)), sub:`${open.length} open deals`},
+        {label:'Weighted pipeline', icon:'scale', ic:'var(--violet)', value:W.money(wsum(open)), title:W.full(wsum(open)), sub:'Value × probability'},
+        {label:'Won', icon:'trophy', ic:'var(--green)', value:W.money(sum(won)), title:W.full(sum(won)), sub:`${won.length} deals with PO`},
+        {label:'Win rate', icon:'target', ic:'var(--green)', value:`${winRate}%`, sub:`${won.length} won · ${lostD.length} lost`, hasBar:true, bar:`${winRate}%`},
+        {label:'Accounts', icon:'building-2', ic:'var(--aqua)', value:'334', sub:'286 owned · 48 unassigned'},
+        {label:'Visits · last 7 days', icon:'map-pin', ic:'var(--aqua)', value:'23', sub:'By 5 salespeople'}
+      ].map(k => ({hasBar:false, bar:'0%', title:'', ...k})),
+      flags: Object.entries(FL).map(([k, f]) => ({...W.flag(k, f.label), count:f.list.length, sub:f.rule, bd: f.list.length ? `color-mix(in srgb, var(--${f.h}) 30%, var(--line))` : 'var(--line)', tint: f.list.length ? `color-mix(in srgb, var(--${f.h}-bg) 40%, var(--surface))` : 'var(--surface)', go: () => a.nav('drill', {flag:k})})),
+      stages: W.STAGES.map(st => { const l = deals.filter(d => d.stage === st.key), v = sum(l), x = W.stage(st.key); return {st:x, money:W.money(v), full:W.full(v), count:l.length, weighted: W.isOpen({stage:st.key}) ? W.money(wsum(l)) : '—', w: Math.round(v / maxStage * (phone ? 90 : 160)) + 'px', bar:x.fg}; }),
+      stageCols: phone ? 'minmax(0,1fr) minmax(0,1.3fr) 40px' : '170px minmax(0,1fr) 56px 110px',
+      lost: lostBy.map(l => ({...l, money: l.value ? W.money(l.value) : '—', word: l.count === 1 ? 'deal' : 'deals', w: Math.round(l.value / maxLost * 100) + '%', fg: l.count ? 'var(--ink)' : 'var(--text-3)'})),
+      lostSummary: `${lostD.length} deals · ${W.money(sum(lostD))}`,
+      people: people.map(u => { const mine = open.filter(d => d.owner === u.id), fl = [];
+        const st = mine.filter(W.isStuck).length, cp = mine.filter(W.isClosePassed).length, ov = overdueV.filter(v => v.owner === u.id).length, dm = dormant.filter(c => c.owner === u.id).length;
+        if (ov) fl.push(W.flag('outcome', `${ov} outcome`)); if (st) fl.push(W.flag('stuck', `${st} stuck`)); if (cp) fl.push(W.flag('close', `${cp} close`)); if (dm) fl.push(W.flag('dormant', `${dm} dormant`));
+        return {name:u.name, initials:u.initials, role:u.roleLabel, region:u.region, open:mine.length, value:W.money(sum(mine)), weighted:W.money(wsum(mine)), visits:VIS7[u.id] || 0, vw: Math.round((VIS7[u.id] || 0) / 9 * 100) + '%', flags:fl, clean: fl.length === 0}; }),
+      kpiCols: phone ? 'repeat(2,minmax(0,1fr))' : 'repeat(3,minmax(0,1fr))', flagCols: phone ? 'repeat(2,minmax(0,1fr))' : 'repeat(4,minmax(0,1fr))', twoCols: phone ? 'minmax(0,1fr)' : 'minmax(0,1.25fr) minmax(0,1fr)',
+      gap: phone ? '10px' : '16px', kpiPad: phone ? '14px' : '16px 18px', kpiSize: phone ? '21px' : '26px', segFlex: phone ? '1 1 100%' : 'none', segH: phone ? '40px' : '32px', h1: phone ? '21px' : '26px', tabH: phone ? '44px' : '36px',
+      drill: {...W.flag(flagKey, F.label), ...F, count:F.list.length}, goCockpit: go(() => a.nav('cockpit')),
+      flagTabs: Object.entries(FL).map(([k, f]) => { const on = k === flagKey, p = W.flag(k, f.label); return {label:f.label, icon:p.icon, fg:p.fg, count:f.list.length, bd: on ? p.fg : 'var(--line-strong)', bg: on ? p.bg : 'var(--surface)', fgc: on ? p.fg : 'var(--ink)', go: () => a.nav('drill', {flag:k})}; }),
+      drillRows, drillCols: phone ? 'minmax(0,1fr) auto' : 'minmax(0,1.6fr) minmax(0,1fr) 150px 170px 24px', drillGap: phone ? '6px 12px' : '14px',
+      exportLabel: s.exporting ? 'Preparing…' : 'Export to Excel', exportXlsx: () => { this.setState({exporting:true}); this.t = setTimeout(() => { this.setState({exporting:false}); a.toast({title:'Export ready', sub:`${F.title.replace(/ /g, '-')}_2026-10-22.xlsx`}); }, 1100); }
+    };
+  }
+}
+</script>
+</body>
+</html>

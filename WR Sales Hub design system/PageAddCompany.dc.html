@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-screen-label="Add company" style="display:flex;flex-direction:column;gap:20px;max-width:880px">
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text-3)"><a href="#accounts" onClick="{{ goAccounts }}" style="color:var(--text-2)">Accounts</a><i class="icon-chevron-right" style="font-size:13px;line-height:1"></i>Add company</span>
+      <h1 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Add company</h1>
+      <p style="margin:0;font-size:14.5px;color:var(--text-2)">You'll be the owner. Only the name is required; fill in the rest when you know it.</p>
+    </div>
+  </sc-if>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:{{ cardPad }};display:flex;flex-direction:column;gap:20px">
+    <label style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:13.5px;font-weight:600">Company name <span style="color:var(--red)">*</span></span>
+      <input value="{{ name }}" onChange="{{ onName }}" placeholder="Legal or trading name" style="height:{{ inH }};padding:0 12px;border-radius:12px;border:1px solid {{ nameBd }};background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)">
+      <sc-if value="{{ nameErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--red);font-weight:500"><i class="icon-circle-alert" style="font-size:14px;line-height:1"></i>{{ nameErr }}</span></sc-if>
+    </label>
+    <sc-if value="{{ hasDupes }}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:14px;background:var(--amber-bg);margin-top:-8px">
+        <span style="display:flex;gap:8px;align-items:center;font-size:14px;font-weight:700;color:var(--amber)"><i class="icon-copy" style="font-size:16px;line-height:1"></i>Possible duplicates — check before adding</span>
+        <sc-for list="{{ dupes }}" as="d" hint-placeholder-count="1">
+          <div style="display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line)">
+            <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ d.name }}</span><span style="font-size:12.5px;color:var(--text-2)">{{ d.sub }}</span></span>
+            <button onClick="{{ d.open }}" style="height:36px;padding:0 12px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">Open existing</button>
+          </div>
+        </sc-for>
+        <span style="font-size:13px;color:var(--ink)">Different plant or company? Carry on — you can add a new plant unit of the same group.</span>
+      </div>
+    </sc-if>
+    <div style="display:grid;grid-template-columns:{{ cols3 }};gap:16px">
+      <sc-for list="{{ texts }}" as="f" hint-placeholder-count="3">
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">{{ f.label }}</span><input value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.ph }}" style="height:{{ inH }};padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)"></label>
+      </sc-for>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ cols3 }};gap:16px">
+      <sc-for list="{{ selects }}" as="f" hint-placeholder-count="3">
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">{{ f.label }}</span><span style="position:relative;display:flex"><select value="{{ f.value }}" onChange="{{ f.onChange }}" disabled="{{ f.disabled }}" style="flex:1;appearance:none;-webkit-appearance:none;height:{{ inH }};padding:0 38px 0 12px;border-radius:12px;border:1px solid var(--line-strong);background:{{ f.bg }};color:{{ f.fg }};font-size:{{ inFs }};outline:none"><sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.l }}</option></sc-for></select><i class="icon-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:16px;line-height:1;color:var(--text-3);pointer-events:none"></i></span><span style="font-size:12.5px;color:var(--text-3)">{{ f.help }}</span></label>
+      </sc-for>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ cols2 }};gap:16px">
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Priority</span>
+        <div style="display:flex;gap:8px"><sc-for list="{{ pris }}" as="p" hint-placeholder-count="3"><button onClick="{{ p.pick }}" style="flex:1;height:{{ inH }};border-radius:12px;border:1px solid {{ p.bd }};background:{{ p.bg }};color:{{ p.fg }};font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><i class="icon-{{ p.icon }}" style="font-size:15px;line-height:1"></i>{{ p.label }}</button></sc-for></div>
+        <span style="font-size:12.5px;color:var(--text-3)">P1 is the highest.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Lead source</span>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><sc-for list="{{ sources }}" as="p" hint-placeholder-count="4"><button onClick="{{ p.pick }}" style="height:{{ chipH }};border-radius:12px;border:1px solid {{ p.bd }};background:{{ p.bg }};color:{{ p.fg }};font-size:13.5px;font-weight:600;cursor:pointer">{{ p.label }}</button></sc-for></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ cols3 }};gap:16px">
+      <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Water need</span><input value="{{ need }}" onChange="{{ onNeed }}" placeholder="e.g. ETP upgrade + reuse" style="height:{{ inH }};padding:0 12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font-size:{{ inFs }};outline:none"></label>
+      <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Estimated capacity</span><span style="display:flex;align-items:center;height:{{ inH }};border-radius:12px;border:1px solid var(--line-strong);background:var(--input);overflow:hidden"><input value="{{ mld }}" onChange="{{ onMld }}" inputmode="decimal" placeholder="0.0" style="flex:1;min-width:0;height:100%;padding:0 12px;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none;font-variant-numeric:tabular-nums"><span style="height:100%;padding:0 12px;display:flex;align-items:center;background:var(--bg-alt);color:var(--text-2);font-size:13px;font-weight:700;border-left:1px solid var(--line)">MLD</span></span><span style="font-size:12.5px;color:var(--text-3)">Million litres per day</span></label>
+      <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Website</span><span style="display:flex;align-items:center;height:{{ inH }};border-radius:12px;border:1px solid var(--line-strong);background:var(--input);overflow:hidden"><span style="height:100%;padding:0 10px;display:flex;align-items:center;background:var(--bg-alt);color:var(--text-2);font-size:13px;border-right:1px solid var(--line)">https://</span><input value="{{ web }}" onChange="{{ onWeb }}" placeholder="company.pk" style="flex:1;min-width:0;height:100%;padding:0 12px;border:0;background:transparent;color:var(--ink);font-size:{{ inFs }};outline:none"></span></label>
+    </div>
+    <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:600">Notes</span><textarea rows="3" value="{{ notes }}" onChange="{{ onNotes }}" placeholder="How you heard about them, decision makers, timing" style="resize:vertical;min-height:84px;padding:12px;border-radius:12px;border:1px solid var(--line-strong);background:var(--input);color:var(--ink);font-size:{{ inFs }};line-height:1.5;outline:none"></textarea></label>
+    <div style="display:flex;justify-content:flex-end;align-items:center;gap:10px;padding-top:18px;border-top:1px solid var(--line);flex-wrap:wrap">
+      <button onClick="{{ cancel }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 18px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer">Cancel</button>
+      <button onClick="{{ save }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 22px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px" style-hover="background:var(--primary-hover)"><i class="icon-check" style="font-size:16px;line-height:1"></i>Add company</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {name:'', brand:'', plant:'', group:'', sector:'', sub:'', city:'', pri:'P2', source:'Target', need:'', mld:'', web:'', notes:'', err:''};
+  app() { return this.props.app || {}; }
+  componentDidMount() { const d = this.app().demo; if (d === 'dup') this.setState({name:'Lyallpur Denim', brand:'LDM', city:'Faisalabad', sector:'Textiles', sub:'Denim'}); if (d === 'error') this.setState({err:'Enter the company name.'}); }
+  save() {
+    const s = this.state, a = this.app();
+    if (!s.name.trim()) return this.setState({err:'Enter the company name.'});
+    a.toast({title:'Company added', sub:`${s.name.trim()} · owner: you`});
+    a.nav('accounts');
+  }
+  renderVals() {
+    const a = this.app(), W = a.W, s = this.state;
+    if (!W) return {};
+    const phone = !!a.phone, go = fn => e => { if (e && e.preventDefault) e.preventDefault(); fn(); };
+    const words = s.name.toLowerCase().split(/\s+/).filter(w => w.length >= 4);
+    const dupes = s.name.trim().length >= 4 ? W.COMPANIES.filter(c => words.some(w => [c.name, c.brand, c.group].join(' ').toLowerCase().includes(w))).slice(0, 3) : [];
+    const t = (key, label, ph) => ({label, ph, value:s[key], onChange: e => this.setState({[key]: e.target.value})});
+    const subs = s.sector ? W.SECTORS[s.sector] : [];
+    const sel = on => on ? {bd:'var(--primary)', bg:'var(--brand-soft)', fg:'var(--green)'} : {bd:'var(--line-strong)', bg:'var(--surface)', fg:'var(--ink)'};
+    return {
+      isDesktop: !phone, goAccounts: go(() => a.nav('accounts')),
+      name: s.name, onName: e => this.setState({name: e.target.value, err:''}), nameErr: s.err, nameBd: s.err ? 'var(--red)' : 'var(--line-strong)',
+      hasDupes: dupes.length > 0, dupes: dupes.map(c => ({name:c.name, sub:`${c.brand} · ${c.plant} · ${c.city} · owner ${c.owner ? W.user(c.owner).name : 'unassigned'}`, open: () => a.nav('account', {company:c.id})})),
+      texts: [t('brand','Brand','e.g. LDM Denim'), t('plant','Plant unit','e.g. Plant 2'), t('group','Parent group','e.g. Lyallpur Group')],
+      selects: [
+        {label:'Sector', value:s.sector, onChange: e => this.setState({sector: e.target.value, sub:''}), options:[{v:'', l:'Choose sector'}, ...Object.keys(W.SECTORS).map(k => ({v:k, l:k}))], bg:'var(--input)', fg:'var(--ink)', disabled:false, help:''},
+        {label:'Sub-sector', value:s.sub, onChange: e => this.setState({sub: e.target.value}), options:[{v:'', l: s.sector ? 'Choose sub-sector' : 'Pick a sector first'}, ...subs.map(k => ({v:k, l:k}))], bg: s.sector ? 'var(--input)' : 'var(--bg-alt)', fg: s.sector ? 'var(--ink)' : 'var(--text-3)', disabled: !s.sector, help: s.sector ? `${subs.length} options for ${s.sector}` : 'Options depend on the sector'},
+        {label:'City', value:s.city, onChange: e => this.setState({city: e.target.value}), options:[{v:'', l:'Choose city'}, ...W.CITIES.map(k => ({v:k, l:k}))], bg:'var(--input)', fg:'var(--ink)', disabled:false, help:''}
+      ],
+      pris: ['P1','P2','P3'].map(p => ({...W.pri(p), ...sel(s.pri === p), pick: () => this.setState({pri:p})})),
+      sources: W.SOURCES.map(p => ({label:p, ...sel(s.source === p), pick: () => this.setState({source:p})})),
+      need: s.need, onNeed: e => this.setState({need: e.target.value}), mld: s.mld, onMld: e => this.setState({mld: e.target.value}), web: s.web, onWeb: e => this.setState({web: e.target.value}), notes: s.notes, onNotes: e => this.setState({notes: e.target.value}),
+      save: () => this.save(), cancel: () => a.nav('accounts'),
+      cardPad: phone ? '18px 16px' : '28px', inH: phone ? '48px' : '44px', inFs: phone ? '16px' : '14.5px', chipH: phone ? '44px' : '38px', btnH: phone ? '50px' : '42px', btnFlex: phone ? '1' : 'none',
+      cols3: phone ? 'minmax(0,1fr)' : 'repeat(3,minmax(0,1fr))', cols2: phone ? 'minmax(0,1fr)' : 'repeat(2,minmax(0,1fr))'
+    };
+  }
+}
+</script>
+</body>
+</html>

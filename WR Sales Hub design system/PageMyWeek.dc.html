@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Sora:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/font/lucide.css">
+<link rel="icon" href="uploads/favicon.png">
+<style>body{margin:0;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}button,textarea,input{font:inherit}a{color:#007A3A;text-decoration:none}a:hover{color:#0A5C30;text-decoration:underline}</style>
+</helmet>
+<sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="My Week" style="display:flex;flex-direction:column;gap:24px">
+      <div style="display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap">
+        <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:13px;font-weight:600;color:var(--text-2)">Thursday, 22 Oct 2026</span>
+          <h1 style="margin:0;font-family:Sora,sans-serif;font-weight:600;font-size:30px;line-height:1.15;letter-spacing:-0.02em">Good morning, {{ firstName }}</h1>
+          <p style="margin:0;font-size:15px;color:var(--text-2);text-wrap:pretty">{{ summary }}</p>
+        </div>
+        <a href="#log" onClick="{{ goLog }}" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 26px 0 22px;border-radius:999px;background:var(--cta);color:var(--on-cta);font-weight:700;font-size:16px;text-decoration:none;box-shadow:0 12px 28px -12px rgba(0,169,80,0.75)" style-hover="background:var(--cta-hover);color:var(--on-cta);text-decoration:none"><i class="icon-notebook-pen" style="font-size:19px;line-height:1"></i>Log a visit</a>
+      </div>
+
+      <sc-if value="{{ isNew }}" hint-placeholder-val="{{ false }}">
+        <section style="background:var(--surface);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow-sm);padding:32px;display:flex;flex-direction:column;gap:24px">
+          <div style="display:flex;flex-direction:column;gap:6px;max-width:620px">
+            <h2 style="margin:0;font-family:Sora,sans-serif;font-size:22px;font-weight:600;letter-spacing:-0.01em">Your week is empty — for now</h2>
+            <p style="margin:0;font-size:14.5px;line-height:1.55;color:var(--text-2);text-wrap:pretty">My Week fills itself from your accounts, visits and deals: outcomes to set, next actions, and anything that's slipping. Three steps get you going.</p>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+            <div style="border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px;background:var(--surface-2)">
+              <span style="width:32px;height:32px;border-radius:999px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:600;font-size:14px">1</span>
+              <span style="font-size:15px;font-weight:600">Claim your accounts</span>
+              <span style="font-size:13.5px;color:var(--text-2);line-height:1.5">Pick the companies you're chasing from the shared list of 334.</span>
+              <a href="#accounts" onClick="{{ goAccounts }}" style="margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--link)">Browse accounts<i class="icon-arrow-right" style="font-size:15px;line-height:1"></i></a>
+            </div>
+            <div style="border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px;background:var(--surface-2)">
+              <span style="width:32px;height:32px;border-radius:999px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:600;font-size:14px">2</span>
+              <span style="font-size:15px;font-weight:600">Log your first visit</span>
+              <span style="font-size:13.5px;color:var(--text-2);line-height:1.5">Calls and emails count too. Set the outcome within 48 hrs.</span>
+              <a href="#log" onClick="{{ goLog }}" style="margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--link)">Log a visit<i class="icon-arrow-right" style="font-size:15px;line-height:1"></i></a>
+            </div>
+            <div style="border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px;background:var(--surface-2)">
+              <span style="width:32px;height:32px;border-radius:999px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:600;font-size:14px">3</span>
+              <span style="font-size:15px;font-weight:600">Open a deal</span>
+              <span style="font-size:13.5px;color:var(--text-2);line-height:1.5">Track value and stage from first lead to PO.</span>
+              <a href="#new-deal" onClick="{{ goNewDeal }}" style="margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--link)">New deal<i class="icon-arrow-right" style="font-size:15px;line-height:1"></i></a>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ notNew }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+        <div style="flex:999 1 600px;display:flex;flex-direction:column;gap:24px;min-width:0">
+
+          <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+            <div style="display:flex;align-items:center;gap:10px;padding:18px 20px 14px">
+              <h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">Awaiting outcome</h2>
+              <sc-if value="{{ hasOverdueVisit }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 9px;border-radius:999px;background:var(--red-bg);color:var(--red);font-size:12px;font-weight:700"><i class="icon-alarm-clock" style="font-size:12px;line-height:1"></i>{{ visitCount }} · {{ overdueVisitCount }} overdue</span></sc-if>
+              <sc-if value="{{ noOverdueVisit }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--slate-bg);color:var(--text-2);font-size:12px;font-weight:700">{{ visitCount }}</span></sc-if>
+              <span style="margin-left:auto;font-size:12.5px;color:var(--text-3);display:flex;gap:6px;align-items:center"><i class="icon-info" style="font-size:14px;line-height:1"></i>Every visit needs an outcome within 48 hrs</span>
+            </div>
+            <sc-for list="{{ visits }}" as="v" hint-placeholder-count="3">
+              <div style="border-top:1px solid var(--line);padding:16px 20px;display:flex;flex-direction:column;gap:12px;background:{{ v.rowBg }}">
+                <div style="display:flex;gap:14px;align-items:flex-start">
+                  <span style="width:40px;height:40px;flex:none;border-radius:12px;background:var(--bg-alt);color:var(--text-2);display:flex;align-items:center;justify-content:center"><i class="icon-{{ v.icon }}" style="font-size:18px;line-height:1"></i></span>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                    <div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap"><a href="#account" onClick="{{ v.goCo }}" style="font-size:15px;font-weight:600;color:var(--ink)">{{ v.company }}</a><span style="font-size:13px;color:var(--text-3)">{{ v.sub }}</span></div>
+                    <div style="font-size:13px;color:var(--text-2)">{{ v.type }} · {{ v.when }} · with {{ v.contact }}</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none">
+                    <span title="Outcome due {{ v.dueAt }}" style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12.5px;font-weight:600;color:{{ v.cdFg }};background:{{ v.cdBg }};white-space:nowrap"><i class="icon-{{ v.cdIcon }}" style="font-size:13px;line-height:1"></i>{{ v.cdLabel }}</span>
+                    <span style="width:96px;height:4px;border-radius:99px;background:var(--line);overflow:hidden;display:block"><span style="display:block;height:100%;width:{{ v.cdPct }};background:{{ v.cdBar }};border-radius:99px"></span></span>
+                  </div>
+                </div>
+                <sc-if value="{{ v.overdue }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:8px;align-items:center;font-size:13px;font-weight:500;color:var(--red);padding-left:54px"><i class="icon-triangle-alert" style="font-size:14px;line-height:1"></i>{{ v.lateBy }} past the 48-hour window. You'll need to add a late reason.</div>
+                </sc-if>
+                <sc-if value="{{ v.collapsed }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-left:54px">
+                    <sc-for list="{{ v.choices }}" as="c" hint-placeholder-count="5">
+                      <button onClick="{{ c.onClick }}" title="{{ c.full }}" style="display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px 0 10px;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font-size:13px;font-weight:500;cursor:pointer" style-hover="background:var(--surface-2);border-color:var(--text-3)"><i class="icon-{{ c.icon }}" style="font-size:15px;line-height:1;color:{{ c.fg }}"></i>{{ c.label }}</button>
+                    </sc-for>
+                    <a href="#visit" onClick="{{ v.goVisit }}" style="margin-left:auto;font-size:13px;font-weight:600;color:var(--link)">Open visit</a>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ v.expanded }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-left:54px;border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:16px">
+                    <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600">
+                      <span style="display:inline-flex;align-items:center;gap:6px;color:var(--green)"><span style="width:20px;height:20px;border-radius:999px;background:var(--green-bg);display:flex;align-items:center;justify-content:center"><i class="icon-check" style="font-size:12px;line-height:1"></i></span>Outcome</span>
+                      <span style="width:28px;height:1px;background:var(--line-strong)"></span>
+                      <span style="display:inline-flex;align-items:center;gap:6px;color:var(--ink)"><span style="width:20px;height:20px;border-radius:999px;background:var(--ink);color:var(--surface);display:flex;align-items:center;justify-content:center;font-size:11px">2</span>{{ stepTwo }}</span>
+                      <span style="margin-left:auto;font-size:12px;font-weight:500;color:var(--text-3)">Required before saving</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px 0 10px;border-radius:999px;font-size:13px;font-weight:600;color:{{ pFg }};background:{{ pBg }}"><i class="icon-{{ pIcon }}" style="font-size:14px;line-height:1"></i>{{ pLabel }}</span>
+                      <button onClick="{{ onChangeOutcome }}" style="height:28px;padding:0 10px;border:0;border-radius:999px;background:transparent;color:var(--link);font-size:13px;font-weight:600;cursor:pointer">Change</button>
+                    </div>
+                    <sc-if value="{{ pIsSkip }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;gap:8px">
+                        <span style="font-size:13.5px;font-weight:600">Skip reason <span style="color:var(--red)">*</span></span>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px">
+                          <sc-for list="{{ skipChoices }}" as="s" hint-placeholder-count="6">
+                            <button onClick="{{ s.onClick }}" style="display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px 0 10px;border-radius:999px;border:1px solid {{ s.bd }};background:{{ s.bg }};color:{{ s.fg }};font-size:13px;font-weight:500;cursor:pointer"><i class="icon-{{ s.icon }}" style="font-size:14px;line-height:1"></i>{{ s.label }}</button>
+                          </sc-for>
+                        </div>
+                        <sc-if value="{{ hasSkipErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--red)"><i class="icon-circle-alert" style="font-size:13px;line-height:1"></i>{{ skipErr }}</span></sc-if>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ pNeedsLate }}" hint-placeholder-val="{{ true }}">
+                      <label style="display:flex;flex-direction:column;gap:6px">
+                        <span style="font-size:13.5px;font-weight:600">Why is this outcome late? <span style="color:var(--red)">*</span></span>
+                        <textarea rows="3" value="{{ lateReason }}" onChange="{{ onLate }}" placeholder="e.g. Waited for the client's lab report before confirming next steps" style="resize:vertical;min-height:84px;padding:10px 12px;border-radius:12px;border:1px solid {{ lateBd }};background:var(--input);color:var(--ink);font-size:14px;line-height:1.5;outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)"></textarea>
+                        <sc-if value="{{ hasLateErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--red)"><i class="icon-circle-alert" style="font-size:13px;line-height:1"></i>{{ lateErr }}</span></sc-if>
+                        <sc-if value="{{ noLateErr }}" hint-placeholder-val="{{ true }}"><span style="font-size:12.5px;color:var(--text-3)">Required because this is {{ pLateBy }} past the 48-hour window. Saved with the visit and visible to your manager.</span></sc-if>
+                      </label>
+                    </sc-if>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <button onClick="{{ onSave }}" style="height:40px;padding:0 20px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px" style-hover="background:var(--primary-hover)"><i class="icon-check" style="font-size:15px;line-height:1"></i>Save outcome</button>
+                      <button onClick="{{ onCancel }}" style="height:40px;padding:0 16px;border:0;border-radius:999px;background:transparent;color:var(--text-2);font-size:14px;font-weight:600;cursor:pointer" style-hover="background:var(--bg-alt)">Cancel</button>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <sc-if value="{{ noVisits }}" hint-placeholder-val="{{ false }}">
+              <div style="border-top:1px solid var(--line);padding:24px 20px;display:flex;gap:14px;align-items:center">
+                <span style="width:44px;height:44px;flex:none;border-radius:999px;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center"><i class="icon-circle-check" style="font-size:22px;line-height:1"></i></span>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">All clear</span><span style="font-size:13.5px;color:var(--text-2)">Every visit has an outcome. New visits show up here with a 48-hour countdown.</span></div>
+              </div>
+            </sc-if>
+          </section>
+
+          <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden">
+            <div style="display:flex;align-items:center;gap:10px;padding:18px 20px 14px">
+              <h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">My open deals</h2>
+              <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--slate-bg);color:var(--text-2);font-size:12px;font-weight:700">{{ dealCount }}</span>
+              <span style="font-family:Sora,sans-serif;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums" title="{{ openTotalFull }}">{{ openTotal }}</span>
+              <a href="#pulse" onClick="{{ goPulse }}" style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--link)">Team Pulse<i class="icon-arrow-right" style="font-size:14px;line-height:1"></i></a>
+            </div>
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 178px 108px 164px;gap:16px;padding:9px 20px;border-top:1px solid var(--line);background:var(--surface-2);font-size:11.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3)">
+              <span>Deal</span><span>Stage</span><span style="text-align:right">Value</span><span>In stage</span>
+            </div>
+            <sc-for list="{{ deals }}" as="d" hint-placeholder-count="6">
+              <a href="#deal" onClick="{{ d.go }}" style="display:grid;grid-template-columns:minmax(0,1fr) 178px 108px 164px;gap:16px;align-items:center;padding:12px 20px;border-top:1px solid var(--line);color:var(--ink);text-decoration:none" style-hover="background:var(--surface-2);text-decoration:none;color:var(--ink)">
+                <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.title }}</span><span style="font-size:13px;color:var(--text-2)">{{ d.company }}</span></span>
+                <span><span style="display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px 0 8px;border-radius:999px;font-size:12.5px;font-weight:600;color:{{ d.sFg }};background:{{ d.sBg }};white-space:nowrap"><i class="icon-{{ d.sIcon }}" style="font-size:13px;line-height:1"></i>{{ d.sLabel }}</span></span>
+                <span title="{{ d.full }}" style="text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums">{{ d.value }}</span>
+                <span style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+                  <sc-if value="{{ d.stuck }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--red-bg);color:var(--red);font-size:12px;font-weight:600"><i class="icon-hourglass" style="font-size:12px;line-height:1"></i>Stuck · {{ d.days }} d</span></sc-if>
+                  <sc-if value="{{ d.notStuck }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px;color:var(--text-2);font-variant-numeric:tabular-nums">{{ d.days }} d</span></sc-if>
+                  <sc-if value="{{ d.closePassed }}" hint-placeholder-val="{{ false }}"><span title="Expected close {{ d.close }}" style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--red-bg);color:var(--red);font-size:12px;font-weight:600"><i class="icon-calendar-x" style="font-size:12px;line-height:1"></i>Close passed</span></sc-if>
+                </span>
+              </a>
+            </sc-for>
+          </section>
+        </div>
+
+        <div style="flex:1 1 376px;display:flex;flex-direction:column;gap:24px;min-width:0">
+          <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden;padding-bottom:8px">
+            <div style="display:flex;align-items:center;gap:10px;padding:18px 20px 10px">
+              <h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">Due this week</h2>
+              <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--slate-bg);color:var(--text-2);font-size:12px;font-weight:700">{{ openActCount }}</span>
+            </div>
+            <sc-for list="{{ actGroups }}" as="g" hint-placeholder-count="2">
+              <div style="padding:10px 20px 4px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:{{ g.fg }}">{{ g.label }}</div>
+              <sc-for list="{{ g.items }}" as="a" hint-placeholder-count="2">
+                <div style="display:flex;gap:12px;align-items:flex-start;padding:8px 20px">
+                  <button onClick="{{ a.onToggle }}" aria-label="Mark done" style="width:22px;height:22px;flex:none;margin-top:1px;border-radius:7px;border:1.5px solid {{ a.boxBd }};background:{{ a.boxBg }};color:var(--on-primary);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0"><i class="icon-check" style="font-size:14px;line-height:1;opacity:{{ a.checkOp }}"></i></button>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:14px;font-weight:500;color:{{ a.textColor }};text-decoration:{{ a.deco }}">{{ a.text }}</span>
+                    <span style="font-size:12.5px;color:var(--text-2)">{{ a.company }} · from {{ a.from }}</span>
+                  </div>
+                  <sc-if value="{{ a.isOpen }}" hint-placeholder-val="{{ true }}"><span style="flex:none;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:600;color:{{ a.chipFg }};background:{{ a.chipBg }};white-space:nowrap">{{ a.chip }}</span></sc-if>
+                  <sc-if value="{{ a.isDone }}" hint-placeholder-val="{{ false }}"><button onClick="{{ a.onToggle }}" style="flex:none;height:22px;padding:0 6px;border:0;background:transparent;color:var(--link);font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px"><i class="icon-undo-2" style="font-size:13px;line-height:1"></i>Undo</button></sc-if>
+                </div>
+              </sc-for>
+            </sc-for>
+            <sc-if value="{{ noActs }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:8px 20px 14px;display:flex;gap:12px;align-items:center;font-size:13.5px;color:var(--text-2)"><i class="icon-calendar-check" style="font-size:18px;line-height:1;color:var(--green)"></i>No next actions due this week.</div>
+            </sc-if>
+          </section>
+
+          <section style="background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden;padding-bottom:8px">
+            <div style="display:flex;flex-direction:column;gap:2px;padding:18px 20px 6px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <h2 style="margin:0;font-family:Sora,sans-serif;font-size:17px;font-weight:600">Self-correction</h2>
+                <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--slate-bg);color:var(--text-2);font-size:12px;font-weight:700">{{ flagCount }}</span>
+              </div>
+              <span style="font-size:13px;color:var(--text-2)">Fix these before anyone has to ask.</span>
+            </div>
+            <sc-for list="{{ flagGroups }}" as="g" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:8px;padding:12px 20px 4px">
+                <span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:{{ g.bg }};color:{{ g.fg }};font-size:12px;font-weight:600"><i class="icon-{{ g.icon }}" style="font-size:12px;line-height:1"></i>{{ g.label }}</span>
+                <span style="font-size:13px;font-weight:600;color:var(--text-2)">{{ g.title }} · {{ g.count }}</span>
+              </div>
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
+                <a href="#item" onClick="{{ it.go }}" style="display:flex;align-items:center;gap:10px;padding:8px 20px;color:var(--ink);text-decoration:none" style-hover="background:var(--surface-2);color:var(--ink);text-decoration:none">
+                  <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:500">{{ it.title }}</span><span style="font-size:12.5px;color:var(--text-2)">{{ it.meta }}</span></span>
+                  <i class="icon-chevron-right" style="font-size:16px;line-height:1;color:var(--text-3)"></i>
+                </a>
+              </sc-for>
+            </sc-for>
+            <sc-if value="{{ noFlags }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:8px 20px 14px;display:flex;gap:12px;align-items:center;font-size:13.5px;color:var(--text-2)"><i class="icon-shield-check" style="font-size:18px;line-height:1;color:var(--green)"></i>No stuck deals, dormant accounts or passed close dates.</div>
+            </sc-if>
+          </section>
+        </div>
+      </div>
+      </sc-if>
+    </div>
+</sc-if>
+<sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="My Week" style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:13px;font-weight:600;color:var(--text-2)">Thu 22 Oct 2026 · 9:12 AM PKT</span>
+        <h1 style="margin:0;font-family:Sora,sans-serif;font-size:25px;font-weight:600;letter-spacing:-0.02em;line-height:1.2">Good morning, {{ firstName }}</h1>
+        <p style="margin:0;font-size:14.5px;line-height:1.45;color:var(--text-2);text-wrap:pretty">{{ summary }}</p>
+      </div>
+      <a href="#log" onClick="{{ goLog }}" style="display:flex;align-items:center;justify-content:center;gap:10px;height:54px;border-radius:999px;background:var(--cta);color:var(--on-cta);font-size:16.5px;font-weight:700;text-decoration:none;box-shadow:0 12px 28px -12px rgba(0,169,80,0.75)"><i class="icon-notebook-pen" style="font-size:20px;line-height:1"></i>Log a visit</a>
+    </div>
+
+    <sc-if value="{{ isNew }}" hint-placeholder-val="{{ false }}">
+      <section style="display:flex;flex-direction:column;gap:12px">
+        <h2 style="margin:0;font-family:Sora,sans-serif;font-size:18px;font-weight:600">Get started</h2>
+        <a href="#accounts" onClick="{{ goAccounts }}" style="display:flex;gap:14px;align-items:center;padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none">
+          <span style="width:36px;height:36px;flex:none;border-radius:999px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:600">1</span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">Claim your accounts</span><span style="font-size:13px;color:var(--text-2)">Pick the companies you're chasing.</span></span><i class="icon-chevron-right" style="font-size:18px;line-height:1;color:var(--text-3)"></i>
+        </a>
+        <a href="#log" onClick="{{ goLog }}" style="display:flex;gap:14px;align-items:center;padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none">
+          <span style="width:36px;height:36px;flex:none;border-radius:999px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:600">2</span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">Log your first visit</span><span style="font-size:13px;color:var(--text-2)">Calls and emails count too.</span></span><i class="icon-chevron-right" style="font-size:18px;line-height:1;color:var(--text-3)"></i>
+        </a>
+        <a href="#new-deal" onClick="{{ goNewDeal }}" style="display:flex;gap:14px;align-items:center;padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none">
+          <span style="width:36px;height:36px;flex:none;border-radius:999px;background:var(--brand-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:600">3</span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">Open a deal</span><span style="font-size:13px;color:var(--text-2)">Track it from lead to PO.</span></span><i class="icon-chevron-right" style="font-size:18px;line-height:1;color:var(--text-3)"></i>
+        </a>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ notNew }}" hint-placeholder-val="{{ true }}">
+    <section style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <h2 style="margin:0;font-family:Sora,sans-serif;font-size:18px;font-weight:600">Awaiting outcome</h2>
+        <sc-if value="{{ hasOverdueVisit }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 9px;border-radius:999px;background:var(--red-bg);color:var(--red);font-size:12px;font-weight:700"><i class="icon-alarm-clock" style="font-size:12px;line-height:1"></i>{{ visitCount }} · {{ overdueVisitCount }} overdue</span></sc-if>
+        <sc-if value="{{ noOverdueVisit }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--slate-bg);color:var(--text-2);font-size:12px;font-weight:700">{{ visitCount }}</span></sc-if>
+      </div>
+      <sc-for list="{{ visits }}" as="v" hint-placeholder-count="3">
+        <article style="background:var(--surface);border:1px solid {{ v.cardBd }};border-radius:18px;padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:15.5px;font-weight:600">{{ v.company }}</span><span style="font-size:13px;color:var(--text-3)">{{ v.sub }}</span></div>
+            <span style="display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-radius:999px;font-size:12.5px;font-weight:600;color:{{ v.cdFg }};background:{{ v.cdBg }};white-space:nowrap;flex:none"><i class="icon-{{ v.cdIcon }}" style="font-size:13px;line-height:1"></i>{{ v.cdLabelShort }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-2)"><i class="icon-{{ v.icon }}" style="font-size:15px;line-height:1"></i>{{ v.type }} · {{ v.whenShort }}</div>
+          <sc-if value="{{ v.overdue }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:500;color:var(--red);line-height:1.4"><i class="icon-triangle-alert" style="font-size:14px;line-height:1.3"></i>{{ v.lateBy }} past 48 hrs — a late reason is required.</div></sc-if>
+          <sc-if value="{{ v.overdue }}" hint-placeholder-val="{{ false }}"><button onClick="{{ v.onOpenSheet }}" style="height:46px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">Set outcome</button></sc-if>
+          <sc-if value="{{ v.onTime }}" hint-placeholder-val="{{ true }}"><button onClick="{{ v.onOpenSheet }}" style="height:46px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">Set outcome</button></sc-if>
+        </article>
+      </sc-for>
+      <sc-if value="{{ noVisits }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:14px;align-items:center;padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line)">
+          <span style="width:44px;height:44px;flex:none;border-radius:999px;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center"><i class="icon-circle-check" style="font-size:22px;line-height:1"></i></span>
+          <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">All clear</span><span style="font-size:13.5px;color:var(--text-2);line-height:1.4">Every visit has an outcome.</span></span>
+        </div>
+      </sc-if>
+    </section>
+
+    <section style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <h2 style="margin:0;font-family:Sora,sans-serif;font-size:18px;font-weight:600">Due this week</h2>
+        <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--slate-bg);color:var(--text-2);font-size:12px;font-weight:700">{{ openActCount }}</span>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;padding:4px 0 6px">
+        <sc-for list="{{ actGroups }}" as="g" hint-placeholder-count="2">
+          <div style="padding:10px 16px 2px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:{{ g.fg }}">{{ g.label }}</div>
+          <sc-for list="{{ g.items }}" as="a" hint-placeholder-count="2">
+            <div style="display:flex;gap:2px;align-items:center;padding:2px 12px 2px 4px;min-height:58px">
+              <button onClick="{{ a.onToggle }}" aria-label="Mark done" style="width:44px;height:44px;flex:none;border:0;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0"><span style="width:24px;height:24px;border-radius:8px;border:1.5px solid {{ a.boxBd }};background:{{ a.boxBg }};color:var(--on-primary);display:flex;align-items:center;justify-content:center"><i class="icon-check" style="font-size:15px;line-height:1;opacity:{{ a.checkOp }}"></i></span></button>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14.5px;font-weight:500;color:{{ a.textColor }};text-decoration:{{ a.deco }}">{{ a.text }}</span><span style="font-size:12.5px;color:var(--text-2)">{{ a.company }}</span></div>
+              <sc-if value="{{ a.isOpen }}" hint-placeholder-val="{{ true }}"><span style="flex:none;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:600;color:{{ a.chipFg }};background:{{ a.chipBg }};white-space:nowrap">{{ a.chip }}</span></sc-if>
+              <sc-if value="{{ a.isDone }}" hint-placeholder-val="{{ false }}"><button onClick="{{ a.onToggle }}" style="flex:none;height:44px;padding:0 8px;border:0;background:transparent;color:var(--link);font-size:13px;font-weight:600;cursor:pointer">Undo</button></sc-if>
+            </div>
+          </sc-for>
+        </sc-for>
+        <sc-if value="{{ noActs }}" hint-placeholder-val="{{ false }}"><div style="padding:14px 16px;font-size:14px;color:var(--text-2)">No next actions due this week.</div></sc-if>
+      </div>
+    </section>
+
+    <section style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <h2 style="margin:0;font-family:Sora,sans-serif;font-size:18px;font-weight:600">My open deals</h2>
+        <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--slate-bg);color:var(--text-2);font-size:12px;font-weight:700">{{ dealCount }}</span>
+        <span style="margin-left:auto;font-family:Sora,sans-serif;font-size:15px;font-weight:600">{{ openTotal }}</span>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden">
+        <sc-for list="{{ deals }}" as="d" hint-placeholder-count="4">
+          <a href="#deal" onClick="{{ d.go }}" style="display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-top:1px solid {{ d.rowBd }};color:var(--ink);text-decoration:none">
+            <span style="display:flex;gap:12px;align-items:flex-start"><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14.5px;font-weight:600">{{ d.title }}</span><span style="font-size:13px;color:var(--text-2)">{{ d.company }}</span></span><span style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap">{{ d.value }}</span></span>
+            <span style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+              <span style="display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px 0 8px;border-radius:999px;font-size:12.5px;font-weight:600;color:{{ d.sFg }};background:{{ d.sBg }};white-space:nowrap"><i class="icon-{{ d.sIcon }}" style="font-size:13px;line-height:1"></i>{{ d.sLabel }}</span>
+              <sc-if value="{{ d.stuck }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border-radius:999px;background:var(--red-bg);color:var(--red);font-size:12px;font-weight:600"><i class="icon-hourglass" style="font-size:12px;line-height:1"></i>Stuck · {{ d.days }} d</span></sc-if>
+              <sc-if value="{{ d.notStuck }}" hint-placeholder-val="{{ true }}"><span style="font-size:12.5px;color:var(--text-2)">{{ d.days }} d in stage</span></sc-if>
+              <sc-if value="{{ d.closePassed }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border-radius:999px;background:var(--red-bg);color:var(--red);font-size:12px;font-weight:600"><i class="icon-calendar-x" style="font-size:12px;line-height:1"></i>Close passed</span></sc-if>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;align-items:center;gap:8px"><h2 style="margin:0;font-family:Sora,sans-serif;font-size:18px;font-weight:600">Self-correction</h2><span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--slate-bg);color:var(--text-2);font-size:12px;font-weight:700">{{ flagCount }}</span></div>
+        <span style="font-size:13px;color:var(--text-2)">Fix these before anyone has to ask.</span>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;padding:4px 0 6px">
+        <sc-for list="{{ flagGroups }}" as="g" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:8px;padding:12px 16px 2px">
+            <span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:{{ g.bg }};color:{{ g.fg }};font-size:12px;font-weight:600"><i class="icon-{{ g.icon }}" style="font-size:12px;line-height:1"></i>{{ g.label }}</span>
+            <span style="font-size:13px;font-weight:600;color:var(--text-2)">{{ g.count }}</span>
+          </div>
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
+            <a href="#item" onClick="{{ it.go }}" style="display:flex;align-items:center;gap:10px;min-height:56px;padding:6px 12px 6px 16px;color:var(--ink);text-decoration:none">
+              <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14.5px;font-weight:500">{{ it.title }}</span><span style="font-size:12.5px;color:var(--text-2)">{{ it.meta }}</span></span>
+              <i class="icon-chevron-right" style="font-size:18px;line-height:1;color:var(--text-3)"></i>
+            </a>
+          </sc-for>
+        </sc-for>
+        <sc-if value="{{ noFlags }}" hint-placeholder-val="{{ false }}"><div style="padding:14px 16px;font-size:14px;color:var(--text-2)">Nothing stuck, dormant or past its close date.</div></sc-if>
+      </div>
+    </section>
+    </sc-if>
+  </div>
+<sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;justify-content:flex-end">
+      <div onClick="{{ onCancel }}" style="position:absolute;inset:0;background:var(--scrim)"></div>
+      <div role="dialog" aria-label="Set outcome" style="position:relative;background:var(--surface);border-radius:28px 28px 0 0;padding:8px 20px 30px;display:flex;flex-direction:column;gap:16px;max-height:90%;overflow-y:auto;box-shadow:var(--shadow-lg)">
+        <div style="width:40px;height:5px;border-radius:99px;background:var(--line-strong);margin:0 auto 2px"></div>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+            <span style="font-family:Sora,sans-serif;font-size:19px;font-weight:600">{{ sheetTitle }}</span>
+            <span style="font-size:13.5px;color:var(--text-2)">{{ svCompany }} · {{ svType }}</span>
+            <span style="font-size:13px;color:var(--text-3)">{{ svWhen }}</span>
+          </div>
+          <button onClick="{{ onCancel }}" aria-label="Close" style="width:44px;height:44px;margin:-6px -10px 0 0;border:0;border-radius:999px;background:transparent;color:var(--text-2);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="icon-x" style="font-size:22px;line-height:1"></i></button>
+        </div>
+        <sc-if value="{{ svOverdue }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--red-bg);color:var(--red);font-size:13.5px;font-weight:500;line-height:1.4"><i class="icon-alarm-clock" style="font-size:17px;line-height:1.2"></i><span>Overdue by {{ svLateBy }}. After choosing an outcome you'll add a late reason — both are required.</span></div>
+        </sc-if>
+        <sc-if value="{{ sheetPick }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ sheetChoices }}" as="c" hint-placeholder-count="5">
+              <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 12px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-align:left;cursor:pointer">
+                <span style="width:36px;height:36px;flex:none;border-radius:10px;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center"><i class="icon-{{ c.icon }}" style="font-size:18px;line-height:1"></i></span>
+                <span style="flex:1;font-size:15px;font-weight:500">{{ c.full }}</span>
+                <i class="icon-chevron-right" style="font-size:18px;line-height:1;color:var(--text-3)"></i>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ sheetDetails }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600">
+              <span style="display:inline-flex;align-items:center;gap:6px;color:var(--green)"><span style="width:20px;height:20px;border-radius:999px;background:var(--green-bg);display:flex;align-items:center;justify-content:center"><i class="icon-check" style="font-size:12px;line-height:1"></i></span>Outcome</span>
+              <span style="width:24px;height:1px;background:var(--line-strong)"></span>
+              <span style="display:inline-flex;align-items:center;gap:6px;color:var(--ink)"><span style="width:20px;height:20px;border-radius:999px;background:var(--ink);color:var(--surface);display:flex;align-items:center;justify-content:center;font-size:11px">2</span>{{ stepTwo }}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 6px 10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2)">
+              <span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px 0 10px;border-radius:999px;font-size:13.5px;font-weight:600;color:{{ pFg }};background:{{ pBg }}"><i class="icon-{{ pIcon }}" style="font-size:14px;line-height:1"></i>{{ pLabel }}</span>
+              <button onClick="{{ onChangeOutcome }}" style="margin-left:auto;height:44px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:var(--link);font-size:14px;font-weight:600;cursor:pointer">Change</button>
+            </div>
+            <sc-if value="{{ pIsSkip }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:14px;font-weight:600">Skip reason <span style="color:var(--red)">*</span></span>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <sc-for list="{{ skipChoices }}" as="s" hint-placeholder-count="6">
+                    <button onClick="{{ s.onClick }}" style="display:flex;align-items:center;gap:10px;min-height:48px;padding:0 14px;border-radius:12px;border:1px solid {{ s.bd }};background:{{ s.bg }};color:{{ s.fg }};font-size:14.5px;font-weight:500;text-align:left;cursor:pointer"><i class="icon-{{ s.icon }}" style="font-size:18px;line-height:1"></i>{{ s.label }}</button>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ hasSkipErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--red)"><i class="icon-circle-alert" style="font-size:14px;line-height:1"></i>{{ skipErr }}</span></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ pNeedsLate }}" hint-placeholder-val="{{ false }}">
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:14px;font-weight:600">Why is this outcome late? <span style="color:var(--red)">*</span></span>
+                <textarea rows="3" value="{{ lateReason }}" onChange="{{ onLate }}" placeholder="e.g. Waited for the client's lab report" style="resize:none;min-height:96px;padding:12px 14px;border-radius:14px;border:1px solid {{ lateBd }};background:var(--input);color:var(--ink);font-size:15px;line-height:1.5;outline:none" style-focus="border-color:var(--focus);box-shadow:0 0 0 3px rgba(20,194,201,0.25)"></textarea>
+                <sc-if value="{{ hasLateErr }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--red)"><i class="icon-circle-alert" style="font-size:14px;line-height:1"></i>{{ lateErr }}</span></sc-if>
+                <sc-if value="{{ noLateErr }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px;color:var(--text-3);line-height:1.4">Saved with the visit and visible to your manager.</span></sc-if>
+              </label>
+            </sc-if>
+            <button onClick="{{ onSave }}" style="height:52px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer"><i class="icon-check" style="font-size:18px;line-height:1"></i>Save outcome</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:1100}}">
+
+const STAGES = {
+  lead:{label:'Lead',icon:'circle-dashed',h:'slate'},
+  qualified:{label:'Qualified',icon:'circle-dot',h:'aqua'},
+  proposal:{label:'Proposal Submitted',icon:'file-text',h:'blue'},
+  negotiation:{label:'Negotiation',icon:'handshake',h:'violet'},
+  won:{label:'Won (PO)',icon:'trophy',h:'green'},
+  lost:{label:'Lost',icon:'circle-x',h:'red'}
+};
+const OUTCOMES = [
+  {key:'positive',label:'Positive',full:'Positive — move forward',icon:'thumbs-up',h:'green'},
+  {key:'neutral',label:'Neutral',full:'Neutral — info only',icon:'info',h:'aqua'},
+  {key:'negative',label:'Negative',full:'Negative — pushback',icon:'thumbs-down',h:'red'},
+  {key:'noshow',label:'No show',full:'No show / rescheduled',icon:'calendar-clock',h:'amber'},
+  {key:'skipped',label:'Skipped',full:'Skipped — reason required',icon:'skip-forward',h:'slate'}
+];
+const SKIP = ['Client unavailable','Rescheduled by client','Travel / logistics','Internal priority shift','No access to decision maker','Other (specify in notes)'];
+const VISITS = [
+  {id:'v1',company:'Lyallpur Denim Mills',sub:'LDM Denim · Plant 2, Faisalabad',type:'Site Survey',icon:'clipboard-list',when:'19 Oct 2026, 2:30 PM PKT',whenShort:'Mon 19 Oct, 2:30 PM PKT',dueAt:'21 Oct 2026, 2:30 PM PKT',contact:'Imran Qureshi',hrsLeft:-18.7},
+  {id:'v2',company:'Ravi Valley Beverages',sub:'RVB Bottling · Sheikhupura',type:'Meeting',icon:'users',when:'20 Oct 2026, 4:00 PM PKT',whenShort:'Tue 20 Oct, 4:00 PM PKT',dueAt:'22 Oct 2026, 4:00 PM PKT',contact:'Ayesha Khan',hrsLeft:6.8},
+  {id:'v3',company:'Margalla Biopharma',sub:'Sterile Unit · Islamabad',type:'Call',icon:'phone',when:'21 Oct 2026, 10:30 AM PKT',whenShort:'Wed 21 Oct, 10:30 AM PKT',dueAt:'23 Oct 2026, 10:30 AM PKT',contact:'Dr. Faraz Hussain',hrsLeft:25.3},
+  {id:'v4',company:'Kohsar Chemicals',sub:'Port Qasim Plant, Karachi',type:'Proposal Meeting',icon:'presentation',when:'22 Oct 2026, 8:00 AM PKT',whenShort:'Today, 8:00 AM PKT',dueAt:'24 Oct 2026, 8:00 AM PKT',contact:'Usman Tariq',hrsLeft:46.8}
+];
+const ACTIONS = [
+  {id:'a1',text:'Send revised RO proposal',company:'Ravi Valley Beverages',from:'Meeting, 13 Oct',group:'overdue',chip:'2 d overdue'},
+  {id:'a2',text:'Share ETP reference sites',company:'Sutlej Steel Works',from:'Call, 16 Oct',group:'overdue',chip:'1 d overdue'},
+  {id:'a3',text:'Confirm site survey date',company:'Chenab Agro Foods',from:'Call, 19 Oct',group:'today',chip:'Today'},
+  {id:'a4',text:'Call procurement about budget',company:'Margalla Biopharma',from:'Call, 21 Oct',group:'later',chip:'Fri 23 Oct'},
+  {id:'a5',text:'Send ZLD case study',company:'Pak Tanners Group',from:'Email, 8 Oct',group:'later',chip:'Sat 24 Oct'}
+];
+const DEALS = [
+  {id:'d1',title:'ZLD plant, 1.2 MLD',company:'Kohsar Chemicals',stage:'negotiation',value:'PKR 412.0M',full:'PKR 412,000,000',days:18},
+  {id:'d2',title:'Cooling water recycling',company:'Sutlej Steel Works',stage:'proposal',value:'PKR 268.0M',full:'PKR 268,000,000',days:9,closePassed:true,close:'15 Oct 2026'},
+  {id:'d3',title:'ETP expansion, Plant 2',company:'Lyallpur Denim Mills',stage:'qualified',value:'PKR 145.0M',full:'PKR 145,000,000',days:12},
+  {id:'d4',title:'RO + UF upgrade',company:'Ravi Valley Beverages',stage:'proposal',value:'PKR 86.5M',full:'PKR 86,500,000',days:41},
+  {id:'d5',title:'RO-EDI purified water',company:'Margalla Biopharma',stage:'lead',value:'PKR 38.4M',full:'PKR 38,400,000',days:33},
+  {id:'d6',title:'STP, 0.5 MLD',company:'Chenab Agro Foods',stage:'lead',value:'PKR 22.0M',full:'PKR 22,000,000',days:6}
+];
+const DORMANT = [
+  {title:'Pak Tanners Group',meta:'Sialkot · no visit in 74 d (last 9 Aug 2026)'},
+  {title:'Punjab Ceramics',meta:'Gujranwala · no visit in 63 d (last 20 Aug 2026)'}
+];
+const hue = h => ({fg:`var(--${h})`, bg:`var(--${h}-bg)`});
+
+class Component extends DCLogic {
+  state = {pending:null, skipReason:'', lateReason:'', errors:{}, sheet:null};
+  app() { return this.props.app || {}; }
+  store() { return this.app().store || {outcomes:{}, done:{}}; }
+
+  componentDidMount() {
+    const d = this.app().demo;
+    const phone = this.isPhone();
+    if (d === 'late') this.setState({pending:{id:'v1',key:'positive'}, sheet: phone ? 'details' : null});
+    else if (d === 'skip') this.setState({pending:{id:'v3',key:'skipped'}, sheet: phone ? 'details' : null});
+    else if (d === 'pick') this.setState({pending:{id:'v1',key:null}, sheet:'pick'});
+  }
+  componentWillUnmount() { clearTimeout(this.tt); }
+  isPhone() { return !!this.app().phone; }
+  scenario() { return this.app().scenario || 'default'; }
+
+  toast(title, sub, undo) { const a = this.app(); if (a.toast) a.toast({title, sub, undo}); }
+  cd(h) {
+    if (h < 0) { const l = Math.round(-h); return {label:`Overdue · ${l} hrs`, short:'Overdue', lateBy:`${l} hrs`, fg:'var(--red)', bg:'var(--red-bg)', bar:'var(--red-solid)', pct:'100%', icon:'alarm-clock'}; }
+    const label = h < 1 ? `${Math.round(h*60)} min left` : `${Math.round(h)} hrs left`;
+    const pct = Math.max(4, Math.round(h/48*100)) + '%';
+    if (h < 12) return {label, short:label, fg:'var(--amber)', bg:'var(--amber-bg)', bar:'var(--amber-solid)', pct, icon:'timer'};
+    return {label, short:label, fg:'var(--text-2)', bg:'var(--slate-bg)', bar:'var(--green-solid)', pct, icon:'timer'};
+  }
+  pick(v, o) {
+    if (o.key === 'skipped' || v.hrsLeft < 0) {
+      this.setState({pending:{id:v.id, key:o.key}, skipReason:'', lateReason:'', errors:{}, sheet: this.isPhone() ? 'details' : null});
+    } else this.commit(v, o);
+  }
+  commit(v, o) {
+    const a = this.app(), extra = {skip: this.state.skipReason, late: this.state.lateReason};
+    a.update(s => ({...s, outcomes:{...s.outcomes, [v.id]:{key:o.key, ...extra}}}));
+    this.setState({pending:null, sheet:null, errors:{}});
+    this.toast('Outcome saved', `${o.full} · ${v.company}`, () => a.update(s => { const outcomes = {...s.outcomes}; delete outcomes[v.id]; return {...s, outcomes}; }));
+  }
+  save() {
+    const {pending, skipReason, lateReason} = this.state;
+    if (!pending || !pending.key) return;
+    const v = VISITS.find(x => x.id === pending.id), o = OUTCOMES.find(x => x.key === pending.key);
+    const errors = {};
+    if (o.key === 'skipped' && !skipReason) errors.skip = 'Choose why this visit was skipped.';
+    if (v.hrsLeft < 0 && lateReason.trim().length < 10) errors.late = 'Add a short reason (at least 10 characters).';
+    if (Object.keys(errors).length) return this.setState({errors});
+    this.commit(v, o);
+  }
+  cancel() { this.setState({pending:null, sheet:null, errors:{}}); }
+  toggleDone(a) {
+    const ap = this.app(), was = !!(this.store().done || {})[a.id];
+    ap.update(s => ({...s, done:{...(s.done || {}), [a.id]:!was}}));
+    if (!was) this.toast('Marked done', `${a.text} · ${a.company}`, () => ap.update(s => ({...s, done:{...(s.done || {}), [a.id]:false}})));
+  }
+
+  renderVals() {
+    const phone = this.isPhone(), sc = this.scenario(), ap = this.app(), sto = this.store();
+    const st = {...this.state, saved: Object.fromEntries(Object.entries(sto.outcomes || {}).map(([k, v]) => [k, v.key])), done: sto.done || {}};
+    const W = ap.W, go = fn => e => { if (e && e.preventDefault) e.preventDefault(); fn(); }, coId = n => ((W && W.COMPANIES.find(c => c.name === n)) || {}).id;
+    const isNew = sc === 'new';
+    const all = sc === 'default' ? VISITS : [];
+    const open = all.filter(v => !st.saved[v.id]);
+    const pv = st.pending ? VISITS.find(v => v.id === st.pending.id) : null;
+    const po = st.pending && st.pending.key ? OUTCOMES.find(o => o.key === st.pending.key) : null;
+
+    const visits = open.map((v, i) => {
+      const c = this.cd(v.hrsLeft);
+      const exp = !phone && !!po && pv && pv.id === v.id;
+      return {...v, goCo: go(() => ap.nav('account', {company: coId(v.company)})), goVisit: go(() => ap.nav('visits')), cdLabel:c.label, cdLabelShort:c.short, cdFg:c.fg, cdBg:c.bg, cdBar:c.bar, cdPct:c.pct, cdIcon:c.icon, lateBy:c.lateBy,
+        overdue: v.hrsLeft < 0, onTime: v.hrsLeft >= 0, expanded: exp, collapsed: !exp,
+        rowBg: v.hrsLeft < 0 ? 'color-mix(in srgb, var(--red-bg) 45%, transparent)' : 'transparent',
+        cardBd: v.hrsLeft < 0 ? 'var(--red)' : 'var(--line)',
+        choices: OUTCOMES.map(o => ({label:o.label, full:o.full, icon:o.icon, fg:`var(--${o.h})`, onClick:() => this.pick(v, o)})),
+        onOpenSheet: () => this.setState({pending:{id:v.id, key:null}, sheet:'pick', errors:{}, skipReason:'', lateReason:''})};
+    });
+    const overdueVisitCount = open.filter(v => v.hrsLeft < 0).length;
+
+    const acts = sc === 'default' ? ACTIONS : [];
+    const mk = a => {
+      const d = !!st.done[a.id];
+      const tone = a.group === 'overdue' ? 'red' : a.group === 'today' ? 'amber' : 'slate';
+      return {...a, isDone:d, isOpen:!d, chipFg: tone === 'slate' ? 'var(--text-2)' : `var(--${tone})`, chipBg:`var(--${tone}-bg)`,
+        boxBg: d ? 'var(--primary)' : 'var(--input)', boxBd: d ? 'var(--primary)' : 'var(--line-strong)', checkOp: d ? '1' : '0',
+        textColor: d ? 'var(--text-3)' : 'var(--ink)', deco: d ? 'line-through' : 'none', onToggle: () => this.toggleDone(a)};
+    };
+    const actGroups = [['overdue','Overdue','var(--red)'],['today','Today','var(--amber)'],['later','Later this week','var(--text-3)']]
+      .map(([k, label, fg]) => ({label, fg, items: acts.filter(a => a.group === k && !st.done[a.id]).map(mk)}))
+      .filter(g => g.items.length);
+    const doneItems = acts.filter(a => st.done[a.id]).map(mk);
+    if (doneItems.length) actGroups.push({label:`Done · ${doneItems.length}`, fg:'var(--green)', items:doneItems});
+    const openActs = acts.filter(a => !st.done[a.id]);
+    const overdueActs = openActs.filter(a => a.group === 'overdue').length;
+
+    const deals = (isNew ? [] : DEALS.map(d => { const o = (sto.deals || {})[d.id]; return o ? {...d, ...o} : d; }).filter(d => !['won','lost'].includes(d.stage))).map((d, i) => {
+      const s = STAGES[d.stage];
+      const stuck = sc === 'default' && d.days > 30;
+      return {...d, go: go(() => ap.nav('deal', {deal: d.id})), sLabel:s.label, sIcon:s.icon, sFg:`var(--${s.h})`, sBg:`var(--${s.h}-bg)`, stuck, notStuck:!stuck,
+        closePassed: sc === 'default' && !!d.closePassed, rowBd: i === 0 ? 'transparent' : 'var(--line)'};
+    });
+
+    const flagGroups = sc !== 'default' ? [] : [
+      {label:'Stuck', icon:'hourglass', ...hue('red'), title:'Stuck deals', items: DEALS.filter(d => d.days > 30).map(d => ({go: go(() => ap.nav('deal', {deal: d.id})), title:`${d.company} — ${d.title}`, meta:`${d.days} d in ${STAGES[d.stage].label}`}))},
+      {label:'Dormant', icon:'moon', ...hue('amber'), title:'Dormant accounts', items: DORMANT.map(x => ({...x, go: go(() => ap.nav('account', {company: coId(x.title)}))}))},
+      {label:'Close passed', icon:'calendar-x', ...hue('red'), title:'Overdue close dates', items: DEALS.filter(d => d.closePassed).map(d => ({go: go(() => ap.nav('deal', {deal: d.id})), title:`${d.company} — ${d.title}`, meta:`Expected ${d.close} · 7 d ago`}))}
+    ].map(g => ({...g, count:g.items.length}));
+    const flagCount = flagGroups.reduce((n, g) => n + g.count, 0);
+
+    let summary;
+    if (isNew) summary = 'Welcome to WR Sales Hub. Here’s how to get started.';
+    else if (sc === 'allclear') summary = 'Nothing pending. Every visit has an outcome and nothing is slipping.';
+    else {
+      const parts = [];
+      if (overdueVisitCount) parts.push(`${overdueVisitCount} overdue outcome${overdueVisitCount > 1 ? 's' : ''}`);
+      if (overdueActs) parts.push(`${overdueActs} overdue action${overdueActs > 1 ? 's' : ''}`);
+      summary = parts.length ? `${parts.join(' and ')} need you first.` : open.length ? `${open.length} visit${open.length > 1 ? 's' : ''} waiting for an outcome. Nothing overdue.` : 'Nothing overdue. Nice work.';
+    }
+
+    const pc = pv ? this.cd(pv.hrsLeft) : null;
+    const pNeedsLate = !!pv && pv.hrsLeft < 0;
+    const pIsSkip = !!po && po.key === 'skipped';
+
+    return {
+      goLog: go(() => ap.nav('log')), goAccounts: go(() => ap.nav('accounts')), goPulse: go(() => ap.nav('pulse')), goNewDeal: go(() => ap.nav('newdeal')),
+      firstName: ((ap.me || {}).name || 'Ali Raza').split(' ')[0], openTotal: W ? W.money(deals.reduce((n, d) => n + parseFloat(String(d.value).replace(/[^0-9.]/g, '')), 0)) : '', openTotalFull: W ? W.full(deals.reduce((n, d) => n + parseFloat(String(d.value).replace(/[^0-9.]/g, '')), 0)) : '',
+      isDesktop: !phone, isPhone: phone, isNew, notNew: !isNew,
+      summary,
+      visits, visitCount: open.length, overdueVisitCount,
+      hasOverdueVisit: overdueVisitCount > 0, noOverdueVisit: overdueVisitCount === 0 && open.length > 0,
+      showCalmBadge: overdueVisitCount === 0 && open.length > 0,
+      badgeTitle: `${open.length} visits awaiting outcome${overdueVisitCount ? `, ${overdueVisitCount} overdue` : ''}`,
+      noVisits: !isNew && open.length === 0,
+      actGroups, openActCount: openActs.length, noActs: actGroups.length === 0,
+      deals, dealCount: deals.length,
+      flagGroups, flagCount, noFlags: flagCount === 0,
+      showToast: !!st.toast, toastTitle: st.toast ? st.toast.title : '', toastSub: st.toast ? st.toast.sub : '',
+      onUndo: () => st.toast && st.toast.undo && st.toast.undo(), onDismiss: () => this.setState({toast:null}),
+      pLabel: po ? po.full : '', pIcon: po ? po.icon : 'circle', pFg: po ? `var(--${po.h})` : '', pBg: po ? `var(--${po.h}-bg)` : '',
+      pIsSkip, pNeedsLate, pLateBy: pc ? pc.lateBy : '',
+      stepTwo: pIsSkip && pNeedsLate ? 'Skip + late reason' : pIsSkip ? 'Skip reason' : 'Late reason',
+      skipChoices: SKIP.map(r => { const sel = st.skipReason === r; return {label:r, bd: sel ? 'var(--primary)' : 'var(--line-strong)', bg: sel ? 'var(--brand-soft)' : 'var(--surface)', fg: sel ? 'var(--green)' : 'var(--ink)', icon: sel ? 'circle-check' : 'circle', onClick: () => this.setState(s => ({skipReason:r, errors:{...s.errors, skip:null}}))}; }),
+      lateReason: st.lateReason, onLate: e => this.setState({lateReason: e.target.value, errors:{...st.errors, late:null}}),
+      lateBd: st.errors.late ? 'var(--red)' : 'var(--line-strong)',
+      hasLateErr: !!st.errors.late, noLateErr: !st.errors.late, lateErr: st.errors.late || '',
+      hasSkipErr: !!st.errors.skip, skipErr: st.errors.skip || '',
+      onSave: () => this.save(), onCancel: () => this.cancel(),
+      onChangeOutcome: () => phone ? this.setState({sheet:'pick', errors:{}}) : this.cancel(),
+      sheetOpen: phone && !!st.sheet && !!pv, sheetPick: st.sheet === 'pick', sheetDetails: st.sheet === 'details' && !!po,
+      sheetTitle: st.sheet === 'details' ? 'Almost done' : 'Set outcome',
+      svCompany: pv ? pv.company : '', svType: pv ? pv.type : '', svWhen: pv ? pv.whenShort : '', svOverdue: pNeedsLate, svLateBy: pc ? pc.lateBy : '',
+      sheetChoices: pv ? OUTCOMES.map(o => ({full:o.full, icon:o.icon, fg:`var(--${o.h})`, bg:`var(--${o.h}-bg)`, onClick: () => this.pick(pv, o)})) : []
+    };
+  }
+}
+</script>
+</body>
+</html>

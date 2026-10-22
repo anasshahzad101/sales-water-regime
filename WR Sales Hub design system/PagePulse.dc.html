@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-screen-label="Team Pulse" style="display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><div style="flex:1;min-width:260px;display:flex;flex-direction:column;gap:6px"><h1 style="margin:0;font-family:Sora,sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em">Team Pulse</h1><p style="margin:0;font-size:14.5px;color:var(--text-2)">Where every deal is right now. Open a deal to change its stage.</p></div></sc-if>
+    <button onClick="{{ goNew }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 18px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px" style-hover="background:var(--primary-hover)"><i class="icon-plus" style="font-size:16px;line-height:1"></i>New deal</button>
+    <button onClick="{{ exportXlsx }}" style="height:{{ btnH }};flex:{{ btnFlex }};padding:0 16px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px"><i class="icon-{{ exportIcon }}" style="font-size:16px;line-height:1;color:var(--green);animation:{{ exportAnim }}"></i>{{ exportLabel }}</button>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <div role="radiogroup" aria-label="Scope" style="display:flex;padding:3px;border-radius:999px;background:var(--bg-alt);border:1px solid var(--line)">
+      <sc-for list="{{ scopes }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="height:{{ segH }};padding:0 16px;border:0;border-radius:999px;font-size:13.5px;font-weight:600;cursor:pointer;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.sh }}">{{ o.label }}</button></sc-for>
+    </div>
+    <span style="position:relative;display:flex;opacity:{{ personOp }}"><select value="{{ person }}" onChange="{{ onPerson }}" disabled="{{ personDisabled }}" aria-label="Salesperson" style="appearance:none;-webkit-appearance:none;height:{{ selH }};padding:0 34px 0 12px;border-radius:999px;border:1px solid {{ personBd }};background:{{ personBg }};color:var(--ink);font-size:{{ selFs }};font-weight:500;outline:none"><option value="all">All salespeople</option><sc-for list="{{ people }}" as="p" hint-placeholder-count="4"><option value="{{ p.id }}">{{ p.name }}</option></sc-for></select><i class="icon-chevron-down" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px;line-height:1;color:var(--text-3);pointer-events:none"></i></span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:12.5px;font-weight:600;color:var(--text-3);margin-right:2px">Solution</span>
+      <sc-for list="{{ sols }}" as="o" hint-placeholder-count="7"><button onClick="{{ o.toggle }}" aria-pressed="{{ o.on }}" style="height:{{ solH }};min-width:44px;padding:0 10px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:12.5px;font-weight:700;cursor:pointer">{{ o.label }}</button></sc-for>
+      <sc-if value="{{ hasSol }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearSol }}" style="height:32px;padding:0 8px;border:0;background:transparent;color:var(--link);font-size:13px;font-weight:600;cursor:pointer">Clear</button></sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-auto-flow:column;grid-auto-columns:minmax(236px,1fr);gap:14px;overflow-x:auto;padding-bottom:8px;align-items:start">
+      <sc-for list="{{ columns }}" as="c" hint-placeholder-count="6">
+        <section style="background:var(--bg-alt);border:1px solid var(--line);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:320px">
+          <div style="display:flex;flex-direction:column;gap:4px;padding:2px 4px 6px">
+            <span style="display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:700;color:{{ c.st.fg }}"><i class="icon-{{ c.st.icon }}" style="font-size:15px;line-height:1"></i>{{ c.st.label }}<span style="margin-left:auto;min-width:24px;height:22px;padding:0 7px;border-radius:999px;background:var(--surface);color:var(--ink);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ c.count }}</span></span>
+            <span title="{{ c.full }}" style="font-family:Sora,sans-serif;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums">{{ c.total }}</span>
+          </div>
+          <sc-for list="{{ c.cards }}" as="d" hint-placeholder-count="2">
+            <a href="#deal" onClick="{{ d.go }}" style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:14px;background:var(--surface);border:1px solid {{ d.bd }};box-shadow:var(--shadow-sm);color:var(--ink);text-decoration:none" style-hover="box-shadow:var(--shadow-md);text-decoration:none;color:var(--ink)">
+              <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600;line-height:1.3">{{ d.title }}</span><span style="font-size:12.5px;color:var(--text-2)">{{ d.company }}</span></span>
+              <span style="display:flex;align-items:center;gap:8px"><span title="{{ d.full }}" style="font-family:Sora,sans-serif;font-size:15.5px;font-weight:600;font-variant-numeric:tabular-nums">{{ d.money }}</span><span style="margin-left:auto;height:20px;padding:0 6px;border-radius:6px;border:1px solid var(--line-strong);color:var(--text-2);font-size:11px;font-weight:700;display:flex;align-items:center">{{ d.sol }}</span></span>
+              <span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--line)">
+                <span style="width:22px;height:22px;border-radius:999px;background:var(--brand-soft);color:var(--green);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ d.initials }}</span><span style="font-size:12.5px;color:var(--text-2)">{{ d.owner }}</span>
+                <span style="margin-left:auto;display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:999px;font-size:11.5px;font-weight:600;color:{{ d.dFg }};background:{{ d.dBg }}"><i class="icon-{{ d.dIcon }}" style="font-size:11px;line-height:1"></i>{{ d.dLabel }}</span>
+              </span>
+              <sc-if value="{{ d.closePassed }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--red)"><i class="icon-calendar-x" style="font-size:12px;line-height:1"></i>Close date passed · {{ d.close }}</span></sc-if>
+              <sc-if value="{{ d.hasNote }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:var(--text-2)">{{ d.note }}</span></sc-if>
+            </a>
+          </sc-for>
+          <sc-if value="{{ c.empty }}" hint-placeholder-val="{{ false }}"><span style="padding:16px 8px;font-size:13px;color:var(--text-3);text-align:center;border:1px dashed var(--line-strong);border-radius:14px">No deals</span></sc-if>
+        </section>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+    <div role="tablist" style="display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:0 16px 2px;scrollbar-width:none">
+      <sc-for list="{{ columns }}" as="c" hint-placeholder-count="6"><button role="tab" onClick="{{ c.pick }}" style="flex:none;height:44px;padding:0 14px 0 12px;border-radius:999px;border:1px solid {{ c.tabBd }};background:{{ c.tabBg }};color:{{ c.tabFg }};font-size:14px;font-weight:600;display:flex;align-items:center;gap:7px;cursor:pointer;white-space:nowrap"><i class="icon-{{ c.st.icon }}" style="font-size:15px;line-height:1;color:{{ c.st.fg }}"></i>{{ c.st.label }}<span style="font-weight:500;color:var(--text-3)">{{ c.count }}</span></button></sc-for>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:8px;padding:2px 2px 0"><span style="font-family:Sora,sans-serif;font-size:20px;font-weight:600">{{ cur.total }}</span><span style="font-size:13.5px;color:var(--text-2)">{{ cur.count }} deals in {{ cur.st.label }}</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ cur.cards }}" as="d" hint-placeholder-count="3">
+        <a href="#deal" onClick="{{ d.go }}" style="display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-radius:18px;background:var(--surface);border:1px solid {{ d.bd }};color:var(--ink);text-decoration:none">
+          <span style="display:flex;gap:10px;align-items:flex-start"><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{ d.title }}</span><span style="font-size:13px;color:var(--text-2)">{{ d.company }}</span></span><span style="font-family:Sora,sans-serif;font-size:16px;font-weight:600;white-space:nowrap">{{ d.money }}</span></span>
+          <span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:13px;color:var(--text-2)">{{ d.owner }} · {{ d.sol }}</span><span style="margin-left:auto;display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:600;color:{{ d.dFg }};background:{{ d.dBg }}"><i class="icon-{{ d.dIcon }}" style="font-size:12px;line-height:1"></i>{{ d.dLabel }}</span></span>
+          <sc-if value="{{ d.closePassed }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--red)"><i class="icon-calendar-x" style="font-size:13px;line-height:1"></i>Close date passed · {{ d.close }}</span></sc-if>
+        </a>
+      </sc-for>
+      <sc-if value="{{ cur.empty }}" hint-placeholder-val="{{ false }}"><div style="padding:28px 16px;border-radius:18px;border:1px dashed var(--line-strong);text-align:center;font-size:14px;color:var(--text-2)">No deals in this stage with the current filters.</div></sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {scope:null, person:'all', sols:[], tab:'proposal', exporting:false};
+  app() { return this.props.app || {}; }
+  componentWillUnmount() { clearTimeout(this.t); }
+  exportXlsx() { if (this.state.exporting) return; this.setState({exporting:true}); this.t = setTimeout(() => { this.setState({exporting:false}); this.app().toast({title:'Export ready', sub:'pipeline_2026-10-22.xlsx · current filters applied'}); }, 1200); }
+  renderVals() {
+    const a = this.app(), W = a.W, s = this.state;
+    if (!W) return {};
+    const phone = !!a.phone, me = a.me || {id:'u1'};
+    const scope = s.scope || (a.role === 'sales' ? 'mine' : 'team');
+    const deals = W.allDeals(a.store).filter(d => (scope === 'mine' ? d.owner === me.id : (s.person === 'all' || d.owner === s.person)) && (!s.sols.length || s.sols.includes(d.sol)));
+    const seg = on => on ? {bg:'var(--surface)', fg:'var(--ink)', sh:'var(--shadow-sm)'} : {bg:'transparent', fg:'var(--text-2)', sh:'none'};
+    const card = d => {
+      const u = W.user(d.owner), co = W.co(d.co), stuck = W.isStuck(d), cp = W.isClosePassed(d), closed = !W.isOpen(d);
+      return {title:d.title, company:co.name, money:W.money(d.value), full:W.full(d.value), sol:d.sol, owner:u.name.split(' ')[0], initials:u.initials, close:d.close, closePassed:cp,
+        dLabel: closed ? (d.stage === 'won' ? `PO · ${d.close}` : 'Closed') : stuck ? `Stuck · ${d.days} d` : `${d.days} d in stage`, dIcon: closed ? (d.stage === 'won' ? 'trophy' : 'circle-x') : stuck ? 'hourglass' : 'clock',
+        dFg: stuck ? 'var(--red)' : 'var(--text-2)', dBg: stuck ? 'var(--red-bg)' : 'var(--slate-bg)', bd: stuck || cp ? 'color-mix(in srgb, var(--red) 40%, var(--line))' : 'var(--line)',
+        hasNote: d.stage === 'lost' && !!d.lostReason, note: d.lostReason ? `Reason: ${d.lostReason}` : '', go: e => { e.preventDefault(); a.nav('deal', {deal:d.id}); }};
+    };
+    const columns = W.STAGES.map(st => {
+      const list = deals.filter(d => d.stage === st.key).sort((x, y) => y.value - x.value), tot = list.reduce((n, d) => n + d.value, 0), on = s.tab === st.key;
+      return {st: W.stage(st.key), count:list.length, total:W.money(tot), full:W.full(tot), cards:list.map(card), empty:list.length === 0, key:st.key,
+        tabBd: on ? 'var(--primary)' : 'var(--line-strong)', tabBg: on ? 'var(--brand-soft)' : 'var(--surface)', tabFg: on ? 'var(--green)' : 'var(--ink)', pick: () => this.setState({tab:st.key})};
+    });
+    const people = W.USERS.filter(u => ['sales','manager'].includes(u.role) && u.active);
+    return {
+      isDesktop: !phone, isPhone: phone, goNew: () => a.nav('newdeal'),
+      exportXlsx: () => this.exportXlsx(), exportLabel: s.exporting ? 'Preparing…' : phone ? 'Export' : 'Export to Excel', exportIcon: s.exporting ? 'loader-circle' : 'file-spreadsheet', exportAnim: s.exporting ? 'wrspin 0.9s linear infinite' : 'none',
+      scopes: [['mine','Mine'],['team','Team']].map(([k, l]) => ({label:l, ...seg(scope === k), pick: () => this.setState({scope:k})})),
+      person: s.person, onPerson: e => this.setState({person: e.target.value}), people, personDisabled: scope === 'mine', personOp: scope === 'mine' ? 0.5 : 1,
+      personBd: s.person !== 'all' && scope === 'team' ? 'var(--primary)' : 'var(--line-strong)', personBg: s.person !== 'all' && scope === 'team' ? 'var(--brand-soft)' : 'var(--surface)',
+      sols: W.SOL.map(x => { const on = s.sols.includes(x); return {label:x, on, bd: on ? 'var(--primary)' : 'var(--line-strong)', bg: on ? 'var(--brand-soft)' : 'var(--surface)', fg: on ? 'var(--green)' : 'var(--ink)', toggle: () => this.setState({sols: on ? s.sols.filter(y => y !== x) : [...s.sols, x]})}; }),
+      hasSol: s.sols.length > 0, clearSol: () => this.setState({sols:[]}),
+      columns, cur: columns.find(c => c.key === s.tab) || columns[0],
+      btnH: phone ? '46px' : '40px', btnFlex: phone ? '1' : 'none', segH: phone ? '40px' : '32px', selH: phone ? '44px' : '40px', selFs: phone ? '16px' : '13.5px', solH: phone ? '40px' : '32px'
+    };
+  }
+}
+</script>
+</body>
+</html>
